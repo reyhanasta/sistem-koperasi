@@ -41,7 +41,7 @@
                 @foreach ($data as $index)
                 <tr>
                   <td>{{$loop->iteration}}</td>
-                  <td><a href="{{ url('customer/'.$index->customer->id)}}">{{$index->customer->name}}</a></td>
+                  <td><a href="{{ url('nasabah/'.$index->customer->id)}}">{{$index->customer->name}}</a></td>
                   <td>{{ucfirst($index->type)}}</td>
                   <td>Rp.{{number_format($index->amount)}}</td>
                   <td>{{$index->created_at}}</td>

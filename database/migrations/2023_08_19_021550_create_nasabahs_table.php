@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('address');
             $table->string('phone');
-            $table->date('date_of_birth');
+            $table->date('date_of_birth')->default('2000-01-01');
             $table->enum('gender',['male','female']);
             $table->timestamps();
         });

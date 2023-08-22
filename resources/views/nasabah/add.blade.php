@@ -13,7 +13,7 @@
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form action="{{ url('customer') }}" method="post" enctype="multipart/form-data">
+                        <form action="{{ url('nasabah') }}" method="post" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             @include('nasabah._form')
                             <!-- /.card-body -->

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Nasabah;
 use App\Models\Penarikan;
+use Illuminate\Support\Facades\DB;
 use App\Models\BukuTabungan;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -41,32 +42,35 @@ class NasabahController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+
     public function store(Request $request)
     {
-        //
+        // Validate the request data
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'gender' => 'required|in:male,female',
+            'phone' => 'required|string',
+            'address' => 'required|string',
+            'date' => 'required|date',
+        ]);
 
-        //Nasabah DATA
-        $nasabah = new Nasabah;
-        $nasabah->name = $request->name;
-        $nasabah->gender = $request->gender;
-        $nasabah->phone = $request->phone;
-        $nasabah->address = $request->address;
-        $nasabah->date_of_birth = $request->date;
-        //  if($request->file('profile_pict')){
-        //      $file=$request->file('profile_pict');
-        //      $nama_file = time().str_replace(" ","",$file->getClientOriginalName());
-        //      $file->move('picture',$nama_file);
-        //      $nasabah->profile_pict = $nama_file;
-        //  }
-        $nasabah->save();
-        if ($nasabah->save()) {
-            $buku_nasabah = new BukuTabungan;
-            $buku_nasabah->id_Nasabah = $nasabah->id;
-            $buku_nasabah->balance = 5000;
-            $buku_nasabah->status = "aktif";
-            $buku_nasabah->save();
-        }
-        return redirect('/Nasabah')->with('success', 'Data Nasabah beserta buku tabungannya berhasil di Tambahkan !');
+        // Wrap the database operations in a transaction
+        DB::transaction(function () use ($validatedData) {
+            // Create and save a new Nasabah
+            $nasabah = Nasabah::create($validatedData);
+
+            // Create and save a new BukuTabungan
+            if ($nasabah) {
+                BukuTabungan::create([
+                    'id_nasabah' => $nasabah->id,
+                    'balance' => 5000,
+                    'status' => 'aktif',
+                ]);
+            }
+        });
+
+        return redirect('/nasabah')->with('success', 'Data Nasabah beserta buku tabungannya berhasil di Tambahkan !');
     }
 
     /**
@@ -79,7 +83,7 @@ class NasabahController extends Controller
     {
         //
         $data = Nasabah::findorFail($id);
-        $dataTabungan = BukuTabungan::where('id_Nasabah', $id)->first();
+        $dataTabungan = BukuTabungan::where('id_nasabah', $id)->first();
         $back = url()->previous();
         return view('nasabah.show', compact('data', 'dataTabungan', 'back'));
     }
@@ -96,7 +100,6 @@ class NasabahController extends Controller
         $data = Nasabah::find($id);
         $back = url()->previous();
         return view('nasabah.edit', compact('data', 'back'));
-
     }
 
     /**
@@ -116,8 +119,7 @@ class NasabahController extends Controller
         $data->address = $request->address;
         $data->date_of_birth = $request->date;
         $data->save();
-        return redirect('/Nasabah')->with('success', 'Data Berhasil di Simpan');
-
+        return redirect('/nasabah')->with('success', 'Data Berhasil di Simpan');
     }
 
     /**
@@ -133,7 +135,6 @@ class NasabahController extends Controller
         $data->delete();
         //mass delete
         //Controller::destroy($id);
-        return redirect('Nasabah')->with('success', 'Data Berhasil di Hapus');
+        return redirect('nasabah')->with('success', 'Data Berhasil di Hapus');
     }
-    
 }

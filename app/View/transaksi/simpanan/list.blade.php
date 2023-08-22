@@ -21,7 +21,7 @@
           @endif
           <div class="card">
             <div class="card-header">
-              <a href="{{url('tr-savings/create/')}}" class="btn btn-primary"><i class="fas fa-plus"></i><span> Tambah</span></a>
+              <a href="{{url('trx-simpanan/create/')}}" class="btn btn-primary"><i class="fas fa-plus"></i><span> Tambah</span></a>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -53,10 +53,10 @@
                         <span class="sr-only">Toggle Dropdown</span>
                       </button>
                       <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item" href="{{ url('tr-savings/'.$index->id)}}"><i class="fas fa-search nav-icon"></i> Detail</a>
-                        <a class="dropdown-item" href="{{ url('tr-savings/'.$index->id.'/edit')}}"><i class="fas fa-edit nav-icon"></i> Edit</a>
+                        <a class="dropdown-item" href="{{ url('trx-simpanan/'.$index->id)}}"><i class="fas fa-search nav-icon"></i> Detail</a>
+                        <a class="dropdown-item" href="{{ url('trx-simpanan/'.$index->id.'/edit')}}"><i class="fas fa-edit nav-icon"></i> Edit</a>
                         <div class="dropdown-divider"></div>
-                        <form action="{{ url('tr-savings/'.$index->id)}}" method="post">
+                        <form action="{{ url('trx-simpanan/'.$index->id)}}" method="post">
                           @method('delete')
                           @csrf
                           <button type="submit" class="dropdown-item" onclick="return confirm('Apakah anda sudah yakin ?')"> <i class="fas fa-trash nav-icon"></i> Delete</button>

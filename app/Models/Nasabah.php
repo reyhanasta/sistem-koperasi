@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Nasabah extends Model
 {
     use HasFactory;
-
+    protected $guarded = ['id'];
+    
     public function savings(){
         return $this->hasMany(Saving::class);
     }

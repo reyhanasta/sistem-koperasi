@@ -13,7 +13,7 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form action="{{ url('customer/' . $data->id) }}" method="post" enctype="multipart/form-data">
+              <form action="{{ url('nasabah/' . $data->id) }}" method="post" enctype="multipart/form-data">
                   @method('put')
                   {{ csrf_field() }}
                   @include('nasabah._form')
