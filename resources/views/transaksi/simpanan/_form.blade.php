@@ -1,10 +1,10 @@
 <div class="card-body">
     <div class="form-group ">
         <label>Data Nasabah</label>
-        @if ($customer->count() > 0)
+        @if ($nasabahList->count() > 0)
             <select class="form-control" name="customer">
                 <!--NANTI AKAN MENGGUNAKAN DATA MASTER JABATAN-->
-                @foreach ($customer as $x)
+                @foreach ($nasabahList as $x)
                     <option value={{ $x->id }}>{{ $x->id }} - {{ $x->name }}</option>
                 @endforeach
             </select>
