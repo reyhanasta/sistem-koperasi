@@ -12,13 +12,13 @@
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form action="{{ url('tr-withdraw') }}" method="post" enctype="multipart/form-data">
+                        <form action="{{ url('trx-penarikan') }}" method="post" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             @include('transaksi.penarikan._form')
                             <!-- /.card-body -->
                             <div class="card-footer">
-                                <button type="submit" onclick="{{ $confirm }}" class="btn btn-primary">Submit</button>
-                                <a class="btn btn-light" href="{{ $back }}">Cancel</a>
+                                <button type="submit" onclick="{{ $confirmationMessage }}" class="btn btn-primary">Submit</button>
+                                <a class="btn btn-light" href="{{ $previousUrl }}">Cancel</a>
                             </div>
                         </form>
                     </div>

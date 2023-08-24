@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Nasabah;
 use App\Models\Penarikan;
 use App\Models\BukuTabungan;
@@ -19,8 +20,8 @@ class PenarikanController extends Controller
     public function index()
     {
         //
-        $data = Penarikan::with('Nasabah_acc')->get()->sortByDesc('created_at');
-        $back = url()->previous();
+        $data = Penarikan::with('bukuTabungan')->get()->sortByDesc('created_at');
+       
         return view('transaksi.penarikan.list', compact('data'));
     }
 
@@ -31,13 +32,14 @@ class PenarikanController extends Controller
      */
     public function create()
     {
-        //
         $data = new Penarikan;
-        $Nasabah = Nasabah::all();
-        $back = url()->previous();
-        $confirm = "return confirm('Pastikan Data sudah di isi dengan benar, karena data transaksi tidak dapat di ubah lagi')";
-        return view('transaksi.penarikan.add', compact('Nasabah', 'data', 'back', 'confirm'));
+        $nasabahList = Nasabah::all();
+        $previousUrl = url()->previous();
+        $confirmationMessage = "Pastikan Data sudah di isi dengan benar, karena data transaksi tidak dapat di ubah lagi";
+
+        return view('transaksi.penarikan.add', compact('nasabahList', 'data', 'previousUrl', 'confirmationMessage'));
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -47,32 +49,37 @@ class PenarikanController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        $data = new Penarikan;
-        $rekeningNasabah = BukuTabungan::where('id_Nasabah', $request->Nasabah)->first();
+        $rekeningNasabah = BukuTabungan::where('id_nasabah', $request->nasabah)->first();
+
         $validateData = $request->validate([
-            'Nasabah' => 'required',
+            'nasabah' => 'required', // Change 'Nasabah' to 'nasabah'
             'amount' => [
                 'required',
                 'min:20000',
                 'numeric',
                 function ($attribute, $value, $fail) use ($rekeningNasabah) {
                     $balance = $rekeningNasabah->balance;
+                    
                     if ($value > $balance) {
-                        return $fail("The $attribute must not be greater than the account balance.");
+                        $fail("The $attribute must not be greater than the account balance.");
                     }
                 },
             ],
         ]);
-        $data->Nasabah_acc_id = $rekeningNasabah->id;
-        $data->amount = $request->amount;
-        $data->desc = $request->desc;
-        $rekeningNasabah->balance -= $request->amount;
-        $rekeningNasabah->save();
-        $data->save();
 
-        return redirect('tr-withdraw/')->with('success', 'Data Berhasil Di tambahkan!');
+        if ($validateData) {
+            $data = new Penarikan; // Move the creation of $data inside the validation check
+            $data->id_rekening = $rekeningNasabah->id;
+            $data->amount = $request->amount;
+            $data->desc = $request->desc;
+            $rekeningNasabah->balance -= $request->amount;
+            
+            $rekeningNasabah->save();
+            $data->save();
+            return redirect('trx-penarikan')->with('success', 'Data Berhasil Ditambahkan!');
+        }
     }
+
 
     /**
      * Display the specified resource.

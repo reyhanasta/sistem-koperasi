@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('buku_tabungans', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('no_rek');
             $table->foreignId('id_nasabah');
             $table->bigInteger('balance');
             $table->enum('status',['aktif','non-aktif']);

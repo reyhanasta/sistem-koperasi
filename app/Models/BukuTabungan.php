@@ -10,10 +10,10 @@ class BukuTabungan extends Model
     use HasFactory;
     protected $guarded = ['id'];
     
-    public function savings(){
-        return $this->hasMany(Saving::class);
+    public function simpanan(){
+        return $this->hasMany(Simpanan::class);
     }
-    public function withdraw(){
-        return $this->hasMany(Withdrawal::class);
+    public function penarikan(){
+        return $this->hasMany(Penarikan::class);
     }
 }

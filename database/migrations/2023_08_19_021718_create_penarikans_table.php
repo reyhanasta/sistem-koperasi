@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('penarikans', function (Blueprint $table) {
             $table->id();
-            $table->string('customer_acc_id');
+            $table->string('id_rekening');
             $table->bigInteger('amount');
             $table->string('desc')->nullable(); 
             $table->timestamps();

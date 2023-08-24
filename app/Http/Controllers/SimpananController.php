@@ -23,7 +23,9 @@ class SimpananController extends Controller
         $data = Simpanan::with('Nasabah')->get()->sortByDesc('created_at');
         $back = url()->previous();
 
-
+    
+        
+        
         return view('transaksi.simpanan.list', compact('data', 'back'));
     }
 
@@ -55,28 +57,28 @@ class SimpananController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        $data = new Simpanan();
-        //$id_rekening = BukuTabungan::findBy('id_nasabah',$request->Nasabah);
-        $rekeningNasabah = BukuTabungan::where('id_nasabah', $request->Nasabah)->first();
-        $validateData = $request->validate([
-            'Nasabah' => 'required',
-            'amount' => ['required', 'min:5000', 'numeric'],
-        ]);
+        $nasabahNotFoundWarning = 'Nasabah tidak ditemukan. Mohon tambahkan terlebih dahulu.';
+        $successMessage = 'Data ditambahkan, buku tabungan nasabah diupdate.';
 
-        
-        if ($validateData) {
-
-            $data->id_nasabah = $rekeningNasabah->id;
+        $rekeningNasabah = BukuTabungan::where('id_nasabah', $request->nasabah)->first();
+       
+        if ($rekeningNasabah) {
+            $data = new Simpanan();
+            $data->id_rekening = $rekeningNasabah->id;
+            $data->id_nasabah = $request->nasabah;
             $data->type = $request->type;
             $data->amount = $request->amount;
             $data->desc = $request->desc;
+
             $rekeningNasabah->balance += $request->amount;
             $rekeningNasabah->save();
+          
             $data->save();
-            return redirect('/trx-simpanan')->with('success', 'Data berhasil di tambahkan dan buku tabungan nasabah berhasil di Update!');
+
+            return redirect('/trx-simpanan')->with('success', $successMessage);
+        } else {
+            return back()->with('warning', $nasabahNotFoundWarning);
         }
-        return back()->with('warning', 'Data Nasabah masih kosong, harap tambahkan terlebih dahulu');
     }
 
     /**

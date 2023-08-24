@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-lg-4"></div>
                 <div class="col-lg-4">
-                    @error('customer')
+                    @error('nasabah')
                     <div class="card card-warning">
                         <div class="card-header">
                           <h3 class="card-title ">Tambahkan Data Nasabah Terlebih Dahulu!</h3>

@@ -9,7 +9,7 @@ class Penarikan extends Model
 {
     use HasFactory;
 
-    public function customer_acc(){
-        return $this->belongsTo(CustomerAccount::class,'customer_acc_id');
+    public function bukuTabungan(){
+        return $this->belongsTo(BukuTabungan::class,'id_rekening');
     }
 }

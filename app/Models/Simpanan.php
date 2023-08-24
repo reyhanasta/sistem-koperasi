@@ -9,10 +9,10 @@ class Simpanan extends Model
 {
     use HasFactory;
     
-    public function customerAccount(){
-        return $this->belongsTo(CustomerAccount::class);
+    public function bukuTabungan(){
+        return $this->belongsTo(BukuTabungan::class);
     }
-    public function customer(){
-        return $this->belongsTo(Customer::class,'id_customer');
+    public function nasabah(){
+        return $this->belongsTo(Nasabah::class,'id_nasabah');
     }
 }

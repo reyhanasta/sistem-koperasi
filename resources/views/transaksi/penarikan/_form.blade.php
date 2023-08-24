@@ -1,15 +1,15 @@
 <div class="card-body">
     <div class="form-group ">
         <label>Data Nasabah</label>
-        @if ($customer->count() > 0)
-            <select class="form-control" name="customer">
+        @if ($nasabahList->count() > 0)
+            <select class="form-control" name="nasabah">
                 <!--NANTI AKAN MENGGUNAKAN DATA MASTER JABATAN-->
-                @foreach ($customer as $x)
+                @foreach ($nasabahList as $x)
                     <option value={{ $x->id }}>{{ $x->id }} - {{ $x->name }}</option>
                 @endforeach
             </select>
         @else
-            <a class="form-control btn btn-success" href="{{ url('customer/create/') }}" class="btn btn-primary"><i
+            <a class="form-control btn btn-success" href="{{ url('nasabah/create/') }}" class="btn btn-primary"><i
                     class="fas fa-plus"></i><span> Tambah Data Nasabah</span></a>
         @endif
 
