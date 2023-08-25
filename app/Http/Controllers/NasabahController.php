@@ -52,22 +52,21 @@ class NasabahController extends Controller
             'gender' => 'required|in:male,female',
             'phone' => 'required|string',
             'address' => 'required|string',
-            'date' => 'required|date',
+            'date_of_birth' => 'required|date',
         ]);
 
         // Wrap the database operations in a transaction
         DB::transaction(function () use ($validatedData) {
             // Create and save a new Nasabah
             $nasabah = Nasabah::create($validatedData);
-            $date = $validatedData['date'];
+            $date = $validatedData['date_of_birth'];
             $formattedDate = date('md', strtotime($date));
-            $padString = date('ymd') + $formattedDate;
-            dd($padString);
-            $nomor_rekening = str_pad($nasabah->id, 6, $padString, STR_PAD_LEFT);
-
+            $padString = date('ymd') . $formattedDate;
+            $point = $nasabah->id;
+            $nomor_rekening = str_pad($point, 12, $padString, STR_PAD_LEFT);
+            
             // Create and save a new BukuTabungan
             if ($nasabah) {
-
                 BukuTabungan::create([
                     'id_nasabah' => $nasabah->id,
                     'no_rek' => $nomor_rekening,
