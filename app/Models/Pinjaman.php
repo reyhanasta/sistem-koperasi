@@ -10,6 +10,8 @@ class Pinjaman extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function nasabah(){
         return $this->belongsTo(Nasabah::class,'id_nasabah');
     }

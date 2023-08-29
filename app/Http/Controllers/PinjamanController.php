@@ -45,7 +45,9 @@ class PinjamanController extends Controller
     public function store(Request $request)
     {
         // Lakukan validasi data yang masuk
-        dd($request);
+        $nasabahNotFoundWarning = 'Nasabah tidak ditemukan. Mohon tambahkan terlebih dahulu.';
+        $successMessage = 'Data ditambahkan, buku tabungan nasabah diupdate.';
+
         $validatedData = $request->validate([
             // Atur aturan validasi sesuai kebutuhan
             'nasabah' => 'required',
@@ -55,14 +57,26 @@ class PinjamanController extends Controller
             'tujuan_pinjaman' => 'required',
             'jangka_waktu' => 'required|integer',
             'bunga' => 'required|numeric',
-            'metode_pembayaran' => 'required',
             'catatan' => 'nullable', // Catatan bersifat opsional
         ]);
 
-        // Simpan data pinjaman ke database
-        Pinjaman::create($validatedData);
+        if ($validatedData) {
+            $data = new Pinjaman();
+            $data->id_nasabah = $request->nasabah;
+            $data->tanggal_pengajuan = $request->tanggal_pengajuan;
+            $data->jumlah_pinjaman = $request->jumlah_pinjaman;
+            $data->jenis_pinjaman = $request->jenis_pinjaman;
+            $data->tujuan_pinjaman = $request->tujuan_pinjaman;
+            $data->jangka_waktu = $request->jangka_waktu;
+            $data->bunga = $request->bunga;
+            $data->catatan = $request->catatan;
 
-        return redirect()->route('transaksi.pinjaman.index')->with('success', 'Pinjaman berhasil ditambahkan.');
+            $data->save();
+            // return redirect('/trx-simpanan')->with('success', $successMessage);
+            return redirect()->route('transaksi.pinjaman.index')->with('success', $successMessage);
+        } else {
+            return back()->with('warning', $nasabahNotFoundWarning);
+        }
     }
 
     /**
