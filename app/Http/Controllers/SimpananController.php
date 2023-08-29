@@ -23,9 +23,6 @@ class SimpananController extends Controller
         $data = Simpanan::with('Nasabah')->get()->sortByDesc('created_at');
         $back = url()->previous();
 
-    
-        
-        
         return view('transaksi.simpanan.list', compact('data', 'back'));
     }
 

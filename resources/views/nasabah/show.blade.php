@@ -73,8 +73,8 @@
                   <table id="a" class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                      <td>ID Tabungan</td>
-                      <td>{{$dataTabungan->id}}</td>
+                      <td>Nomor Rekening</td>
+                      <td>{{$dataTabungan->no_rek}}</td>
                     </tr>
                     </thead>
                     <tr>

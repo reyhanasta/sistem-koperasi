@@ -13,4 +13,8 @@ class Nasabah extends Model
     public function simpanan(){
         return $this->hasMany(Simpanan::class);
     }
+    
+    public function pinjaman(){
+        return $this->hasMany(Pinjaman::class);
+    }
 }

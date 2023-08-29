@@ -43,7 +43,7 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td><a
-                                                    href="{{ url('nasabah/' . $index->bukuTabungan->id_nasabah) }}">{{ $index->bukuTabungan->id }}</a>
+                                                    href="{{ url('nasabah/' . $index->bukuTabungan->id_nasabah) }}">{{ $index->bukuTabungan->no_rek }}</a>
                                             </td>
                                             <td>Rp.{{ number_format($index->amount) }}</td>
                                             <td>{{ $index->created_at }}</td>

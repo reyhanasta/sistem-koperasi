@@ -100,13 +100,13 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="/simpan" class="nav-link {{ request()->is('simpan') ? 'active' : '' }}">
+              <a href="/trx-pinjaman" class="nav-link {{ request()->is('trx-pinjaman') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Pinjaman</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="/simpan" class="nav-link {{ request()->is('simpan') ? 'active' : '' }}">
+              <a href="/trx-angsuran" class="nav-link {{ request()->is('trx-angsuran') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Angsuran</p>
               </a>

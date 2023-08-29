@@ -7,6 +7,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NasabahController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\PenarikanController;
+use App\Http\Controllers\PinjamanController;
+use App\Http\Controllers\AngsuranController;
 use App\Http\Controllers\SimpananController;
 use App\Http\Controllers\MasterJabatanController;
 
@@ -37,6 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('master-jabatan', MasterJabatanController::class);
     Route::resource('trx-simpanan', SimpananController::class);
     Route::resource('trx-penarikan', PenarikanController::class);
+    Route::resource('trx-pinjaman', PinjamanController::class);
+    Route::resource('trx-angsuran', AngsuranController::class);
 });
 
 // //DASHBOARD
