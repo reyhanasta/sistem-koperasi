@@ -73,7 +73,7 @@ class PinjamanController extends Controller
 
             $data->save();
             // return redirect('/trx-simpanan')->with('success', $successMessage);
-            return redirect()->route('transaksi.pinjaman.index')->with('success', $successMessage);
+            return redirect()->route('transaksi.pinjaman.list')->with('success', $successMessage);
         } else {
             return back()->with('warning', $nasabahNotFoundWarning);
         }
