@@ -86,7 +86,7 @@ class PinjamanController extends Controller
     {
         //
         $pinjaman = Pinjaman::findOrFail($id);
-        return view('pinjaman.show', compact('pinjaman'));
+        return view('transaksi.pinjaman.show', compact('pinjaman'));
     }
 
     /**

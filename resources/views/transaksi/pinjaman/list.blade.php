@@ -30,11 +30,11 @@
                 <tr>
                   <th>#</th>
                   <th>Nama Nasabah</th>
-                  <th>Jenis Simpanan</th>
-                  <th>Jumlah Simpanan</th>
+                  <th>Jenis Pinjaman</th>
+                  <th>Jumlah Pinjaman</th>
                   <th>Tanggal Transaksi</th>
                   <th>Deskripsi</th>
-                  {{-- <th>Action</th> --}}
+                  <th>Action</th>
                 </tr>
                 </thead>
               
@@ -43,30 +43,23 @@
                 
                 <tr>
                   <td>{{$loop->iteration}}</td>
-
                   <td><a href="{{ url('nasabah/'.$index->nasabah->id)}}">{{$index->nasabah->name}}</a></td>
-                  <td>{{ucfirst($index->type)}}</td>
-                  <td>Rp.{{number_format($index->amount)}}</td>
+                  <td>{{ucfirst($index->jenis_pinjaman)}}</td>
+                  <td>Rp.{{number_format($index->jumlah_pinjaman)}}</td>
                   <td>{{$index->created_at}}</td>
-                  <td>{{$index->desc}}</td>
-                  {{-- <td>
+                  <td>{{$index->catatan}}</td>
+                  <td>
                     <div class="btn-group">
                       <button type="button" class="btn btn-default">Tindakan</button>
                       <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown">
                         <span class="sr-only">Toggle Dropdown</span>
                       </button>
                       <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item" href="{{ url('trx-simpanan/'.$index->id)}}"><i class="fas fa-search nav-icon"></i> Detail</a>
-                        <a class="dropdown-item" href="{{ url('trx-simpanan/'.$index->id.'/edit')}}"><i class="fas fa-edit nav-icon"></i> Edit</a>
-                        <div class="dropdown-divider"></div>
-                        <form action="{{ url('trx-simpanan/'.$index->id)}}" method="post">
-                          @method('delete')
-                          @csrf
-                          <button type="submit" class="dropdown-item" onclick="return confirm('Apakah anda sudah yakin ?')"> <i class="fas fa-trash nav-icon"></i> Delete</button>
-                        </form>
+                        <a class="dropdown-item" href="{{ url('trx-pinjaman/'.$index->id)}}"><i class="fas fa-search nav-icon"></i> Detail Peminjaman</a>
+                        <a class="dropdown-item" href="{{ url('trx-angsuran/'.$index->id.'/add')}}"><i class="fas fa-edit nav-icon"></i> Update Angsuran</a>
                       </div>
                     </div>
-                  </td> --}}
+                  </td>
                 </tr>
                 @endforeach
               

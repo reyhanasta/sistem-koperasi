@@ -105,12 +105,12 @@
                 <p>Pinjaman</p>
               </a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
               <a href="/trx-angsuran" class="nav-link {{ request()->is('trx-angsuran') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Angsuran</p>
               </a>
-            </li>
+            </li> --}}
           </ul>
         </li>
         <li class="nav-item {{ request()->is('master-*') ? 'menu-open' : '' }}">
