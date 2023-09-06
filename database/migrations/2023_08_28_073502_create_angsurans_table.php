@@ -16,11 +16,12 @@ return new class extends Migration
             $table->unsignedBigInteger('id_pinjaman');
             $table->date('tanggal_angsuran');
             $table->decimal('jumlah_angsuran', 10, 2);
-            $table->decimal('sisa_pinjaman', 10, 2);
+            $table->enum('status', ['Lunas', 'Belum Lunas']);
             $table->timestamps();
-
             // Foreign key constraint
             $table->foreign('id_pinjaman')->references('id')->on('pinjamen');
+
+            
         });
     }
 

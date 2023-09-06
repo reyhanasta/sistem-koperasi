@@ -62,3 +62,23 @@
             })
     });
 </script>
+<script>
+    function trxConfirm() {
+        // Tampilkan dialog konfirmasi
+        var konfirmasi = alert("Pastikan data yang di isi sudah benar, karena tidak dapat diubah");
+    }
+
+    function tampilkanModalKonfirmasi() {
+        
+        // Ambil data yang diinputkan oleh pengguna
+        var dataField1 = document.getElementById('amount').value; // Ganti 'field1' dengan ID input yang sesuai
+        var dataField2 = document.getElementById('nasabah').value; // Ganti 'field2' dengan ID input yang sesuai
+
+        // Tampilkan data di dalam modal konfirmasi
+        document.getElementById('dataField1').textContent = dataField1;
+        document.getElementById('dataField2').textContent = dataField2;
+
+        // Buka modal konfirmasi
+        $('#modal-default').modal('show');
+    }
+</script>

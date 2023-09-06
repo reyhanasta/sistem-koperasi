@@ -54,12 +54,16 @@ class SimpananController extends Controller
      */
     public function store(Request $request)
     {
+        // Pesan-pesan yang akan digunakan
         $nasabahNotFoundWarning = 'Nasabah tidak ditemukan. Mohon tambahkan terlebih dahulu.';
-        $successMessage = 'Data ditambahkan, buku tabungan nasabah diupdate.';
+        $confirmMessage = 'Data ditambahkan, buku tabungan nasabah diupdate.';
 
+        // Cari rekening nasabah berdasarkan ID nasabah
         $rekeningNasabah = BukuTabungan::where('id_nasabah', $request->nasabah)->first();
-       
+
+        // Jika rekening nasabah ditemukan
         if ($rekeningNasabah) {
+            // Buat objek Simpanan
             $data = new Simpanan();
             $data->id_rekening = $rekeningNasabah->id;
             $data->id_nasabah = $request->nasabah;
@@ -67,13 +71,17 @@ class SimpananController extends Controller
             $data->amount = $request->amount;
             $data->desc = $request->desc;
 
+            // Update saldo buku tabungan nasabah
             $rekeningNasabah->balance += $request->amount;
             $rekeningNasabah->save();
-          
+
+            // Simpan data transaksi Simpanan
             $data->save();
 
-            return redirect('/trx-simpanan')->with('success', $successMessage);
+            // Redirect ke halaman yang sesuai dan sertakan pesan sukses
+            return redirect('/trx-simpanan')->with('success', $confirmMessage);
         } else {
+            // Jika nasabah tidak ditemukan, kembalikan ke halaman sebelumnya dengan pesan peringatan
             return back()->with('warning', $nasabahNotFoundWarning);
         }
     }

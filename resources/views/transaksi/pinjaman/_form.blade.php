@@ -2,7 +2,7 @@
     <div class="form-group ">
         <label>Data Nasabah</label>
         @if ($nasabahList->count() > 0)
-            <select class="form-control" name="nasabah">
+            <select class="form-control" name="nasabah" id="nasabah">
                 <!--NANTI AKAN MENGGUNAKAN DATA MASTER JABATAN-->
                 @foreach ($nasabahList as $x)
                     <option value={{ $x->id }}>{{ $x->id }} - {{ $x->name }}</option>
@@ -15,12 +15,20 @@
     </div>
     <div class="form-group">
         <label for="tanggal_pengajuan">Tanggal Pengajuan</label>
-        <input type="date" class="form-control" name="tanggal_pengajuan" id="tanggal_pengajuan" required>
+        <input type="date" class="form-control " name="tanggal_pengajuan" id="tanggal_pengajuan" required>
+        @if ($errors->has('amount'))
+            <div class="text-danger">Minimal Transaksi Rp.5.000</div>
+        @endif
     </div>
     <div class="form-group">
         <label for="jumlah_pinjaman">Jumlah Pinjaman</label>
-        <input type="number" class="form-control" name="jumlah_pinjaman" id="jumlah_pinjaman" required>
+        <input type="text" class="form-control @if ($errors->has('jumlah_pinjaman')) is-invalid @endif"
+            name="jumlah_pinjaman" id="jumlah_pinjaman" required data-mask>
     </div>
+    @if ($errors->has('jumlah_pinjaman'))
+        <div class="text-danger">Minimal Transaksi Peminjaman Rp.5.000</div>
+    @endif
+
     <div class="form-group">
         <label for="jenis_pinjaman">Jenis Pinjaman</label>
         <select class="form-control" name="jenis_pinjaman" id="jenis_pinjaman" required>
@@ -35,14 +43,25 @@
     </div>
     <div class="form-group">
         <label for="jangka_waktu">Jangka Waktu (bulan)</label>
-        <input type="number" class="form-control" name="jangka_waktu" id="jangka_waktu" required>
+        <div class="input-group">
+            <input type="number" class="form-control" name="jangka_waktu" id="jangka_waktu" required>
+            <div class="input-group-append">
+                <span class="input-group-text">Bulan</span>
+            </div>
+        </div>
     </div>
+
     <div class="form-group">
         <label for="bunga">Bunga (%)</label>
-        <input type="number" class="form-control" name="bunga" id="bunga" required>
+        <div class="input-group">
+            <input type="number" class="form-control" name="bunga" id="bunga" required>
+            <div class="input-group-append">
+                <span class="input-group-text">%</span>
+            </div>
+        </div>
     </div>
     <div class="form-group">
         <label for="catatan">Catatan (Opstional)</label>
-        <input type="number" class="form-control" name="catatan" id="catatan" >
+        <textarea name="catatan" id="catatan" cols="30" rows="3" class="form-control"></textarea>
     </div>
 </div>

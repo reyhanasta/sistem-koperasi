@@ -2,7 +2,7 @@
     <div class="form-group ">
         <label>Data Nasabah</label>
         @if ($nasabahList->count() > 0)
-            <select class="form-control" name="nasabah">
+            <select class="form-control" name="nasabah" id="nasabah">
                 <!--NANTI AKAN MENGGUNAKAN DATA MASTER JABATAN-->
                 @foreach ($nasabahList as $x)
                     <option value={{ $x->id }}>{{ $x->id }} - {{ $x->name }}</option>
@@ -16,7 +16,7 @@
     </div>
     <div class="form-group">
         <label for="type">Jenis Simpanan</label>
-        <select class="form-control" name="type" id="type">
+        <select class="form-control" name="type" id="type" id="jenis_simpanan">
             <option value="pokok">Pokok</option>
             <option value="wajib">Wajib</option>
             <option value="sukarela">Sukarela</option>
