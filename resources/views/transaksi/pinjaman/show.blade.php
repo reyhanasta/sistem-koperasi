@@ -21,7 +21,7 @@
                 <li class="list-group-item"><strong>Catatan:</strong> {{ $pinjaman->catatan ?? 'Tidak ada catatan' }}</li>
             </div>
             <div class="text-center mt-3">
-                <a href="" class="btn btn-secondary">Kembali</a>
+                <a href="{{$previousUrl}}" class="btn btn-secondary">Kembali</a>
                 <a href="" class="btn btn-success">Terima Pinjaman</a>
                 <a href="" class="btn btn-primary">Lakukan Angsuran</a>
             </div>

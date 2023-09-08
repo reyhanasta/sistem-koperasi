@@ -7,6 +7,8 @@ use App\Models\MasterJabatan;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,6 +25,6 @@ class DatabaseSeeder extends Seeder
         // ]);
         MasterJabatan::create(['name' => 'Staff Administrasi']);
         MasterJabatan::create(['name' => 'Staff Keuangan']);
-        User::factory(1)->create();
+        
     }
 }
