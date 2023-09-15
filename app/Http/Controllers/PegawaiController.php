@@ -64,7 +64,7 @@ class PegawaiController extends Controller
              $newUser = new User([
                  'email' => strtolower($request->email),
                  'email_verified_at' => now(),
-                 'level' => 'admin',
+                 'level' => 'staff',
                  'name' => ucwords(strtolower($request->name)),
                  'password' => Hash::make('btm100'),
              ]);

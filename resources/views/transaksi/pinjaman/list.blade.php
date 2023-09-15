@@ -45,7 +45,7 @@
                                     @foreach ($data as $index)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $index->id }}</td>
+                                            <td>{{ $index->kode_pinjaman }}</td>
                                             <td><a
                                                     href="{{ url('nasabah/' . $index->nasabah->id) }}">{{ $index->nasabah->name }}</a>
                                             </td>
@@ -88,7 +88,6 @@
                                             </td>
                                         </tr>
                                     @endforeach
-
                                     </tfoot>
                             </table>
                         </div>

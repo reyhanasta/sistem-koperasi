@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\PinjamanRequest;
 
 use App\Models\Nasabah;
 use App\Models\Pinjaman;
+use App\Models\Pegawai;
 use App\Models\Penarikan;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\BukuTabungan;
 use App\Http\Controllers\Controller;
@@ -38,47 +41,58 @@ class PinjamanController extends Controller
 
         return view('transaksi.pinjaman.add', compact('data', 'nasabahList', 'previousUrl', 'confirmMessage'));
     }
-
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, PinjamanRequest $pinjamanRequest)
     {
-        // Lakukan validasi data yang masuk
+        
         $nasabahNotFoundWarning = 'Nasabah tidak ditemukan. Mohon tambahkan terlebih dahulu.';
         $successMessage = 'Data ditambahkan, buku tabungan nasabah diupdate.';
-
-        $validatedData = $request->validate([
-            // Atur aturan validasi sesuai kebutuhan
-            'nasabah' => 'required',
-            'tanggal_pengajuan' => 'required|date',
-            'jumlah_pinjaman' => 'required|numeric',
-            'jenis_pinjaman' => 'required',
-            'tujuan_pinjaman' => 'required',
-            'jangka_waktu' => 'required|integer',
-            'bunga' => 'required|numeric',
-            'catatan' => 'nullable', // Catatan bersifat opsional
-        ]);
-
-        if ($validatedData) {
-            $data = new Pinjaman();
-            $data->id_nasabah = $request->nasabah;
-            $data->tanggal_pengajuan = $request->tanggal_pengajuan;
-            $data->jumlah_pinjaman = $request->jumlah_pinjaman;
-            $data->jenis_pinjaman = $request->jenis_pinjaman;
-            $data->tujuan_pinjaman = $request->tujuan_pinjaman;
-            $data->jangka_waktu = $request->jangka_waktu;
-            $data->bunga = $request->bunga;
-            $data->catatan = $request->catatan;
-
-            $data->save();
-            // return redirect('/trx-simpanan')->with('success', $successMessage);
-            return redirect('/trx-pinjaman')->with('success', $successMessage);
-        } else {
+    
+        // Lakukan validasi data yang masuk
+        $validatedData = $pinjamanRequest->validated();
+    
+        if (!$validatedData) {
+            
             return back()->with('warning', $nasabahNotFoundWarning);
         }
+    
+        // Generate kode transaksi
+        $kodeInput = $this->generateTransactionCode();
+    
+        // Mendapatkan ID pengguna yang sedang login
+        $userId = Auth::id();
+        
+        // Mencari pegawai berdasarkan user_id
+        $pegawai = Pegawai::where('user_id', $userId)->first();
+            
+        // Simpan data pinjaman
+        $data = new Pinjaman();
+        $data->id_nasabah = $request->nasabah;
+        $data->kode_pinjaman = $kodeInput;
+        $data->id_pegawai = $pegawai->id;
+        $data->tanggal_pengajuan = $request->tanggal_pengajuan;
+        $data->jumlah_pinjaman = $request->jumlah_pinjaman;
+        $data->jenis_pinjaman = $request->jenis_pinjaman;
+        $data->tujuan_pinjaman = $request->tujuan_pinjaman;
+        $data->jangka_waktu = $request->jangka_waktu;
+        $data->bunga = $request->bunga;
+        $data->catatan = $request->catatan;
+    
+        $data->save();
+    
+        return redirect('/trx-pinjaman')->with('success', $successMessage);
     }
-
+    
+    private function generateTransactionCode()
+    {
+        $now = now();
+        $year = $now->format('y');
+        $month = $now->format('m');
+        $transactionCount = Pinjaman::whereDate('created_at', now()->toDateString())->count();
+        return "P{$year}{$month}" . sprintf("%03d", $transactionCount + 1);
+    }
     /**
      * Display the specified resource.
      */
@@ -87,7 +101,7 @@ class PinjamanController extends Controller
         //
         $pinjaman = Pinjaman::findOrFail($id);
         $previousUrl = url()->previous();
-        return view('transaksi.pinjaman.show', compact('pinjaman','previousUrl'));
+        return view('transaksi.pinjaman.show', compact('pinjaman', 'previousUrl'));
     }
 
     /**

@@ -1,11 +1,17 @@
 <div class="card-body">
     <div class="form-group ">
-        <label>Data Nasabah</label>
+        
         @if ($nasabahList->count() > 0)
+            <div class="form-group">
+                <label for="kode">Kode Transaksi</label>
+                <input class="form-control" type="text" name="kode" id="kode" value="{{ $kodeInput }}" readonly>
+            </div>
+            <label>Data Nasabah</label>
             <select class="form-control" name="nasabah" id="nasabah">
                 <!--NANTI AKAN MENGGUNAKAN DATA MASTER JABATAN-->
                 @foreach ($nasabahList as $x)
-                    <option value={{ $x->id }}>{{ $x->id }} - {{ $x->name }}</option>
+                    <option value={{ $x->id }} data-nama="{{ $x->name }}">{{ $x->id }} -
+                        {{ $x->name }}</option>
                 @endforeach
             </select>
         @else

@@ -15,7 +15,7 @@
     </div>
     <div class="form-group">
         <label for="tanggal_pengajuan">Tanggal Pengajuan</label>
-        <input type="date" class="form-control " name="tanggal_pengajuan" id="tanggal_pengajuan" required>
+        <input type="date" class="form-control " name="tanggal_pengajuan" id="tanggal_pengajuan" value="{{ now()->format('Y-m-d')}}" required>
         @if ($errors->has('amount'))
             <div class="text-danger">Minimal Transaksi Rp.5.000</div>
         @endif
@@ -32,8 +32,8 @@
     <div class="form-group">
         <label for="jenis_pinjaman">Jenis Pinjaman</label>
         <select class="form-control" name="jenis_pinjaman" id="jenis_pinjaman" required>
-            <option value="pribadi">Pribadi</option>
             <option value="usaha">Usaha</option>
+            <option value="pribadi">Pribadi</option>
             <!-- Tambahkan pilihan jenis pinjaman lainnya sesuai kebutuhan -->
         </select>
     </div>

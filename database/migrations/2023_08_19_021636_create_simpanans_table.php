@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_rekening');
             $table->foreignId('id_nasabah');
+            $table->string('kode_simpanan');
             $table->string('type');
             $table->bigInteger('amount');
-            $table->string('desc')->nullable();   
+            $table->string('desc')->nullable();
             $table->timestamps();
         });
     }

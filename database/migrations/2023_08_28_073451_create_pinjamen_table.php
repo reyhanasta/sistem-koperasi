@@ -14,13 +14,15 @@ return new class extends Migration
         Schema::create('pinjamen', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_nasabah');
+            $table->foreignId('id_pegawai');
+            $table->string('kode_pinjaman')->default('P238001');
             $table->date('tanggal_pengajuan');
             $table->date('tanggal_persetujuan')->nullable();
             $table->decimal('jumlah_pinjaman', 10, 2);
             $table->string('jenis_pinjaman');
             $table->string('tujuan_pinjaman');
             $table->integer('jangka_waktu'); // dalam bulan
-            $table->decimal('bunga', 5, 2);
+            $table->decimal('bunga', 5, 2)->default(0)->nullable();
             $table->string('status')->default('diajukan');
             $table->string('metode_pembayaran')->default('cash');
             $table->date('tanggal_pelunasan')->nullable();

@@ -21,8 +21,6 @@ class RolePermissionSeeder extends Seeder
         Role::create(['name' => 'admin']);
 
         // Membuat permission
-        $manageNasabah = Permission::create(['name' => 'manage nasabah']);
-        $manageStaff = Permission::create(['name' => 'manage staff']);
         Permission::create(['name' => 'edit-nasabah']);
 
         // Memberikan permission ke role yang sesuai

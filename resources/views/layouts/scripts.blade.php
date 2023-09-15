@@ -68,15 +68,33 @@
         var konfirmasi = alert("Pastikan data yang di isi sudah benar, karena tidak dapat diubah");
     }
 
-    function tampilkanModalKonfirmasi() {
-        
+    function tampilkanModalKonfirmasiSimpanan() {
         // Ambil data yang diinputkan oleh pengguna
-        var dataField1 = document.getElementById('amount').value; // Ganti 'field1' dengan ID input yang sesuai
-        var dataField2 = document.getElementById('nasabah').value; // Ganti 'field2' dengan ID input yang sesuai
+        var amount = document.getElementById('amount').value; // Ganti 'field1' dengan ID input yang sesuai
+        var nasabahSelect = document.getElementById('nasabah');
+        var nasabah = nasabahSelect.options[nasabahSelect.selectedIndex].getAttribute('data-nama');
+        var type = document.getElementById('type').value; // Ganti 'field2' dengan ID input yang sesuai
+        var desc = document.getElementById('desc').value; // Ganti 'field2' dengan ID input yang sesuai
+        var kode = document.getElementById('kode').value;
+        var simpanButton = document.getElementById('simpan');
+        var simpanButtonModal = document.getElementById('simpanButton');
+        var myForm = document.getElementById('form-simpanan');
 
         // Tampilkan data di dalam modal konfirmasi
-        document.getElementById('dataField1').textContent = dataField1;
-        document.getElementById('dataField2').textContent = dataField2;
+        document.getElementById('modal-kode').textContent = kode;
+        document.getElementById('modal-nasabah').textContent = nasabah;
+        document.getElementById('modal-jumlah').textContent = amount;
+        document.getElementById('modal-type').textContent = type;
+        document.getElementById('modal-desc').textContent = desc;
+
+        // Mendengarkan kejadian "keydown" di elemen input
+        myForm.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Menghentikan aksi default (pengiriman formulir)
+                event.stopPropagation(); // Menghentikan penyebaran event keydown
+                simpanButtonModal.click(); // Menekan tombol "Simpan" saat "Enter" ditekan
+            }
+        });
 
         // Buka modal konfirmasi
         $('#modal-default').modal('show');

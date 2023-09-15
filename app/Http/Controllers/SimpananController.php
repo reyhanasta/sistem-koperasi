@@ -33,6 +33,13 @@ class SimpananController extends Controller
      */
     public function create()
     {
+        // Create Kode Simpan
+        $now = now();
+        $year = $now->format('y');
+        $month = $now->format('m');
+        $day = $now->format('d');
+        $transactionCount = Simpanan::count();
+        $kodeInput = "S" . sprintf("%04d", $transactionCount + 1);
         // Create a new Simpanan instance
         $data = new Simpanan;
         // Fetch all Nasabah data
@@ -41,9 +48,8 @@ class SimpananController extends Controller
         $previousUrl = url()->previous();
         // Confirmation message for data input
         $confirmMessage = "Pastikan Data sudah di isi dengan benar, karena data transaksi tidak dapat di ubah lagi";
-
         // Pass data to the view using compact()
-        return view('transaksi.simpanan.add', compact('data', 'nasabahList', 'previousUrl', 'confirmMessage'));
+        return view('transaksi.simpanan.add', compact('data', 'nasabahList', 'previousUrl', 'confirmMessage','kodeInput'));
     }
 
     /**
@@ -57,24 +63,21 @@ class SimpananController extends Controller
         // Pesan-pesan yang akan digunakan
         $nasabahNotFoundWarning = 'Nasabah tidak ditemukan. Mohon tambahkan terlebih dahulu.';
         $confirmMessage = 'Data ditambahkan, buku tabungan nasabah diupdate.';
-
         // Cari rekening nasabah berdasarkan ID nasabah
         $rekeningNasabah = BukuTabungan::where('id_nasabah', $request->nasabah)->first();
-
         // Jika rekening nasabah ditemukan
         if ($rekeningNasabah) {
             // Buat objek Simpanan
             $data = new Simpanan();
             $data->id_rekening = $rekeningNasabah->id;
             $data->id_nasabah = $request->nasabah;
+            $data->kode_simpanan = $request->kode;
             $data->type = $request->type;
             $data->amount = $request->amount;
             $data->desc = $request->desc;
-
             // Update saldo buku tabungan nasabah
             $rekeningNasabah->balance += $request->amount;
             $rekeningNasabah->save();
-
             // Simpan data transaksi Simpanan
             $data->save();
 
