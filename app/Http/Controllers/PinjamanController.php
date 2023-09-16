@@ -8,10 +8,8 @@ use App\Http\Requests\PinjamanRequest;
 use App\Models\Nasabah;
 use App\Models\Pinjaman;
 use App\Models\Pegawai;
-use App\Models\Penarikan;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use App\Models\BukuTabungan;
 use App\Http\Controllers\Controller;
 
 
@@ -46,45 +44,60 @@ class PinjamanController extends Controller
      */
     public function store(Request $request, PinjamanRequest $pinjamanRequest)
     {
-        
         $nasabahNotFoundWarning = 'Nasabah tidak ditemukan. Mohon tambahkan terlebih dahulu.';
         $successMessage = 'Data ditambahkan, buku tabungan nasabah diupdate.';
-    
-        // Lakukan validasi data yang masuk
-        $validatedData = $pinjamanRequest->validated();
-    
-        if (!$validatedData) {
-            
-            return back()->with('warning', $nasabahNotFoundWarning);
+
+        try {
+            // Lakukan validasi data yang masuk
+            $validatedData = $pinjamanRequest->validated();
+
+            if (!$validatedData) {
+                return back()->with('warning', $nasabahNotFoundWarning);
+            }
+
+            // Generate kode transaksi
+            $kodeInput = $this->generateTransactionCode();
+
+            // Mendapatkan ID pengguna yang sedang login
+            $userId = Auth::id();
+
+            // Mencari pegawai berdasarkan user_id
+            $pegawai = Pegawai::where('user_id', $userId)->first();
+
+            // Nilai total pembayaran
+            $total_pembayaran = $request->jumlah_pinjaman * (1 - ($request->bunga / 100));
+
+            // Nilai total pembayaran
+            $angsuran = $total_pembayaran / $request->jangka_waktu;
+
+            // Simpan data pinjaman
+            $data = new Pinjaman();
+            $data->id_nasabah = $request->nasabah;
+            $data->kode_pinjaman = $kodeInput;
+            $data->id_pegawai = $pegawai->id;
+            $data->tanggal_pengajuan = $request->tanggal_pengajuan;
+            $data->jumlah_pinjaman = $request->jumlah_pinjaman;
+            $data->jenis_pinjaman = $request->jenis_pinjaman;
+            $data->tujuan_pinjaman = $request->tujuan_pinjaman;
+            $data->jangka_waktu = $request->jangka_waktu;
+            $data->bunga = $request->bunga;
+            $data->catatan = $request->catatan;
+            $data->angsuran = $angsuran;
+            $data->sisa_pinjaman = $total_pembayaran;
+            $data->total_pembayaran = $total_pembayaran;
+
+            $data->save();
+
+            return redirect('/trx-pinjaman')->with('success', $successMessage);
+        } catch (\Exception $e) {
+            // Log kesalahan
+            Log::error('Terjadi kesalahan saat menyimpan data pinjaman: ' . $e->getMessage());
+            // Tangani kesalahan di sini, misalnya, log kesalahan
+            return back()->with('error', 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
         }
-    
-        // Generate kode transaksi
-        $kodeInput = $this->generateTransactionCode();
-    
-        // Mendapatkan ID pengguna yang sedang login
-        $userId = Auth::id();
-        
-        // Mencari pegawai berdasarkan user_id
-        $pegawai = Pegawai::where('user_id', $userId)->first();
-            
-        // Simpan data pinjaman
-        $data = new Pinjaman();
-        $data->id_nasabah = $request->nasabah;
-        $data->kode_pinjaman = $kodeInput;
-        $data->id_pegawai = $pegawai->id;
-        $data->tanggal_pengajuan = $request->tanggal_pengajuan;
-        $data->jumlah_pinjaman = $request->jumlah_pinjaman;
-        $data->jenis_pinjaman = $request->jenis_pinjaman;
-        $data->tujuan_pinjaman = $request->tujuan_pinjaman;
-        $data->jangka_waktu = $request->jangka_waktu;
-        $data->bunga = $request->bunga;
-        $data->catatan = $request->catatan;
-    
-        $data->save();
-    
-        return redirect('/trx-pinjaman')->with('success', $successMessage);
     }
-    
+
+
     private function generateTransactionCode()
     {
         $now = now();
@@ -130,6 +143,27 @@ class PinjamanController extends Controller
 
         return redirect()->route('pinjaman.index')->with('success', 'Pinjaman berhasil diperbarui.');
     }
+
+    public function updateStatus($id, $newStatus)
+    {
+        try {
+            $pinjaman = Pinjaman::findOrFail($id);
+
+            // Lakukan validasi status yang sah di sini, jika perlu
+            // Misalnya, Anda ingin memeriksa apakah $newStatus adalah status yang valid
+
+            $pinjaman->status = $newStatus;
+            $pinjaman->save();
+
+            return redirect('/trx-pinjaman')->with('success', 'Status berhasil diperbarui.');
+        } catch (\Exception $e) {
+            // Tangani kesalahan
+            Log::error('Terjadi kesalahan saat memperbarui status pinjaman: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat memperbarui status pinjaman. Silakan coba lagi.');
+        }
+    }
+
+    
 
     /**
      * Remove the specified resource from storage.

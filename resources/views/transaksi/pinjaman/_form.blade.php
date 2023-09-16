@@ -54,7 +54,7 @@
     <div class="form-group">
         <label for="bunga">Bunga (%)</label>
         <div class="input-group">
-            <input type="number" class="form-control" name="bunga" id="bunga" required>
+            <input type="number" class="form-control" name="bunga" id="bunga" value="0"required>
             <div class="input-group-append">
                 <span class="input-group-text">%</span>
             </div>

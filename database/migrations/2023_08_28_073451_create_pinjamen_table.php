@@ -23,11 +23,12 @@ return new class extends Migration
             $table->string('tujuan_pinjaman');
             $table->integer('jangka_waktu'); // dalam bulan
             $table->decimal('bunga', 5, 2)->default(0)->nullable();
-            $table->string('status')->default('diajukan');
+            $table->string('status')->default('Diajukan');
             $table->string('metode_pembayaran')->default('cash');
             $table->date('tanggal_pelunasan')->nullable();
             $table->decimal('total_pembayaran', 10, 2)->default(0);
             $table->decimal('angsuran', 10, 2)->default(0);
+            $table->integer('jumlah_angsuran')->default(0); // dalam satuan
             $table->decimal('sisa_pinjaman', 10, 2)->default(0);
             $table->text('catatan')->nullable();
             $table->timestamps();

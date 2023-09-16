@@ -4,7 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\MasterJabatan;
-
+use App\Models\Pegawai;
+use App\Models\Nasabah;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -31,6 +32,23 @@ class DatabaseSeeder extends Seeder
         //JABATAB SEEDER
         MasterJabatan::create(['name' => 'Staff Administrasi']);
         MasterJabatan::create(['name' => 'Staff Keuangan']);
+        //JABATAB SEEDER
+        Pegawai::create([
+            'name' => 'Muhammad Reyhan Perdana Asta',
+            'email' => 'reyhan.perdana48@example.com',
+            'user_id' => 1,
+            'position' => 'Staff',
+            'gaji' => 1000000,
+            'gender' => 'male',
+            'join_date' => now()
+        ]);
+        Nasabah::create([
+            'name' => 'Putri Novia',
+            'address' => 'Jalan Hangtuah Bukit Cipta Residence',
+            'phone' => '087654321232',
+            'date_of_birth' => '1998-11-28',
+            'gender' => 'female',
+        ]);
         
     }
 }

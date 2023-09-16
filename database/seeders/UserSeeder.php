@@ -34,6 +34,6 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
         
-        $admin->assignRole('nasabah');
+        $admin->assignRole('staff');
     }
 }

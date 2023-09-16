@@ -42,6 +42,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('trx-penarikan', PenarikanController::class);
     Route::resource('trx-pinjaman', PinjamanController::class);
     Route::resource('trx-angsuran', AngsuranController::class);
+    Route::put('/pinjaman/{id}/update-status/{newStatus}', [PinjamanController::class, 'updateStatus'])->name('pinjaman.updateStatus');
+
+
 });
 
 Route::get('/ujicoba',function(){

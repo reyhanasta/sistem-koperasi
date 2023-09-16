@@ -27,7 +27,7 @@ class PinjamanRequest extends FormRequest
                 // Atur aturan validasi sesuai kebutuhan
                 'nasabah' => 'required',
                 'tanggal_pengajuan' => 'required|date',
-                'jumlah_pinjaman' => 'required|numeric',
+                'jumlah_pinjaman' => 'required|numeric|min:1000000',
                 'jenis_pinjaman' => 'required',
                 'tujuan_pinjaman' => 'required',
                 'jangka_waktu' => 'required|integer',
