@@ -46,12 +46,10 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $index->kode_pinjaman }}</td>
-                                            <td><a
-                                                    href="{{ url('nasabah/' . $index->nasabah->id) }}">{{ $index->nasabah->name }}</a>
-                                            </td>
+                                            <td><a href="{{ url('nasabah/' . $index->nasabah->id) }}">{{ $index->nasabah->name }}</a></td>
                                             <td>{{ $index->created_at }}</td>
                                             <td>Rp.{{ number_format($index->jumlah_pinjaman) }}</td>
-                                            <td>{{ $index->jangka_waktu }}</td>
+                                            <td>{{ $index->jangka_waktu }} Kali</td>
                                             <td>{{ $index->status }}</td>
 
                                             <td>
@@ -72,17 +70,29 @@
                                                                     class="fas fa-edit nav-icon"></i> Edit Pinjaman</a>
                                                             <a class="dropdown-item"
                                                                 href="{{ url('trx-angsuran/' . $index->id . '/add') }}"><i
-                                                                    class="fas fa-edit nav-icon"></i> Hapus Pinjaman</a>
+                                                                    class="fas fa-trash nav-icon"></i> Hapus Pinjaman</a>
                                                         @endif
-                                                        <a class="dropdown-item"
+                                                        @if ($index->status !== 'Lunas')
+                                                            <form
+                                                                action="{{ route('pinjaman.lunasi', ['id' => $index->id]) }}"
+                                                                method="post">
+                                                                @csrf
+                                                                @method('PUT') <!-- Ganti dengan PATCH jika sesuai -->
+                                                                <button type="submit" class="dropdown-item"
+                                                                    href=""><i
+                                                                        class="fas fa-cash-register nav-icon"></i> Bayar
+                                                                    Lunas
+                                                                </button>
+                                                            </form>
+                                                        @endif
+
+
+                                                        {{-- <a class="dropdown-item"
                                                             href="{{ url('trx-angsuran/' . $index->id . '/add') }}"><i
-                                                                class="fas fa-edit nav-icon"></i> Pembayaran </a>
-                                                        <a class="dropdown-item"
+                                                                class="fas fa-edit nav-icon"></i> Perpanjang Pinjaman</a> --}}
+                                                        {{-- <a class="dropdown-item"
                                                             href="{{ url('trx-angsuran/' . $index->id . '/add') }}"><i
-                                                                class="fas fa-edit nav-icon"></i> Perpanjang Pinjaman</a>
-                                                        <a class="dropdown-item"
-                                                            href="{{ url('trx-angsuran/' . $index->id . '/add') }}"><i
-                                                                class="fas fa-edit nav-icon"></i>Status Pengajuan</a>
+                                                                class="fas fa-edit nav-icon"></i>Status Pengajuan</a> --}}
                                                     </div>
                                                 </div>
                                             </td>

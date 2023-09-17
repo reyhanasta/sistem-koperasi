@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\BukuTabungan;
 use App\Models\User;
 use App\Models\MasterJabatan;
 use App\Models\Pegawai;
@@ -48,6 +49,13 @@ class DatabaseSeeder extends Seeder
             'phone' => '087654321232',
             'date_of_birth' => '1998-11-28',
             'gender' => 'female',
+        ]);
+        BukuTabungan::create([
+            'no_rek' => '230916080911',
+            'id_nasabah' => '1',
+            'balance' => 1000000,
+            'status' => 'aktif',
+            'notes' => 'Catatan',
         ]);
         
     }

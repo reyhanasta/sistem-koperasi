@@ -46,17 +46,18 @@ class AngsuranController extends Controller
             $pinjaman = Pinjaman::findOrFail($request->id_pinjaman);
 
             // Lakukan validasi, misalnya, pastikan status pinjaman adalah "Pencairan" dan nasabah memiliki saldo cukup
-
+            // Hilangkan tanda ribuan dan ganti tanda desimal jika perlu
+            $angsuran_harian = (float) str_replace([',', '.'], ['', '.'], $request->angsuran);
+            $sisaPinjaman = (float) str_replace([',', '.'], ['', '.'], $pinjaman->sisa_pinjaman);
             // // Lakukan pengurangan saldo nasabah
             // $nasabah = Nasabah::findOrFail($pinjaman->id_nasabah);
             // $nasabah->saldo -= $request->jumlah_angsuran;
             // $nasabah->save();
-
             // Update status pinjaman (misalnya, periksa jika pinjaman sudah lunas)
-            if ($pinjaman->sisa_pinjaman <= $request->angsuran) {
+            if ($sisaPinjaman <= $angsuran_harian) {
                 $pinjaman->status = 'Lunas';
             } else {
-                $pinjaman->sisa_pinjaman -= $request->angsuran;
+                $pinjaman->sisa_pinjaman = $sisaPinjaman - $angsuran_harian;
                 $pinjaman->jumlah_angsuran += 1;
                 $pinjaman->status = 'Proses Angsuran';
             }
@@ -65,7 +66,7 @@ class AngsuranController extends Controller
             // Simpan data angsuran
             $angsuran = new Angsuran();
             $angsuran->id_pinjaman = $pinjaman->id;
-            $angsuran->jumlah_angsuran = $request->angsuran;
+            $angsuran->jumlah_angsuran = $angsuran_harian;
             $angsuran->tanggal_angsuran = now();
             $angsuran->save();
 

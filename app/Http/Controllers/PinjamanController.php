@@ -26,6 +26,23 @@ class PinjamanController extends Controller
         return view('transaksi.pinjaman.list', compact('data', 'urlCreate'));
     }
 
+    public function riwayatPinjaman($nasabah_id)
+    {
+    // Cari nasabah berdasarkan ID
+    $nasabah = Nasabah::find($nasabah_id);
+    $previousUrl = url()->previous();
+
+    if (!$nasabah) {
+        return back()->with('warning', 'Nasabah tidak ditemukan.');
+    }
+
+    // Ambil riwayat transaksi peminjaman nasabah berdasarkan ID nasabah
+    $riwayatPinjaman = Pinjaman::where('id_nasabah', $nasabah_id)->orderBy('created_at', 'desc')->get();
+
+    return view('transaksi.pinjaman.riwayat', compact('nasabah', 'riwayatPinjaman','previousUrl'));
+    }
+ 
+
     /**
      * Show the form for creating a new resource.
      */
@@ -151,7 +168,6 @@ class PinjamanController extends Controller
 
             // Lakukan validasi status yang sah di sini, jika perlu
             // Misalnya, Anda ingin memeriksa apakah $newStatus adalah status yang valid
-
             $pinjaman->status = $newStatus;
             $pinjaman->save();
 
@@ -163,7 +179,23 @@ class PinjamanController extends Controller
         }
     }
 
-    
+    public function lunasi(Request $request, $id)
+{
+    // Cari pinjaman berdasarkan ID
+    $pinjaman = Pinjaman::findOrFail($id);
+
+    // Lakukan validasi, misalnya, pastikan status pinjaman adalah "Proses Angsuran"
+
+    // Update status pinjaman menjadi "Lunas"
+    $pinjaman->status = 'Lunas';
+    $pinjaman->sisa_pinjaman = 0; // Jika ingin mengatur sisa_pinjaman menjadi 0
+    $pinjaman->jumlah_angsuran += 1; // Melakukan 1x angsuran lunas
+    $pinjaman->save();
+
+    // Redirect atau kirim respons sesuai dengan kebutuhan Anda
+    return redirect('/trx-pinjaman')->with('success', 'Pembayaran lunas berhasil.');
+}
+
 
     /**
      * Remove the specified resource from storage.

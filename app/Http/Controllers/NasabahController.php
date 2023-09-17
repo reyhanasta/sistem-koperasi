@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Nasabah;
+use App\Models\Pinjaman;
+use App\Models\Simpanan;
 use App\Models\Penarikan;
-use Illuminate\Support\Facades\DB;
 use App\Models\BukuTabungan;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class NasabahController extends Controller
 {
@@ -90,8 +92,12 @@ class NasabahController extends Controller
         //
         $data = Nasabah::findorFail($id);
         $dataTabungan = BukuTabungan::where('id_nasabah', $id)->first();
+        // Ambil daftar transaksi simpanan nasabah berdasarkan ID nasabah
+        $transaksiSimpanan = Simpanan::where('id_nasabah', $id)->get()->sortByDesc('created_at');
+         // Ambil riwayat transaksi pinjaman nasabah berdasarkan ID nasabah
+        $riwayatPinjaman = Pinjaman::where('id_nasabah', $id)->orderBy('created_at', 'desc')->get();
         $back = url()->previous();
-        return view('nasabah.show', compact('data', 'dataTabungan', 'back'));
+        return view('nasabah.show', compact('data', 'dataTabungan', 'back','transaksiSimpanan','riwayatPinjaman'));
     }
 
     /**
@@ -143,4 +149,18 @@ class NasabahController extends Controller
         //Controller::destroy($id);
         return redirect('nasabah')->with('success', 'Data Berhasil di Hapus');
     }
+
+    public function showTransactions($id)
+    {
+        // Cari nasabah berdasarkan ID
+        $nasabah = Nasabah::find($id);
+        if (!$nasabah) {
+            return back()->with('warning', 'Nasabah tidak ditemukan.');
+        }
+        // Ambil daftar transaksi simpanan nasabah berdasarkan ID nasabah
+        $transaksiSimpanan = Simpanan::where('id_nasabah', $id)->orderBy('created_at', 'desc')->get();
+
+        return view('transaksi.index', compact('nasabah', 'transaksiSimpanan'));
+    }
+
 }

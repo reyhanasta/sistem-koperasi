@@ -16,9 +16,6 @@
     <div class="form-group">
         <label for="tanggal_pengajuan">Tanggal Pengajuan</label>
         <input type="date" class="form-control " name="tanggal_pengajuan" id="tanggal_pengajuan" value="{{ now()->format('Y-m-d')}}" required>
-        @if ($errors->has('amount'))
-            <div class="text-danger">Minimal Transaksi Rp.5.000</div>
-        @endif
     </div>
     <div class="form-group">
         <label for="jumlah_pinjaman">Jumlah Pinjaman</label>
@@ -26,7 +23,7 @@
             name="jumlah_pinjaman" id="jumlah_pinjaman" required data-mask>
     </div>
     @if ($errors->has('jumlah_pinjaman'))
-        <div class="text-danger">Minimal Transaksi Peminjaman Rp.5.000</div>
+        <div class="text-danger">Minimal Transaksi Peminjaman Rp.1.000.000</div>
     @endif
 
     <div class="form-group">

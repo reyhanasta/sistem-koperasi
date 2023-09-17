@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\BukuTabungan;
 use App\Models\Simpanan;
 use App\Models\Nasabah;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log; // Impor Log class
 
 class SimpananController extends Controller
 {
@@ -25,6 +27,19 @@ class SimpananController extends Controller
 
         return view('transaksi.simpanan.list', compact('data', 'back'));
     }
+    public function riwayatSimpanan($nasabah_id)
+    {
+        // Cari nasabah berdasarkan ID
+        $nasabah = Nasabah::find($nasabah_id);
+        $previousUrl = url()->previous();
+        
+        if (!$nasabah) {
+            return back()->with('warning', 'Nasabah tidak ditemukan.');
+        }
+        // Ambil riwayat transaksi simpanan nasabah berdasarkan ID nasabah
+        $riwayatSimpanan = Simpanan::where('id_nasabah', $nasabah_id)->orderBy('created_at', 'desc')->get();
+        return view('transaksi.simpanan.riwayat', compact('nasabah', 'riwayatSimpanan','previousUrl'));
+    }    
 
     /**
      * Show the form for creating a new resource.
@@ -63,10 +78,19 @@ class SimpananController extends Controller
         // Pesan-pesan yang akan digunakan
         $nasabahNotFoundWarning = 'Nasabah tidak ditemukan. Mohon tambahkan terlebih dahulu.';
         $confirmMessage = 'Data ditambahkan, buku tabungan nasabah diupdate.';
-        // Cari rekening nasabah berdasarkan ID nasabah
-        $rekeningNasabah = BukuTabungan::where('id_nasabah', $request->nasabah)->first();
-        // Jika rekening nasabah ditemukan
-        if ($rekeningNasabah) {
+        
+        try {
+            // Memulai transaksi database
+            DB::beginTransaction();
+    
+            // Cari rekening nasabah berdasarkan ID nasabah
+            $rekeningNasabah = BukuTabungan::where('id_nasabah', $request->nasabah)->first();
+            if (!$rekeningNasabah) {
+                // Jika nasabah tidak ditemukan, batalkan transaksi dan kembalikan ke halaman sebelumnya dengan pesan peringatan
+                DB::rollBack();
+                return back()->with('warning', $nasabahNotFoundWarning);
+            }
+            
             // Buat objek Simpanan
             $data = new Simpanan();
             $data->id_rekening = $rekeningNasabah->id;
@@ -75,17 +99,24 @@ class SimpananController extends Controller
             $data->type = $request->type;
             $data->amount = $request->amount;
             $data->desc = $request->desc;
+            
             // Update saldo buku tabungan nasabah
             $rekeningNasabah->balance += $request->amount;
             $rekeningNasabah->save();
+            
             // Simpan data transaksi Simpanan
             $data->save();
-
+    
+            // Commit transaksi jika semuanya berhasil
+            DB::commit();
+    
             // Redirect ke halaman yang sesuai dan sertakan pesan sukses
             return redirect('/trx-simpanan')->with('success', $confirmMessage);
-        } else {
-            // Jika nasabah tidak ditemukan, kembalikan ke halaman sebelumnya dengan pesan peringatan
-            return back()->with('warning', $nasabahNotFoundWarning);
+        } catch (\Exception $e) {
+            // Jika terjadi kesalahan, batalkan transaksi, tampilkan pesan kesalahan, dan log error
+            DB::rollBack();
+            Log::error('Terjadi kesalahan dalam transaksi simpanan: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan. Silakan coba lagi nanti.');
         }
     }
 
@@ -98,6 +129,7 @@ class SimpananController extends Controller
     public function show($id)
     {
         //
+
     }
 
     /**
