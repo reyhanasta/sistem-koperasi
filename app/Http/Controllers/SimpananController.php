@@ -32,14 +32,14 @@ class SimpananController extends Controller
         // Cari nasabah berdasarkan ID
         $nasabah = Nasabah::find($nasabah_id);
         $previousUrl = url()->previous();
-        
+
         if (!$nasabah) {
             return back()->with('warning', 'Nasabah tidak ditemukan.');
         }
         // Ambil riwayat transaksi simpanan nasabah berdasarkan ID nasabah
         $riwayatSimpanan = Simpanan::where('id_nasabah', $nasabah_id)->orderBy('created_at', 'desc')->get();
-        return view('transaksi.simpanan.riwayat', compact('nasabah', 'riwayatSimpanan','previousUrl'));
-    }    
+        return view('transaksi.simpanan.riwayat', compact('nasabah', 'riwayatSimpanan', 'previousUrl'));
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -48,13 +48,8 @@ class SimpananController extends Controller
      */
     public function create()
     {
-        // Create Kode Simpan
-        $now = now();
-        $year = $now->format('y');
-        $month = $now->format('m');
-        $day = $now->format('d');
-        $transactionCount = Simpanan::count();
-        $kodeInput = "S" . sprintf("%04d", $transactionCount + 1);
+        // Generate kode transaksi
+        $kodeInput = $this->generateTransactionCode();
         // Create a new Simpanan instance
         $data = new Simpanan;
         // Fetch all Nasabah data
@@ -64,7 +59,23 @@ class SimpananController extends Controller
         // Confirmation message for data input
         $confirmMessage = "Pastikan Data sudah di isi dengan benar, karena data transaksi tidak dapat di ubah lagi";
         // Pass data to the view using compact()
-        return view('transaksi.simpanan.add', compact('data', 'nasabahList', 'previousUrl', 'confirmMessage','kodeInput'));
+        return view('transaksi.simpanan.add', compact('data', 'nasabahList', 'previousUrl', 'confirmMessage', 'kodeInput'));
+    }
+
+    private function generateTransactionCode()
+    {
+        $now = now();
+        $year = $now->format('y');
+        $month = $now->format('m');
+        $baseCode = "S{$year}{$month}";
+
+        // Mengecek apakah kode sudah terdaftar di database
+        $existingCount = Simpanan::where('kode_simpanan', 'like', "{$baseCode}%")->count();
+
+        // Menghasilkan kode dengan nomor urut yang sesuai
+        $transactionCount = $existingCount + 1;
+
+        return $baseCode . sprintf("%03d", $transactionCount);
     }
 
     /**
@@ -78,11 +89,11 @@ class SimpananController extends Controller
         // Pesan-pesan yang akan digunakan
         $nasabahNotFoundWarning = 'Nasabah tidak ditemukan. Mohon tambahkan terlebih dahulu.';
         $confirmMessage = 'Data ditambahkan, buku tabungan nasabah diupdate.';
-        
+
         try {
             // Memulai transaksi database
             DB::beginTransaction();
-    
+
             // Cari rekening nasabah berdasarkan ID nasabah
             $rekeningNasabah = BukuTabungan::where('id_nasabah', $request->nasabah)->first();
             if (!$rekeningNasabah) {
@@ -90,7 +101,7 @@ class SimpananController extends Controller
                 DB::rollBack();
                 return back()->with('warning', $nasabahNotFoundWarning);
             }
-            
+
             // Buat objek Simpanan
             $data = new Simpanan();
             $data->id_rekening = $rekeningNasabah->id;
@@ -99,17 +110,17 @@ class SimpananController extends Controller
             $data->type = $request->type;
             $data->amount = $request->amount;
             $data->desc = $request->desc;
-            
+
             // Update saldo buku tabungan nasabah
             $rekeningNasabah->balance += $request->amount;
             $rekeningNasabah->save();
-            
+
             // Simpan data transaksi Simpanan
             $data->save();
-    
+
             // Commit transaksi jika semuanya berhasil
             DB::commit();
-    
+
             // Redirect ke halaman yang sesuai dan sertakan pesan sukses
             return redirect('/trx-simpanan')->with('success', $confirmMessage);
         } catch (\Exception $e) {

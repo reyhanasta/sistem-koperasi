@@ -120,9 +120,18 @@ class PinjamanController extends Controller
         $now = now();
         $year = $now->format('y');
         $month = $now->format('m');
-        $transactionCount = Pinjaman::whereDate('created_at', now()->toDateString())->count();
-        return "P{$year}{$month}" . sprintf("%03d", $transactionCount + 1);
+        $baseCode = "P{$year}{$month}";
+        
+        // Mengecek apakah kode sudah terdaftar di database
+        $existingCount = Pinjaman::where('kode_pinjaman', 'like', "{$baseCode}%")->count();
+        
+        // Menghasilkan kode dengan nomor urut yang sesuai
+        $transactionCount = $existingCount + 1;
+        
+        return $baseCode . sprintf("%03d", $transactionCount);
     }
+
+    
     /**
      * Display the specified resource.
      */
