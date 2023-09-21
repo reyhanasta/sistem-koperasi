@@ -12,15 +12,18 @@ class Pinjaman extends Model
 
     protected $guarded = ['id'];
 
-    public function nasabah(){
-        return $this->belongsTo(Nasabah::class,'id_nasabah');
+    public function nasabah()
+    {
+        return $this->belongsTo(Nasabah::class, 'id_nasabah');
     }
 
-    public function pegawai(){
-        return $this->belongsTo(Pegawai::class,'id_pegawai');
+    public function pegawai()
+    {
+        return $this->belongsTo(Pegawai::class, 'id_pegawai');
     }
 
-    public function angsuran(){
-        return $this->hasMany(Angsuran::class); 
+    public function angsuran()
+    {
+        return $this->hasMany(Angsuran::class);
     }
 }

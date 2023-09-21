@@ -46,7 +46,12 @@
                     @else
                         <p>Tidak ada riwayat transaksi Pinjaman.</p>
                     @endif
-                    
+                    <div class="row">
+                        <div class=""></div>
+                      <div class="">
+                        <a href="{{ $previousUrl }}" class="btn btn-secondary">Kembali</a>
+                      </div>
+                    </div>
                     </div>
                     <!-- /.card-body -->
                 </div>
@@ -55,12 +60,7 @@
             <!-- /.col -->
         </div>
         <!-- /.row -->
-        <div class="row">
-            <div class=""></div>
-          <div class="">
-            <a href="{{ $previousUrl }}" class="btn btn-secondary">Kembali</a>
-          </div>
-        </div>
+        
     </div>
     <!-- /.container-fluid -->
 </section>

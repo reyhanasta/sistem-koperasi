@@ -18,6 +18,7 @@
                                     alt="User profile picture">
                             </div>
                             <h3 class="profile-username text-center">{{ $data->name }}</h3>
+                            <p class="text-muted text-center">KTP - {{ $data->ktp }}</p>
                             <br>
                             <ul class="list-group list-group-unbordered mb-3">
                                 <li class="list-group-item">

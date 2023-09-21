@@ -12,13 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('nasabahs', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('address');
-            $table->string('phone');
-            $table->date('date_of_birth')->default('2000-01-01');
-            $table->enum('gender',['male','female']);
-            $table->timestamps();
+            $table->id(); // ID Nasabah (ID)
+            $table->string('name'); // Nama (Name)
+            $table->enum('gender', ['male', 'female']); // Jenis Kelamin (Gender)
+            $table->string('phone'); // Nomor Telepon (Phone)
+            $table->string('ktp_image_path')->nullable(); // Kolom untuk menyimpan path/URL gambar KTP
+            $table->string('address'); // Alamat (Address)
+            $table->string('ktp')->unique(); // Nomor KTP (Kartu Tanda Penduduk)
+            $table->date('date_of_birth'); // Tanggal Lahir (Date of Birth)
+            $table->timestamps(); // Tanggal Pembuatan dan Perubahan Data
+            $table->date('closure_date')->nullable(); // Tanggal Penutupan (Closure Date)
         });
     }
 
