@@ -28,20 +28,20 @@ class PinjamanController extends Controller
 
     public function riwayatPinjaman($nasabah_id)
     {
-    // Cari nasabah berdasarkan ID
-    $nasabah = Nasabah::find($nasabah_id);
-    $previousUrl = url()->previous();
+        // Cari nasabah berdasarkan ID
+        $nasabah = Nasabah::find($nasabah_id);
+        $previousUrl = url()->previous();
 
-    if (!$nasabah) {
-        return back()->with('warning', 'Nasabah tidak ditemukan.');
+        if (!$nasabah) {
+            return back()->with('warning', 'Nasabah tidak ditemukan.');
+        }
+
+        // Ambil riwayat transaksi peminjaman nasabah berdasarkan ID nasabah
+        $riwayatPinjaman = Pinjaman::where('id_nasabah', $nasabah_id)->orderBy('created_at', 'desc')->get();
+
+        return view('transaksi.pinjaman.riwayat', compact('nasabah', 'riwayatPinjaman', 'previousUrl'));
     }
 
-    // Ambil riwayat transaksi peminjaman nasabah berdasarkan ID nasabah
-    $riwayatPinjaman = Pinjaman::where('id_nasabah', $nasabah_id)->orderBy('created_at', 'desc')->get();
-
-    return view('transaksi.pinjaman.riwayat', compact('nasabah', 'riwayatPinjaman','previousUrl'));
-    }
- 
 
     /**
      * Show the form for creating a new resource.
@@ -121,17 +121,17 @@ class PinjamanController extends Controller
         $year = $now->format('y');
         $month = $now->format('m');
         $baseCode = "P{$year}{$month}";
-        
+
         // Mengecek apakah kode sudah terdaftar di database
         $existingCount = Pinjaman::where('kode_pinjaman', 'like', "{$baseCode}%")->count();
-        
+
         // Menghasilkan kode dengan nomor urut yang sesuai
         $transactionCount = $existingCount + 1;
-        
+
         return $baseCode . sprintf("%03d", $transactionCount);
     }
 
-    
+
     /**
      * Display the specified resource.
      */
@@ -189,21 +189,21 @@ class PinjamanController extends Controller
     }
 
     public function lunasi(Request $request, $id)
-{
-    // Cari pinjaman berdasarkan ID
-    $pinjaman = Pinjaman::findOrFail($id);
+    {
+        // Cari pinjaman berdasarkan ID
+        $pinjaman = Pinjaman::findOrFail($id);
 
-    // Lakukan validasi, misalnya, pastikan status pinjaman adalah "Proses Angsuran"
+        // Lakukan validasi, misalnya, pastikan status pinjaman adalah "Proses Angsuran"
 
-    // Update status pinjaman menjadi "Lunas"
-    $pinjaman->status = 'Lunas';
-    $pinjaman->sisa_pinjaman = 0; // Jika ingin mengatur sisa_pinjaman menjadi 0
-    $pinjaman->jumlah_angsuran += 1; // Melakukan 1x angsuran lunas
-    $pinjaman->save();
+        // Update status pinjaman menjadi "Lunas"
+        $pinjaman->status = 'Lunas';
+        $pinjaman->sisa_pinjaman = 0; // Jika ingin mengatur sisa_pinjaman menjadi 0
+        $pinjaman->jumlah_angsuran += 1; // Melakukan 1x angsuran lunas
+        $pinjaman->save();
 
-    // Redirect atau kirim respons sesuai dengan kebutuhan Anda
-    return redirect('/trx-pinjaman')->with('success', 'Pembayaran lunas berhasil.');
-}
+        // Redirect atau kirim respons sesuai dengan kebutuhan Anda
+        return redirect('/trx-pinjaman')->with('success', 'Pembayaran lunas berhasil.');
+    }
 
 
     /**

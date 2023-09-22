@@ -47,7 +47,6 @@
             </div>
         </div>
     </div>
-
     <div class="form-group">
         <label for="bunga">Bunga (%)</label>
         <div class="input-group">

@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
+
+
 
 class NasabahController extends Controller
 {
@@ -59,7 +62,7 @@ class NasabahController extends Controller
                 'address' => 'required|string',
                 'ktp' => 'required|string',
                 'date_of_birth' => 'required|date',
-                'ktp_image_path' => 'image|mimes:jpeg,png,jpg,gif|max:20480', // Validasi gambar KTP
+                'ktp_image' => 'image|mimes:jpeg,png,jpg,gif|max:20480', // Validasi gambar KTP
             ]);
 
             // Wrap the database operations in a transaction
@@ -81,7 +84,6 @@ class NasabahController extends Controller
                         'status' => 'aktif',
                     ]);
                 }
-
                 // Simpan gambar KTP (jika diunggah)
                 if ($request->hasFile('ktp_image_path')) {
                     $imagePath = $request->file('ktp_image_path')->store('ktp_images', 'public');
@@ -125,7 +127,7 @@ class NasabahController extends Controller
     public function edit($id)
     {
         //
-        $data = Nasabah::find($id);
+        $data = Nasabah::findOrFail($id);
         $back = url()->previous();
         return view('nasabah.edit', compact('data', 'back'));
     }
@@ -140,20 +142,44 @@ class NasabahController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            Nasabah::find($id)->update([
-                'name' => $request->name,
-                'gender' => $request->gender,
-                'phone' => $request->phone,
-                'address' => $request->address,
-                'date_of_birth' => $request->date_of_birth,
+            $nasabah = Nasabah::findOrFail($id);
+
+            // Validate the request data
+            $validatedData = $request->validate([
+                'name' => 'required|string',
+                'gender' => 'required|in:male,female',
+                'phone' => 'required|string',
+                'address' => 'required|string',
+                'ktp' => 'required|string',
+                'date_of_birth' => 'required|date',
+                'ktp_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi gambar KTP
+                'ktp' => [
+                    'required',
+                    'string',
+                    'regex:/^[0-9]{16}$/u', // Format KTP adalah 16 digit numerik, sesuaikan dengan format yang sesuai.
+                ],
             ]);
 
-            return redirect('/nasabah')->with('success', 'Data Berhasil di Simpan');
+            // Hapus gambar KTP lama jika ada
+            if ($nasabah->ktp_image_path) {
+                Storage::disk('public')->delete($nasabah->ktp_image_path);
+            }
+
+            // Simpan gambar KTP baru (jika diunggah)
+            if ($request->hasFile('ktp_image')) {
+                $imagePath = $request->file('ktp_image')->store('ktp_images', 'public');
+                $validatedData['ktp_image_path'] = $imagePath;
+            }
+
+            // Update Nasabah data
+            $nasabah->update($validatedData);
+            return redirect('/nasabah')->with('success', 'Data Nasabah berhasil diperbarui!');
         } catch (\Exception $e) {
-            Log::error('Error updating Nasabah data: ' . $e->getMessage());
-            return redirect('/nasabah')->with('error', 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
+            Log::error('Error while updating Nasabah data: ' . $e->getMessage());
+            return redirect()->back()->withInput()->withErrors(['error' => 'Terjadi kesalahan saat memperbarui data Nasabah. Silakan coba lagi.']);
         }
     }
+
 
     /**
      * Remove the specified resource from storage.
