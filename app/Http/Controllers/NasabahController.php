@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 
 
@@ -50,53 +51,68 @@ class NasabahController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-
-    public function store(Request $request)
-    {
-        try {
-            // Validate the request data
-            $validatedData = $request->validate([
-                'name' => 'required|string',
-                'gender' => 'required|in:male,female',
-                'phone' => 'required|string',
-                'address' => 'required|string',
-                'ktp' => 'required|string',
-                'date_of_birth' => 'required|date',
-                'ktp_image' => 'image|mimes:jpeg,png,jpg,gif|max:20480', // Validasi gambar KTP
-            ]);
-
-            // Wrap the database operations in a transaction
-            DB::transaction(function () use ($validatedData, $request) {
-                // Create and save a new Nasabah
-                $nasabah = Nasabah::create($validatedData);
-                $date = $validatedData['date_of_birth'];
-                $formattedDate = date('md', strtotime($date));
-                $padString = date('ymd') . $formattedDate;
-                $point = $nasabah->id;
-                $nomor_rekening = str_pad($point, 12, $padString, STR_PAD_LEFT);
-
-                // Create and save a new BukuTabungan
-                if ($nasabah) {
-                    BukuTabungan::create([
-                        'id_nasabah' => $nasabah->id,
-                        'no_rek' => $nomor_rekening,
-                        'balance' => 5000,
-                        'status' => 'aktif',
-                    ]);
-                }
-                // Simpan gambar KTP (jika diunggah)
-                if ($request->hasFile('ktp_image_path')) {
-                    $imagePath = $request->file('ktp_image_path')->store('ktp_images', 'public');
-                    $nasabah->update(['ktp_image_path' => $imagePath]);
-                }
-            });
-
-            return redirect('/nasabah')->with('success', 'Data Nasabah beserta buku tabungannya berhasil di Tambahkan !');
-        } catch (\Exception $e) {
-            Log::error('Error while adding Nasabah data: ' . $e->getMessage());
-            return redirect('/nasabah')->with('error', 'Terjadi kesalahan saat menambahkan data Nasabah. Silakan coba lagi.');
-        }
-    }
+     public function store(Request $request)
+     {
+         $validator = Validator::make($request->all(), [
+             'name' => 'required|string',
+             'gender' => 'required|in:male,female',
+             'phone' => 'required|string',
+             'address' => 'required|string',
+             'ktp' => 'required|string|unique:nasabahs,ktp',
+             'date_of_birth' => 'required|date',
+             'ktp_image_path' => 'image|mimes:jpeg,png,jpg,gif|max:20480', // Validasi gambar KTP
+         ]);
+ 
+         if ($validator->fails()) {
+             return redirect('/nasabah/create')
+                 ->withErrors($validator)
+                 ->withInput();
+         }
+ 
+         DB::beginTransaction();
+ 
+         try {
+             // Create and save a new Nasabah
+             $nasabah = Nasabah::create([
+                 'name' => $request->input('name'),
+                 'gender' => $request->input('gender'),
+                 'phone' => $request->input('phone'),
+                 'address' => $request->input('address'),
+                 'ktp' => $request->input('ktp'),
+                 'date_of_birth' => $request->input('date_of_birth'),
+             ]);
+ 
+             // Generate and save a new BukuTabungan
+             $date = $request->input('date_of_birth');
+             $formattedDate = date('md', strtotime($date));
+             $padString = date('ymd') . $formattedDate;
+             $point = $nasabah->id;
+             $nomor_rekening = str_pad($point, 12, $padString, STR_PAD_LEFT);
+ 
+             BukuTabungan::create([
+                 'id_nasabah' => $nasabah->id,
+                 'no_rek' => $nomor_rekening,
+                 'balance' => 5000,
+                 'status' => 'aktif',
+             ]);
+ 
+             // Save KTP image (if uploaded)
+             if ($request->hasFile('ktp_image_path')) {
+                 $imagePath = $request->file('ktp_image_path')->store('ktp_images/' . uniqid(), 'public');
+                 $imageName = basename($imagePath);
+                 $nasabah->update(['ktp_image_path' => $imageName]);
+             }
+ 
+             DB::commit();
+ 
+             return redirect('/nasabah')->with('success', 'Data Nasabah beserta buku tabungannya berhasil di Tambahkan!');
+         } catch (\Exception $e) {
+             DB::rollBack();
+             Log::error('Error while adding Nasabah data: ' . $e->getMessage());
+             return redirect('/nasabah')->with('error', 'Terjadi kesalahan saat menambahkan data Nasabah. Silakan coba lagi.');
+         }
+     }
+     
 
 
     /**
