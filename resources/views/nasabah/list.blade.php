@@ -28,11 +28,9 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  
                   <th>Nama nasabah</th>
-                  <th>Alamat</th>
                   <th>Nomor Telefon</th>
-                  
+                  <th>Bergabung Pada</th>
                   <th>Action</th>
                 </tr>
                 </thead>
@@ -40,8 +38,8 @@
                 @foreach ($data as $nasabah)
                 <tr>
                   <td>{{ucwords($nasabah->name)}}</td>
-                  <td>{{ucwords($nasabah->address)}}</td>
                   <td>{{$nasabah->phone}}</td>
+                  <td>{{$nasabah->created_at->isoFormat('D MMMM Y, HH:mm:ss')}}</td>
                   <td>
                     <div class="btn-group">
                       <button type="button" class="btn btn-default">Tindakan</button>

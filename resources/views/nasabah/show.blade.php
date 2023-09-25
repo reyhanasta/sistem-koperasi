@@ -13,22 +13,23 @@
                     <!-- Profile Image -->
                     <div class="card card-primary card-outline">
                         <div class="card-body box-profile">
-                            <div class="text-center">
-                                <img class="profile-user-img img-fluid img-circle" src="../../dist/img/user4-128x128.jpg"
-                                    alt="User profile picture">
-                            </div>
                             <h3 class="profile-username text-center">{{ $data->name }}</h3>
-                            <p class="text-muted text-center">KTP - {{ $data->ktp }}</p>
-                            <br>
+                            <p class="text-muted text-center">NIK {{ $data->ktp }}</p>
                             <ul class="list-group list-group-unbordered mb-3">
                                 <li class="list-group-item">
-                                    <b>Status</b> <span class="float-right">Aktif</span>
+                                    <b>Status</b>
+                                    <span
+                                        class="float-right @if ($dataTabungan->status === 'aktif') text-success @else text-danger @endif">
+                                        Aktif
+                                    </span>
                                 </li>
                             </ul>
                             <a href="{{ url('nasabah/' . $data->id . '/edit') }}" class="btn btn-primary btn-block"><b>Ubah
                                     Data</b></a>
-                            <a href="{{ route('simpanan.riwayat', ['nasabah_id' => $data->id]) }}" class="btn btn-info btn-block"><b>Riwayat Simpanan</b></a>
-                            <a href="{{ route('pinjaman.riwayat', ['nasabah_id' => $data->id]) }}" class="btn btn-warning btn-block"><b>Riwayat Pinjaman</b></a>
+                            <a href="{{ route('simpanan.riwayat', ['nasabah_id' => $data->id]) }}"
+                                class="btn btn-info btn-block"><b>Riwayat Simpanan</b></a>
+                            <a href="{{ route('pinjaman.riwayat', ['nasabah_id' => $data->id]) }}"
+                                class="btn btn-warning btn-block"><b>Riwayat Pinjaman</b></a>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -49,22 +50,20 @@
                             <div class="tab-content">
                                 <div class="active tab-pane" id="activity">
                                     <div class="card-body">
-                                        <strong><i class="fas fa-book mr-1"></i> Pekerjaan</strong>
+                                        <strong><i class="fas fa-calendar mr-1"></i> Tanggal Lahir</strong>
                                         <p class="text-muted">
-                                            Wiraswata
+                                            {{ date('d-m-Y', strtotime($data->date_of_birth)) }} ({{ $age }} Tahun)
+
                                         </p>
-                                        <hr>
-                                        <strong><i class="fas fa-map-marker-alt mr-1"></i> Alamat</strong>
-                                        <p class="text-muted"> {{ $data->address }}</p>
                                         <hr>
                                         <strong><i class="fas fa-phone-alt mr-1"></i> Nomor Telephone</strong>
                                         <p class="text-muted">
                                             {{ $data->phone }}
                                         </p>
                                         <hr>
-                                        <strong><i class="far fa-file-alt mr-1"></i> Notes</strong>
-                                        <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
-                                            fermentum enim neque.</p>
+                                        <strong><i class="fas fa-map-marker-alt mr-1"></i> Alamat</strong>
+                                        <p class="text-muted"> {{ $data->address }}</p>
+
                                     </div>
                                 </div>
                                 <!-- /.tab-pane -->
@@ -86,8 +85,16 @@
                                             <tr>
                                                 {{-- <td>{{$loop->iteration}}</td> --}}
                                                 <td>Status</td>
-                                                <td>{{ ucwords($dataTabungan->status) }}</td>
+                                                <td>
+                                                    @if ($dataTabungan->status === 'aktif')
+                                                        <span
+                                                            style="color: green;">{{ ucwords($dataTabungan->status) }}</span>
+                                                    @else
+                                                        <span
+                                                            style="color: red;">{{ ucwords($dataTabungan->status) }}</span>
+                                                    @endif
                                                 </td>
+
                                             </tr>
                                             <tr>
                                                 {{-- <td>{{$loop->iteration}}</td> --}}
@@ -100,7 +107,7 @@
                                         </table>
                                     </div>
                                 </div>
-                               
+
                                 <!-- /.tab-pane -->
                             </div>
                             <!-- /.tab-content -->

@@ -59,7 +59,11 @@
                 "placeholder": " ",
                 'alias': 'numeric',
                 'removeMaskOnSubmit': true
-            })
+            }),
+            $('#ktp').inputmask('99 99 99 999999 9999', {
+                "placeholder": " ",
+                'removeMaskOnSubmit': true
+            });
     });
 </script>
 <script>
@@ -100,3 +104,4 @@
         $('#modal-default').modal('show');
     }
 </script>
+
