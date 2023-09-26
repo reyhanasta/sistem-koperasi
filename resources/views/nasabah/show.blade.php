@@ -44,6 +44,8 @@
                                         data-toggle="tab">Profile</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Buku
                                         Tabungan</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#berkas" data-toggle="tab">Berkas Nasabah</a>
+                                </li>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
@@ -69,7 +71,7 @@
                                 <!-- /.tab-pane -->
                                 <div class="tab-pane" id="timeline">
                                     <div class="card-body">
-                                        <table id="a" class="table table-bordered table-striped">
+                                        <table id="table-rekening" class="table table-bordered table-striped">
                                             <thead>
                                                 <tr>
                                                     <td>Nomor Rekening</td>
@@ -107,7 +109,30 @@
                                         </table>
                                     </div>
                                 </div>
+                                <!-- /.tab-pane -->
+                                <div class="tab-pane" id="berkas">
+                                    <div class="card-body">
+                                        <strong><i class="fas fa-user mr-1"></i>KTP Nasabah</strong>
+                                       
+                                        {{-- Kode Menampilkan KTP --}}
+                                        @if ($data->ktp_image_path)
+                                            <div class="ktp">
+                                                <br>
+                                                <a href="{{ asset('storage/ktp_images/' . $data->ktp_image_path) }}"
+                                                    data-toggle="lightbox" data-title="sample 1 - white"
+                                                    data-gallery="gallery">
+                                                    <img src="{{ asset('storage/ktp_images/' . $data->ktp_image_path) }}"
+                                                        class="img-fluid mb-2" alt="white sample" width="50%"
+                                                        height="50%" />
 
+                                                </a>
+                                            </div>
+                                        @else
+                                            <p>Gambar KTP Nasabah tidak tersedia.</p>
+                                        @endif
+                                        <hr>
+                                    </div>
+                                </div>
                                 <!-- /.tab-pane -->
                             </div>
                             <!-- /.tab-content -->

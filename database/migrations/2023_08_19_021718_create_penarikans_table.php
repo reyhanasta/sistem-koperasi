@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('id_rekening');
             $table->bigInteger('amount');
             $table->string('desc')->nullable(); 
+            $table->boolean('diarsipkan')->default(false);
             $table->timestamps();
         });
     }

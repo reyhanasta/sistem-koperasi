@@ -2,6 +2,12 @@
 <script src="{{ asset('adminlte/') }}/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="{{ asset('adminlte/') }}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Ekko Lightbox -->
+<script src="{{ asset('adminlte/') }}/plugins/ekko-lightbox/ekko-lightbox.min.js"></script>
+<!-- SweetAlert2 -->
+<script src="{{ asset('adminlte/') }}/plugins/sweetalert2/sweetalert2.min.js"></script>
+<!-- Toastr -->
+<script src="{{ asset('adminlte/') }}/plugins/toastr/toastr.min.js"></script>
 <!-- AdminLTE App -->
 <script src="{{ asset('adminlte/') }}/dist/js/adminlte.min.js"></script>
 <!-- bs-custom-file-input -->
@@ -104,4 +110,42 @@
         $('#modal-default').modal('show');
     }
 </script>
+<script>
+    $(function() {
+        $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+            event.preventDefault();
+            $(this).ekkoLightbox({
+                alwaysShowClose: true
+            });
+        });
 
+        $('.filter-container').filterizr({
+            gutterPixels: 3
+        });
+        $('.btn[data-filter]').on('click', function() {
+            $('.btn[data-filter]').removeClass('active');
+            $(this).addClass('active');
+        });
+    })
+</script>
+<script>
+    // Pastikan pesan 'success' dari session ada
+    @if (session('success'))
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+        toastr.success('{{session('success')}}')
+    @endif
+    @if (session('error'))
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+        toastr.warning('{{session('error')}}')
+    @endif
+</script>

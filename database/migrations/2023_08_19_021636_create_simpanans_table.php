@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('type');
             $table->bigInteger('amount');
             $table->string('desc')->nullable();
+            $table->boolean('diarsipkan')->default(false);
             $table->timestamps();
         });
     }

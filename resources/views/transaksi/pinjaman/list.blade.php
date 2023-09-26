@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    @if (Session::has('success'))
+                    {{-- @if (Session::has('success'))
                         <div class="card card-success">
                             <div class="card-header">
                                 <h3 class="card-title">{{ Session::get('success') }}</h3>
@@ -19,7 +19,7 @@
                             </div>
                             <!-- /.card-header -->
                         </div>
-                    @endif
+                    @endif --}}
                     <div class="card">
                         <div class="card-header">
                             <a href="{{ $urlCreate }}" class="btn btn-primary"><i class="fas fa-plus"></i><span>

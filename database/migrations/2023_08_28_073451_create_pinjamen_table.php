@@ -31,6 +31,7 @@ return new class extends Migration
             $table->integer('jumlah_angsuran')->default(0); // dalam satuan
             $table->decimal('sisa_pinjaman', 10, 2)->default(0);
             $table->text('catatan')->nullable();
+            $table->boolean('diarsipkan')->default(false);
             $table->timestamps();
             
             // Foreign key constraint

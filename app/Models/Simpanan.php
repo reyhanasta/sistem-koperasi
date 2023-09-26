@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Simpanan extends Model
 {
     use HasFactory;
-    
+    protected $guarded = ['id'];
     public function bukuTabungan(){
         return $this->belongsTo(BukuTabungan::class);
     }
