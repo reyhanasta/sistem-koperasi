@@ -21,7 +21,7 @@
         <label for="exampleInputFile">Foto KTP</label> (Opsional)
         <div class="input-group">
             @if ($data->ktp_image_path)
-                <img src="{{ asset('storage/' . $data->ktp_image_path) }}" alt="Gambar KTP" class="img-thumbnail"
+                <img src="{{ asset('storage/ktp_images/' .$data->ktp_image_path) }}" alt="Gambar KTP" class="img-thumbnail"
                     style="width: 200px; height: auto;">
             @endif
         </div>

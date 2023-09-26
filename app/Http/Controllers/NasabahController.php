@@ -80,7 +80,7 @@ class NasabahController extends Controller
 
                 // Simpan gambar KTP (jika diunggah)
                 if ($request->hasFile('ktp_image_path')) {
-                    $imagePath = $request->file('ktp_image_path')->store('ktp_images/' . uniqid(), 'public');
+                    $imagePath = $request->file('ktp_image_path')->store('ktp_images/', 'public');
                     $imageName = basename($imagePath);
                     $nasabah->update(['ktp_image_path' => $imageName]);
                 }
@@ -145,10 +145,19 @@ class NasabahController extends Controller
             // Update the Nasabah
             $nasabah = Nasabah::findOrFail($id);
             $nasabah->update($request->validated());
+            
 
             // Handle KTP image upload
             if ($request->hasFile('ktp_image_path')) {
-                $imagePath = $request->file('ktp_image_path')->store('ktp_images/' . uniqid(), 'public');
+                $oldImagePath = $nasabah->ktp_image_path;
+                dd($oldImagePath);
+                // Menghapus gambar lama
+                if ($oldImagePath) {
+                   
+                   Storage::disk('public')->delete('ktp_images/' . $oldImagePath);
+                }
+                // Menyimpan gambar KTP yang baru
+                $imagePath = $request->file('ktp_image_path')->store('ktp_images/', 'public');
                 $nasabah->update(['ktp_image_path' => basename($imagePath)]);
             }
 
