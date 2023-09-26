@@ -13,6 +13,6 @@ class Simpanan extends Model
         return $this->belongsTo(BukuTabungan::class);
     }
     public function nasabah(){
-        return $this->belongsTo(Nasabah::class,'id_nasabah');
+        return $this->belongsTo(Nasabah::class,'nasabah_id');
     }
 }

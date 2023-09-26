@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pinjamen', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_nasabah');
+            $table->unsignedBigInteger('nasabah_id');
             $table->foreignId('id_pegawai');
             $table->string('kode_pinjaman')->default('P238001');
             $table->date('tanggal_pengajuan');
@@ -35,7 +35,7 @@ return new class extends Migration
             $table->timestamps();
             
             // Foreign key constraint
-            $table->foreign('id_nasabah')->references('id')->on('nasabahs');
+            $table->foreign('nasabah_id')->references('id')->on('nasabahs');
         });
     }
 

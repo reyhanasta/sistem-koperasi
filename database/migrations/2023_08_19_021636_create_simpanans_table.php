@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('simpanans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_rekening');
-            $table->foreignId('id_nasabah');
+            $table->foreignId('nasabah_id');
             $table->string('kode_simpanan');
             $table->string('type');
             $table->bigInteger('amount');

@@ -37,7 +37,7 @@ class SimpananController extends Controller
             return back()->with('warning', 'Nasabah tidak ditemukan.');
         }
         // Ambil riwayat transaksi simpanan nasabah berdasarkan ID nasabah
-        $riwayatSimpanan = Simpanan::where('id_nasabah', $nasabah_id)->orderBy('created_at', 'desc')->get();
+        $riwayatSimpanan = Simpanan::where('nasabah_id', $nasabah_id)->orderBy('created_at', 'desc')->get();
         return view('transaksi.simpanan.riwayat', compact('nasabah', 'riwayatSimpanan', 'previousUrl'));
     }
 
@@ -95,7 +95,7 @@ class SimpananController extends Controller
             DB::beginTransaction();
 
             // Cari rekening nasabah berdasarkan ID nasabah
-            $rekeningNasabah = BukuTabungan::where('id_nasabah', $request->nasabah)->first();
+            $rekeningNasabah = BukuTabungan::where('nasabah_id', $request->nasabah)->first();
             if (!$rekeningNasabah) {
                 // Jika nasabah tidak ditemukan, batalkan transaksi dan kembalikan ke halaman sebelumnya dengan pesan peringatan
                 DB::rollBack();
@@ -105,7 +105,7 @@ class SimpananController extends Controller
             // Buat objek Simpanan
             $data = new Simpanan();
             $data->id_rekening = $rekeningNasabah->id;
-            $data->id_nasabah = $request->nasabah;
+            $data->nasabah_id = $request->nasabah;
             $data->kode_simpanan = $request->kode;
             $data->type = $request->type;
             $data->amount = $request->amount;

@@ -37,7 +37,7 @@ class PinjamanController extends Controller
         }
 
         // Ambil riwayat transaksi peminjaman nasabah berdasarkan ID nasabah
-        $riwayatPinjaman = Pinjaman::where('id_nasabah', $nasabah_id)->orderBy('created_at', 'desc')->get();
+        $riwayatPinjaman = Pinjaman::where('nasabah_id', $nasabah_id)->orderBy('created_at', 'desc')->get();
 
         return view('transaksi.pinjaman.riwayat', compact('nasabah', 'riwayatPinjaman', 'previousUrl'));
     }
@@ -80,7 +80,6 @@ class PinjamanController extends Controller
 
             // Mencari pegawai berdasarkan user_id
             $pegawai = Pegawai::where('user_id', $userId)->first();
-
             // Nilai total pembayaran
             $total_pembayaran = $request->jumlah_pinjaman * (1 - ($request->bunga / 100));
 
@@ -89,7 +88,7 @@ class PinjamanController extends Controller
 
             // Simpan data pinjaman
             $data = new Pinjaman();
-            $data->id_nasabah = $request->nasabah;
+            $data->nasabah_id = $request->nasabah;
             $data->kode_pinjaman = $kodeInput;
             $data->id_pegawai = $pegawai->id;
             $data->tanggal_pengajuan = $request->tanggal_pengajuan;

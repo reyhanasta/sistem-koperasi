@@ -50,7 +50,7 @@ class AngsuranController extends Controller
             $angsuran_harian = (float) str_replace([',', '.'], ['', '.'], $request->angsuran);
             $sisaPinjaman = (float) str_replace([',', '.'], ['', '.'], $pinjaman->sisa_pinjaman);
             // // Lakukan pengurangan saldo nasabah
-            // $nasabah = Nasabah::findOrFail($pinjaman->id_nasabah);
+            // $nasabah = Nasabah::findOrFail($pinjaman->nasabah_id);
             // $nasabah->saldo -= $request->jumlah_angsuran;
             // $nasabah->save();
             // Update status pinjaman (misalnya, periksa jika pinjaman sudah lunas)

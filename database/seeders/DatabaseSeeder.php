@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
         ]);
         BukuTabungan::create([
             'no_rek' => '230916080911',
-            'id_nasabah' => '1',
+            'nasabah_id' => '1',
             'balance' => 1000000,
             'status' => 'aktif',
             'notes' => 'Catatan',

@@ -49,7 +49,7 @@ class PenarikanController extends Controller
      */
     public function store(Request $request)
     {
-        $rekeningNasabah = BukuTabungan::where('id_nasabah', $request->nasabah)->first();
+        $rekeningNasabah = BukuTabungan::where('nasabah_id', $request->nasabah)->first();
 
         $validateData = $request->validate([
             'nasabah' => 'required', // Change 'Nasabah' to 'nasabah'

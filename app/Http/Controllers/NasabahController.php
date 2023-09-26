@@ -70,7 +70,7 @@ class NasabahController extends Controller
                 // Create and save a new BukuTabungan
                 if ($nasabah) {
                     BukuTabungan::create([
-                        'id_nasabah' => $nasabah->id,
+                        'nasabah_id' => $nasabah->id,
                         'no_rek' => $nomor_rekening,
                         'balance' => 5000,
                         'status' => 'aktif',
@@ -104,15 +104,15 @@ class NasabahController extends Controller
     {
         //
         $data = Nasabah::findorFail($id);
-        $dataTabungan = BukuTabungan::where('id_nasabah', $id)->first();
+        $dataTabungan = BukuTabungan::where('nasabah_id', $id)->first();
         //Ambil umur
         $birthdate = Carbon::parse($data->date_of_birth);
         $currentDate = Carbon::now();
         $age = $birthdate->diffInYears($currentDate);
         // Ambil daftar transaksi simpanan nasabah berdasarkan ID nasabah
-        $transaksiSimpanan = Simpanan::where('id_nasabah', $id)->get()->sortByDesc('created_at');
+        $transaksiSimpanan = Simpanan::where('nasabah_id', $id)->get()->sortByDesc('created_at');
         // Ambil riwayat transaksi pinjaman nasabah berdasarkan ID nasabah
-        $riwayatPinjaman = Pinjaman::where('id_nasabah', $id)->orderBy('created_at', 'desc')->get();
+        $riwayatPinjaman = Pinjaman::where('nasabah_id', $id)->orderBy('created_at', 'desc')->get();
         $back = url()->previous();
         return view('nasabah.show', compact('data', 'dataTabungan', 'back', 'transaksiSimpanan', 'riwayatPinjaman', 'age'));
     }
@@ -143,11 +143,14 @@ class NasabahController extends Controller
         try {
             // Hapus gambar lama jika ada yang baru diunggah
             if ($request->hasFile('ktp_image_path')) {
-                $oldImagePath = public_path('storage/ktp_images/' . $nasabah->ktp_image_path);
-
-                if (file_exists($oldImagePath)) {
-                    unlink($oldImagePath);
+                if($nasabah->ktp_image_path){
+                    $oldImagePath = public_path('storage/ktp_images/' . $nasabah->ktp_image_path);
+                   
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
                 }
+               
 
                 // Simpan gambar KTP yang baru
                 $imagePath = $request->file('ktp_image_path')->store('ktp_images/', 'public');
@@ -186,14 +189,15 @@ class NasabahController extends Controller
                 $nasabah->pinjaman()->exists()
             ) {
                 // Nasabah memiliki transaksi, maka arsipkan semua transaksi terkait Nasabah
-                Simpanan::where('id_nasabah', $id)->update(['diarsipkan' => true]);
-                Pinjaman::where('id_nasabah', $id)->update(['diarsipkan' => true]);
-                // Angsuran::where('id_nasabah', $id)->update(['diarsipkan' => true]);
-                // Penarikan::where('id_nasabah', $id)->update(['diarsipkan' => true]);
+                Simpanan::where('nasabah_id', $id)->update(['diarsipkan' => true]);
+                Pinjaman::where('nasabah_id', $id)->update(['diarsipkan' => true]);
+                // Angsuran::where('nasabah_id', $id)->update(['diarsipkan' => true]);
+                // Penarikan::where('nasabah_id', $id)->update(['diarsipkan' => true]);
 
                 // Hapus gambar KTP (jika ada)
                 if ($nasabah->ktp_image_path) {
                     $ktpImagePath = public_path('storage/ktp_images/' . $nasabah->ktp_image_path);
+                   
                     if (file_exists($ktpImagePath)) {
                         unlink($ktpImagePath);
                     }
@@ -232,7 +236,7 @@ class NasabahController extends Controller
             return back()->with('warning', 'Nasabah tidak ditemukan.');
         }
         // Ambil daftar transaksi simpanan nasabah berdasarkan ID nasabah
-        $transaksiSimpanan = Simpanan::where('id_nasabah', $id)->orderBy('created_at', 'desc')->get();
+        $transaksiSimpanan = Simpanan::where('nasabah_id', $id)->orderBy('created_at', 'desc')->get();
 
         return view('transaksi.index', compact('nasabah', 'transaksiSimpanan'));
     }
