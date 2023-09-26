@@ -6,16 +6,16 @@ use Carbon\Carbon;
 
 
 use App\Models\Nasabah;
+use App\Models\Angsuran;
 use App\Models\Pinjaman;
-use App\Models\Simpanan;
 
+use App\Models\Simpanan;
+use App\Models\Penarikan;
 use App\Models\BukuTabungan;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NasabahRequest;
-use Illuminate\Support\Facades\Storage;
 
 
 
@@ -31,7 +31,6 @@ class NasabahController extends Controller
     {
         //
         $data = Nasabah::latest()->get();
-       
         return view('nasabah.list', compact('data'));
     }
 
@@ -139,27 +138,25 @@ class NasabahController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(NasabahRequest $request, $id)
+    public function update(NasabahRequest $request, Nasabah $nasabah)
     {
         try {
-            // Update the Nasabah
-            $nasabah = Nasabah::findOrFail($id);
-            $nasabah->update($request->validated());
-            
-
-            // Handle KTP image upload
+            // Hapus gambar lama jika ada yang baru diunggah
             if ($request->hasFile('ktp_image_path')) {
-                $oldImagePath = $nasabah->ktp_image_path;
-                dd($oldImagePath);
-                // Menghapus gambar lama
-                if ($oldImagePath) {
-                   
-                   Storage::disk('public')->delete('ktp_images/' . $oldImagePath);
+                $oldImagePath = public_path('storage/ktp_images/' . $nasabah->ktp_image_path);
+
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
                 }
-                // Menyimpan gambar KTP yang baru
+
+                // Simpan gambar KTP yang baru
                 $imagePath = $request->file('ktp_image_path')->store('ktp_images/', 'public');
-                $nasabah->update(['ktp_image_path' => basename($imagePath)]);
+                $imageName = basename($imagePath);
+                $nasabah->update(['ktp_image_path' => $imageName]);
             }
+
+            // Update data Nasabah lainnya
+            $nasabah->update($request->except('ktp_image_path'));
 
             return redirect('/nasabah')->with('success', 'Data Nasabah berhasil diperbarui!');
         } catch (\Exception $e) {
@@ -177,9 +174,55 @@ class NasabahController extends Controller
      */
     public function destroy($id)
     {
-        Nasabah::destroy($id);
-        return redirect('nasabah')->with('success', 'Data Berhasil di Hapus');
+        DB::beginTransaction();
+
+        try {
+            // Cari Nasabah berdasarkan ID
+            $nasabah = Nasabah::findOrFail($id);
+
+            // Pengecekan apakah Nasabah memiliki transaksi tertentu
+            if (
+                $nasabah->simpanan()->exists() ||
+                $nasabah->pinjaman()->exists()
+            ) {
+                // Nasabah memiliki transaksi, maka arsipkan semua transaksi terkait Nasabah
+                Simpanan::where('id_nasabah', $id)->update(['diarsipkan' => true]);
+                Pinjaman::where('id_nasabah', $id)->update(['diarsipkan' => true]);
+                // Angsuran::where('id_nasabah', $id)->update(['diarsipkan' => true]);
+                // Penarikan::where('id_nasabah', $id)->update(['diarsipkan' => true]);
+
+                // Hapus gambar KTP (jika ada)
+                if ($nasabah->ktp_image_path) {
+                    $ktpImagePath = public_path('storage/ktp_images/' . $nasabah->ktp_image_path);
+                    if (file_exists($ktpImagePath)) {
+                        unlink($ktpImagePath);
+                    }
+                }
+
+                // Mengarsipkan Nasabah
+                $nasabah->delete();
+
+                // Commit transaksi jika semuanya berhasil
+                DB::commit();
+
+                // Redirect kembali ke halaman daftar Nasabah dengan pesan sukses
+                return redirect('/nasabah')->with('success', 'Data Nasabah berhasil diarsipkan.');
+            } else {
+                // Nasabah tidak memiliki transaksi, tidak bisa diarsipkan
+                // Redirect kembali ke halaman daftar Nasabah dengan pesan kesalahan
+                return redirect('/nasabah')->with('error', 'Nasabah tidak memiliki transaksi yang dapat diarsipkan.');
+            }
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollback();
+
+            Log::error('Error while archiving Nasabah: ' . $e->getMessage());
+            return redirect('/nasabah')->with('error', 'Terjadi kesalahan saat mengarsipkan Nasabah. Silakan coba lagi.');
+        }
     }
+
+
+
 
     public function showTransactions($id)
     {
@@ -192,5 +235,22 @@ class NasabahController extends Controller
         $transaksiSimpanan = Simpanan::where('id_nasabah', $id)->orderBy('created_at', 'desc')->get();
 
         return view('transaksi.index', compact('nasabah', 'transaksiSimpanan'));
+    }
+
+    function generateAccountNumber($nasabahId, $dateOfBirth)
+    {
+        // Format nomor rekening sesuai dengan kebutuhan Anda
+        // Misalnya, Anda ingin format nomor rekening: "N000012345678"
+
+        // Dapatkan tanggal lahir dalam format "ymd"
+        $formattedDate = date('ymd', strtotime($dateOfBirth));
+
+        // Ambil lima digit pertama dari ID nasabah dan tambahkan nol di depan jika perlu
+        $nasabahIdPart = str_pad($nasabahId, 5, '0', STR_PAD_LEFT);
+
+        // Gabungkan semuanya menjadi nomor rekening
+        $accountNumber = "N" . $nasabahIdPart . $formattedDate;
+
+        return $accountNumber;
     }
 }

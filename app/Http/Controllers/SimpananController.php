@@ -22,7 +22,7 @@ class SimpananController extends Controller
         //
         // $data = Simpanan::all()->sortByDesc('created_at');
         // Mendapatkan semua data anggota beserta data pinjaman yang dimilikinya
-        $data = Simpanan::with('Nasabah')->get()->sortByDesc('created_at');
+        $data = Simpanan::with('Nasabah')->where('diarsipkan', 0)->get()->sortByDesc('created_at');
         $back = url()->previous();
 
         return view('transaksi.simpanan.list', compact('data', 'back'));

@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Nasabah;
-
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -43,9 +41,9 @@ class NasabahRequest extends FormRequest
             'ktp' => [
                 'required',
                 'string',
-                $nasabahId ? Rule::unique('nasabahs', 'ktp')->ignore($nasabahId) : 'unique:nasabahs,ktp',
                 'max:16',
                 'regex:/^\d{16}$/u', // Sesuaikan panjang maksimal KTP, 16 digit angka
+                $nasabahId ? Rule::unique('nasabahs', 'ktp')->ignore($nasabahId) : 'unique:nasabahs,ktp',
             ],
             'date_of_birth' => [
                 'required',
@@ -55,7 +53,7 @@ class NasabahRequest extends FormRequest
             'ktp_image_path' => [
                 'image',
                 'mimes:jpeg,png,jpg,gif',
-                'max:10240', // Maksimum 10MB
+                'max:10240' // Maksimum 10MB
             ],
         ];
     }
