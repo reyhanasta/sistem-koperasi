@@ -46,8 +46,8 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ ($index->kode_simpanan) }}</td>
-                                            <td><a
-                                                    href="{{ url('nasabah/' . $index->nasabah->id) }}">{{ $index->nasabah->name }}</a>
+                                            <td>
+                                                <a href="{{ url('nasabah/' . $index->nasabah->id) }}">{{ $index->nasabah->name }}</a>
                                             </td>
                                             <td>{{ ucfirst($index->type) }}</td>
                                             <td>Rp.{{ number_format($index->amount) }}</td>

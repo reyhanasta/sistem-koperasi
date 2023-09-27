@@ -20,8 +20,9 @@ return new class extends Migration
             $table->string('address'); // Alamat (Address)
             $table->string('ktp')->unique(); // Nomor KTP (Kartu Tanda Penduduk)
             $table->date('date_of_birth'); // Tanggal Lahir (Date of Birth)
-            $table->timestamps(); // Tanggal Pembuatan dan Perubahan Data
             $table->date('closure_date')->nullable(); // Tanggal Penutupan (Closure Date)
+            $table->timestamps(); // Tanggal Pembuatan dan Perubahan Data
+            $table->softDeletes(); // Soft Delete
         });
     }
 

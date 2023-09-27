@@ -85,7 +85,7 @@ class NasabahController extends Controller
                 }
             });
 
-            return redirect('/nasabah')->with('success', 'Data Nasabah beserta buku tabungannya berhasil di Tambahkan !');
+            return redirect('/nasabah')->with('success', 'Nasabah baru telah berhasil terdaftar.');
         } catch (\Exception $e) {
             Log::error('Error while adding Nasabah data: ' . $e->getMessage());
             return redirect('/nasabah')->with('error', 'Terjadi kesalahan saat menambahkan data Nasabah. Silakan coba lagi.');
