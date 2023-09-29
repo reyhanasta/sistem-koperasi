@@ -6,11 +6,9 @@ use Carbon\Carbon;
 
 
 use App\Models\Nasabah;
-use App\Models\Angsuran;
 use App\Models\Pinjaman;
 
 use App\Models\Simpanan;
-use App\Models\Penarikan;
 use App\Models\BukuTabungan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -61,14 +59,19 @@ class NasabahController extends Controller
             DB::transaction(function () use ($request) {
                 // Create and save a new Nasabah
                 $nasabah = Nasabah::create($request->validated());
-                $date = $request->input('date_of_birth');
-                $formattedDate = date('md', strtotime($date));
-                $padString = date('ymd') . $formattedDate;
-                $point = $nasabah->id;
-                $nomor_rekening = str_pad($point, 12, $padString, STR_PAD_LEFT);
+
+                // $date = $request->input('date_of_birth');
+                // $formattedDate = date('md', strtotime($date));
+                // $padString = date('ymd') . $formattedDate;
+                // $point = $nasabah->id;
+                // $nomor_rekening = str_pad($point, 12, $padString, STR_PAD_LEFT);
+
+                // Generate kode transaksi
+
 
                 // Create and save a new BukuTabungan
                 if ($nasabah) {
+                    $nomor_rekening = $this->generateAccountNumber($nasabah->id, $request->date_of_birth);
                     BukuTabungan::create([
                         'nasabah_id' => $nasabah->id,
                         'no_rek' => $nomor_rekening,
@@ -143,14 +146,14 @@ class NasabahController extends Controller
         try {
             // Hapus gambar lama jika ada yang baru diunggah
             if ($request->hasFile('ktp_image_path')) {
-                if($nasabah->ktp_image_path){
+                if ($nasabah->ktp_image_path) {
                     $oldImagePath = public_path('storage/ktp_images/' . $nasabah->ktp_image_path);
-                   
+
                     if (file_exists($oldImagePath)) {
                         unlink($oldImagePath);
                     }
                 }
-               
+
 
                 // Simpan gambar KTP yang baru
                 $imagePath = $request->file('ktp_image_path')->store('ktp_images/', 'public');
@@ -183,27 +186,33 @@ class NasabahController extends Controller
             // Cari Nasabah berdasarkan ID
             $nasabah = Nasabah::findOrFail($id);
 
-            // Pengecekan apakah Nasabah memiliki transaksi tertentu
-            if (
-                $nasabah->simpanan()->exists() ||
-                $nasabah->pinjaman()->exists()
-            ) {
-                // Nasabah memiliki transaksi, maka arsipkan semua transaksi terkait Nasabah
-                Simpanan::where('nasabah_id', $id)->update(['diarsipkan' => true]);
-                Pinjaman::where('nasabah_id', $id)->update(['diarsipkan' => true]);
-                // Angsuran::where('nasabah_id', $id)->update(['diarsipkan' => true]);
-                // Penarikan::where('nasabah_id', $id)->update(['diarsipkan' => true]);
+            // Periksa status peminjaman
+            $pinjamanLunas = true; // Inisialisasi status lunas
+            foreach ($nasabah->pinjaman as $pinjaman) {
+                if ($pinjaman->status !== 'Lunas') {
+                    $pinjamanLunas = false;
+                    break; // Hentikan iterasi jika ada peminjaman yang belum lunas
+                }
+            }
+
+            // Hapus Nasabah jika semua peminjamannya sudah lunas
+            if ($pinjamanLunas) {
+                // Hapus Nasabah dan transaksi terkait
+                $nasabah->simpanan()->delete();
+                $nasabah->penarikan()->delete();
+                $nasabah->angsuran()->delete();
+                $nasabah->pinjaman()->delete();
 
                 // Hapus gambar KTP (jika ada)
                 if ($nasabah->ktp_image_path) {
                     $ktpImagePath = public_path('storage/ktp_images/' . $nasabah->ktp_image_path);
-                   
+
                     if (file_exists($ktpImagePath)) {
                         unlink($ktpImagePath);
                     }
                 }
 
-                // Mengarsipkan Nasabah
+                // Hapus Nasabah
                 $nasabah->delete();
 
                 // Commit transaksi jika semuanya berhasil
@@ -212,9 +221,9 @@ class NasabahController extends Controller
                 // Redirect kembali ke halaman daftar Nasabah dengan pesan sukses
                 return redirect('/nasabah')->with('success', 'Data Nasabah berhasil diarsipkan.');
             } else {
-                // Nasabah tidak memiliki transaksi, tidak bisa diarsipkan
+                // Nasabah memiliki peminjaman yang belum lunas, tidak bisa diarsipkan
                 // Redirect kembali ke halaman daftar Nasabah dengan pesan kesalahan
-                return redirect('/nasabah')->with('error', 'Nasabah tidak memiliki transaksi yang dapat diarsipkan.');
+                return redirect('/nasabah')->with('error', 'Nasabah memiliki transaksi peminjaman yang belum lunas sehingga data nasabah tidak dapat diarsipkan.');
             }
         } catch (\Exception $e) {
             // Rollback transaksi jika terjadi kesalahan
@@ -224,8 +233,6 @@ class NasabahController extends Controller
             return redirect('/nasabah')->with('error', 'Terjadi kesalahan saat mengarsipkan Nasabah. Silakan coba lagi.');
         }
     }
-
-
 
 
     public function showTransactions($id)
@@ -247,14 +254,12 @@ class NasabahController extends Controller
         // Misalnya, Anda ingin format nomor rekening: "N000012345678"
 
         // Dapatkan tanggal lahir dalam format "ymd"
-        $formattedDate = date('ymd', strtotime($dateOfBirth));
+        $formattedDate = date('md', strtotime($dateOfBirth));
+        $padString = date('ymd') . $formattedDate;
 
         // Ambil lima digit pertama dari ID nasabah dan tambahkan nol di depan jika perlu
-        $nasabahIdPart = str_pad($nasabahId, 5, '0', STR_PAD_LEFT);
+        $nomorRekening = str_pad($nasabahId, 12, $padString, STR_PAD_LEFT);
 
-        // Gabungkan semuanya menjadi nomor rekening
-        $accountNumber = "N" . $nasabahIdPart . $formattedDate;
-
-        return $accountNumber;
+        return $nomorRekening;
     }
 }

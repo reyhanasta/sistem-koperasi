@@ -49,7 +49,7 @@ class DatabaseSeeder extends Seeder
             'phone' => '087654321232',
             'date_of_birth' => '1998-11-28',
             'gender' => 'female',
-            'ktp' => '14020198723921',
+            'ktp' => '1402010909970003',
         ]);
         BukuTabungan::create([
             'no_rek' => '230916080911',

@@ -14,10 +14,14 @@ return new class extends Migration
         Schema::create('penarikans', function (Blueprint $table) {
             $table->id();
             $table->string('id_rekening');
+            $table->foreignId('nasabah_id');
             $table->bigInteger('amount');
             $table->string('desc')->nullable(); 
-            $table->boolean('diarsipkan')->default(false);
             $table->timestamps();
+            $table->softDeletes(); // Soft Delete
+
+
+
         });
     }
 

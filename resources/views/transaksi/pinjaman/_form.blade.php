@@ -15,16 +15,20 @@
     </div>
     <div class="form-group">
         <label for="tanggal_pengajuan">Tanggal Pengajuan</label>
-        <input type="date" class="form-control " name="tanggal_pengajuan" id="tanggal_pengajuan" value="{{ now()->format('Y-m-d')}}" required>
+        <input type="date" class="form-control @if ($errors->has('tanggal_pengajuan')) is-invalid @endif"
+            name="tanggal_pengajuan" id="tanggal_pengajuan"
+            value="{{ old('tanggal_pengajuan', now()->format('Y-m-d')) }}" required>
     </div>
     <div class="form-group">
         <label for="jumlah_pinjaman">Jumlah Pinjaman</label>
         <input type="text" class="form-control @if ($errors->has('jumlah_pinjaman')) is-invalid @endif"
-            name="jumlah_pinjaman" id="jumlah_pinjaman" required data-mask>
+            name="jumlah_pinjaman" value="{{ old('jumlah_pinjaman') }}" id="jumlah_pinjaman" required data-mask>
+        @error('jumlah_pinjaman')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
-    @if ($errors->has('jumlah_pinjaman'))
-        <div class="text-danger">Minimal Transaksi Peminjaman Rp.1.000.000</div>
-    @endif
+
+
 
     <div class="form-group">
         <label for="jenis_pinjaman">Jenis Pinjaman</label>
@@ -36,18 +40,19 @@
     </div>
     <div class="form-group">
         <label for="tujuan_pinjaman">Tujuan Pinjaman</label>
-        <input type="text" class="form-control" name="tujuan_pinjaman" id="tujuan_pinjaman" required>
+        <input type="text" class="form-control" name="tujuan_pinjaman" id="tujuan_pinjaman"
+            value="{{ old('tujuan_pinjaman') }}" required>
     </div>
     <div class="form-group">
-        <label for="jangka_waktu">Jangka Waktu (bulan)</label>
+        <label for="jangka_waktu">Jangka Waktu Pembayaran</label>
         <div class="input-group">
-            <input type="number" class="form-control" name="jangka_waktu" id="jangka_waktu" required>
+            <input type="number" class="form-control" name="jangka_waktu" id="jangka_waktu" value="100" readonly>
             <div class="input-group-append">
-                <span class="input-group-text">Bulan</span>
+                <span class="input-group-text">Kali</span>
             </div>
         </div>
     </div>
-    <div class="form-group">
+    {{-- <div class="form-group">
         <label for="bunga">Bunga (%)</label>
         <div class="input-group">
             <input type="number" class="form-control" name="bunga" id="bunga" value="0"required>
@@ -55,7 +60,7 @@
                 <span class="input-group-text">%</span>
             </div>
         </div>
-    </div>
+    </div> --}}
     <div class="form-group">
         <label for="catatan">Catatan (Opstional)</label>
         <textarea name="catatan" id="catatan" cols="30" rows="3" class="form-control"></textarea>

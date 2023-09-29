@@ -66,6 +66,7 @@ class AngsuranController extends Controller
             // Simpan data angsuran
             $angsuran = new Angsuran();
             $angsuran->id_pinjaman = $pinjaman->id;
+            $angsuran->nasabah_id = $pinjaman->nasabah_id;
             $angsuran->jumlah_angsuran = $angsuran_harian;
             $angsuran->tanggal_angsuran = now();
             $angsuran->save();

@@ -59,59 +59,38 @@ class PinjamanController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, PinjamanRequest $pinjamanRequest)
+    public function store(PinjamanRequest $request)
     {
-        $nasabahNotFoundWarning = 'Nasabah tidak ditemukan. Mohon tambahkan terlebih dahulu.';
-        $successMessage = 'Data ditambahkan, buku tabungan nasabah diupdate.';
-
         try {
-            // Lakukan validasi data yang masuk
-            $validatedData = $pinjamanRequest->validated();
+            // Validasi data yang masuk telah dilakukan oleh PinjamanRequest
+            $user = Auth::user();
+            $pegawai = Pegawai::where('user_id', $user->id)->firstOrFail();
 
-            if (!$validatedData) {
-                return back()->with('warning', $nasabahNotFoundWarning);
-            }
-
-            // Generate kode transaksi
-            $kodeInput = $this->generateTransactionCode();
-
-            // Mendapatkan ID pengguna yang sedang login
-            $userId = Auth::id();
-
-            // Mencari pegawai berdasarkan user_id
-            $pegawai = Pegawai::where('user_id', $userId)->first();
-            // Nilai total pembayaran
             $total_pembayaran = $request->jumlah_pinjaman * (1 - ($request->bunga / 100));
-
-            // Nilai total pembayaran
             $angsuran = $total_pembayaran / $request->jangka_waktu;
 
-            // Simpan data pinjaman
-            $data = new Pinjaman();
-            $data->nasabah_id = $request->nasabah;
-            $data->kode_pinjaman = $kodeInput;
-            $data->id_pegawai = $pegawai->id;
-            $data->tanggal_pengajuan = $request->tanggal_pengajuan;
-            $data->jumlah_pinjaman = $request->jumlah_pinjaman;
-            $data->jenis_pinjaman = $request->jenis_pinjaman;
-            $data->tujuan_pinjaman = $request->tujuan_pinjaman;
-            $data->jangka_waktu = $request->jangka_waktu;
-            $data->bunga = $request->bunga;
-            $data->catatan = $request->catatan;
-            $data->angsuran = $angsuran;
-            $data->sisa_pinjaman = $total_pembayaran;
-            $data->total_pembayaran = $total_pembayaran;
+            Pinjaman::create([
+                'nasabah_id' => $request->nasabah,
+                'kode_pinjaman' => $this->generateTransactionCode(),
+                'id_pegawai' => $pegawai->id,
+                'tanggal_pengajuan' => $request->tanggal_pengajuan,
+                'jumlah_pinjaman' => $request->jumlah_pinjaman,
+                'tujuan_pinjaman' => $request->tujuan_pinjaman,
+                'jangka_waktu' => $request->jangka_waktu,
+                'catatan' => $request->catatan,
+                'angsuran' => $angsuran,
+                'sisa_pinjaman' => $total_pembayaran,
+                'total_pembayaran' => $total_pembayaran,
+            ]);
 
-            $data->save();
-
-            return redirect('/trx-pinjaman')->with('success', $successMessage);
+            return redirect('/trx-pinjaman')->with('success', 'Data ditambahkan, buku tabungan nasabah diupdate.');
         } catch (\Exception $e) {
             // Log kesalahan
             Log::error('Terjadi kesalahan saat menyimpan data pinjaman: ' . $e->getMessage());
-            // Tangani kesalahan di sini, misalnya, log kesalahan
-            return back()->with('error', 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
+            return redirect('/trx-pinjaman')->with('error', 'Terjadi kesalahan saat menambahkan data Nasabah. Silakan coba lagi.');
         }
     }
+
 
 
     private function generateTransactionCode()

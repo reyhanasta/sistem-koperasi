@@ -43,7 +43,9 @@ class NasabahRequest extends FormRequest
                 'string',
                 'max:16',
                 'regex:/^\d{16}$/u', // Sesuaikan panjang maksimal KTP, 16 digit angka
-                $nasabahId ? Rule::unique('nasabahs', 'ktp')->ignore($nasabahId) : 'unique:nasabahs,ktp',
+                $nasabahId
+                    ? Rule::unique('nasabahs', 'ktp')->ignore($nasabahId)
+                    : Rule::unique('nasabahs', 'ktp')
             ],
             'date_of_birth' => [
                 'required',
@@ -81,7 +83,7 @@ class NasabahRequest extends FormRequest
 
             'ktp.required' => 'Nomor KTP harus diisi.',
             'ktp.string' => 'Nomor KTP harus berupa teks.',
-            'ktp.unique' => 'Nomor KTP sudah terdaftar.',
+            'ktp.unique' => 'Nomor KTP sudah pernah terdaftar sebelumnya.',
             'ktp.regex' => 'Nomor KTP memiliki format yang tidak sesuai.',
             'ktp.max' => 'Nomor KTP tidak boleh lebih dari 16 karakter.',
 

@@ -11,7 +11,7 @@
                     {{-- <li class="list-group-item"><strong>ID Pinjaman:</strong> {{ $pinjaman->id }}</li> --}}
                     <li class="list-group-item"><strong>Kode Pinjaman:</strong> {{ $pinjaman->kode_pinjaman }}</li>
                     <li class="list-group-item"><strong>ID Anggota:</strong> <a
-                            href="{{ url('nasabah/' . $pinjaman->id_nasabah) }}">{{ $pinjaman->id_nasabah }}</a></li>
+                            href="{{ url('nasabah/' . $pinjaman->nasabah_id) }}">{{ $pinjaman->nasabah_id }}</a></li>
                     <li class="list-group-item"><strong>Tanggal Pengajuan:</strong> {{ $pinjaman->tanggal_pengajuan }}</li>
                     <li class="list-group-item"><strong>Jumlah Pinjaman:</strong>
                         Rp.{{ number_format($pinjaman->jumlah_pinjaman) }}</li>
@@ -97,7 +97,7 @@
                             <tr>
                                 <td>Nama Nasabah</td>
                                 <td><input type="text" name="nama_nasabah" id="modal-nasabah"
-                                        value="{{ $pinjaman->nasabah->nama }}" readonly class="form-control"></td>
+                                        value="{{ $pinjaman->nasabah->name }}" readonly class="form-control"></td>
                             </tr>
                             <tr>
                                 <td>Total Tagihan</td>
@@ -115,36 +115,37 @@
                             <tr>
                                 <td>Jumlah Angsuran</td>
                                 <td>
-                                <td class="input-group">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">Rp</span>
+                                    <div class="input-group">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">Rp</span>
+                                        </div>
+                                        <input type="text" name="angsuran" id="modal-jumlah-angsuran"
+                                            value="{{ number_format($pinjaman->angsuran) }}" readonly class="form-control">
                                     </div>
-                                    <input type="text" name="angsuran" id="modal-jumlah-angsuran"
-                                        value="{{ number_format($pinjaman->angsuran) }}" readonly class="form-control">
                                 </td>
+                            </tr>
+                            <tr>
+                                <td>Angsuran ke </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="number" name="jumlah_angsuran" required class="form-control"
+                                            value="{{ $pinjaman->jumlah_angsuran + 1 }}" readonly>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">/ {{ $pinjaman->jangka_waktu }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <input type="hidden" name="id_pinjaman" value="{{ $pinjaman->id }}">
+                            <input type="hidden" name="nasabah_id" value="{{ $pinjaman->nasabah->id }}">
+                        </table>
                 </div>
-                </tr>
-                <tr>
-                    <td>Angsuran ke </td>
-                    <td>
-                        <div class="input-group">
-                            <input type="number" name="jumlah_angsuran" required class="form-control"
-                                value="{{ $pinjaman->jumlah_angsuran + 1 }}" readonly>
-                            <div class="input-group-append">
-                                <span class="input-group-text">/ {{ $pinjaman->jangka_waktu }}</span>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <input type="hidden" name="id_pinjaman" value="{{ $pinjaman->id }}">
-                </table>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Batalkan</button>
+                    <button type="submit" id="simpanButton" class="btn btn-primary">Simpan</button>
+                </div>
+                </form>
             </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Batalkan</button>
-                <button type="submit" id="simpanButton" class="btn btn-primary">Simpan</button>
-            </div>
-            </form>
         </div>
-    </div>
     </div>
 @endsection

@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('nasabahs', function (Blueprint $table) {
             $table->id(); // ID Nasabah (ID)
             $table->string('name'); // Nama (Name)
+            $table->string('ktp')->unique(); // Nomor KTP (Kartu Tanda Penduduk)
             $table->enum('gender', ['male', 'female']); // Jenis Kelamin (Gender)
             $table->string('phone'); // Nomor Telepon (Phone)
             $table->string('ktp_image_path')->nullable(); // Kolom untuk menyimpan path/URL gambar KTP
             $table->string('address'); // Alamat (Address)
-            $table->string('ktp')->unique(); // Nomor KTP (Kartu Tanda Penduduk)
             $table->date('date_of_birth'); // Tanggal Lahir (Date of Birth)
             $table->date('closure_date')->nullable(); // Tanggal Penutupan (Closure Date)
             $table->timestamps(); // Tanggal Pembuatan dan Perubahan Data

@@ -14,15 +14,16 @@ return new class extends Migration
         Schema::create('angsurans', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_pinjaman');
+            $table->unsignedBigInteger('nasabah_id');
             $table->date('tanggal_angsuran');
             $table->decimal('jumlah_angsuran', 10, 2);
             $table->enum('status', ['Lunas', 'Belum Lunas']);
-            $table->boolean('diarsipkan')->default(false);
             $table->timestamps();
+            $table->softDeletes(); // Soft Delete
+
             // Foreign key constraint
             $table->foreign('id_pinjaman')->references('id')->on('pinjamen');
-
-            
+            $table->foreign('nasabah_id')->references('id')->on('nasabahs');
         });
     }
 

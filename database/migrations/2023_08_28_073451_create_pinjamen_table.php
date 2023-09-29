@@ -19,10 +19,10 @@ return new class extends Migration
             $table->date('tanggal_pengajuan');
             $table->date('tanggal_persetujuan')->nullable();
             $table->decimal('jumlah_pinjaman', 10, 2);
-            $table->string('jenis_pinjaman');
-            $table->string('tujuan_pinjaman');
+            $table->string('jenis_pinjaman')->default('usaha');
+            $table->string('tujuan_pinjaman')->default('usaha kelontong');
             $table->integer('jangka_waktu'); // dalam bulan
-            $table->decimal('bunga', 5, 2)->default(0)->nullable();
+            $table->decimal('bunga', 5, 2)->default(0);
             $table->string('status')->default('Diajukan');
             $table->string('metode_pembayaran')->default('cash');
             $table->date('tanggal_pelunasan')->nullable();
@@ -31,8 +31,9 @@ return new class extends Migration
             $table->integer('jumlah_angsuran')->default(0); // dalam satuan
             $table->decimal('sisa_pinjaman', 10, 2)->default(0);
             $table->text('catatan')->nullable();
-            $table->boolean('diarsipkan')->default(false);
             $table->timestamps();
+            $table->softDeletes(); // Soft Delete
+
             
             // Foreign key constraint
             $table->foreign('nasabah_id')->references('id')->on('nasabahs');

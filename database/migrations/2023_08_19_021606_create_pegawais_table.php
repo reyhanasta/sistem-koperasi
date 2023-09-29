@@ -27,6 +27,8 @@ return new class extends Migration
             $table->string('desc')->nullable();
             $table->enum('status',['kontrak','tetap'])->nullable();
             $table->timestamps();
+            $table->softDeletes(); // Soft Delete
+
         });
     }
 

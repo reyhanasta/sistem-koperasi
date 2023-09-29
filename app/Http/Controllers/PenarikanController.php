@@ -70,6 +70,7 @@ class PenarikanController extends Controller
         if ($validateData) {
             $data = new Penarikan; // Move the creation of $data inside the validation check
             $data->id_rekening = $rekeningNasabah->id;
+            $data->nasabah_id = $request->nasabah;
             $data->amount = $request->amount;
             $data->desc = $request->desc;
             $rekeningNasabah->balance -= $request->amount;
