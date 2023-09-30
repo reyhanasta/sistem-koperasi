@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Requests\PinjamanRequest;
-
 use App\Models\Nasabah;
-use App\Models\Pinjaman;
 use App\Models\Pegawai;
+
+use App\Models\Pinjaman;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\PinjamanRequest;
 
 
 class PinjamanController extends Controller
@@ -96,18 +97,14 @@ class PinjamanController extends Controller
     private function generateTransactionCode()
     {
         $now = now();
-        $year = $now->format('y');
-        $month = $now->format('m');
-        $baseCode = "P{$year}{$month}";
+        $baseCode = "P{$now->format('ym')}";
 
-        // Mengecek apakah kode sudah terdaftar di database
-        $existingCount = Pinjaman::where('kode_pinjaman', 'like', "{$baseCode}%")->count();
+        // Increment the transaction count
+        $transactionCount = Pinjaman::where('kode_pinjaman', 'like', "{$baseCode}%")->count() + 1;
 
-        // Menghasilkan kode dengan nomor urut yang sesuai
-        $transactionCount = $existingCount + 1;
-
-        return $baseCode . sprintf("%03d", $transactionCount);
+        return "{$baseCode}" . str_pad($transactionCount, 3, '0', STR_PAD_LEFT);
     }
+
 
 
     /**
@@ -151,12 +148,7 @@ class PinjamanController extends Controller
     public function updateStatus($id, $newStatus)
     {
         try {
-            $pinjaman = Pinjaman::findOrFail($id);
-
-            // Lakukan validasi status yang sah di sini, jika perlu
-            // Misalnya, Anda ingin memeriksa apakah $newStatus adalah status yang valid
-            $pinjaman->status = $newStatus;
-            $pinjaman->save();
+            Pinjaman::findOrFail($id)->update(['status' => $newStatus]);
 
             return redirect('/trx-pinjaman')->with('success', 'Status berhasil diperbarui.');
         } catch (\Exception $e) {
@@ -166,22 +158,26 @@ class PinjamanController extends Controller
         }
     }
 
-    public function lunasi(Request $request, $id)
+
+    public function lunasi($id)
     {
-        // Cari pinjaman berdasarkan ID
-        $pinjaman = Pinjaman::findOrFail($id);
+        try {
+            // Update status pinjaman menjadi "Lunas" dan sisa_pinjaman menjadi 0
+            Pinjaman::where('id', $id)
+                ->update([
+                    'status' => 'Lunas',
+                    'sisa_pinjaman' => 0,
+                    'jumlah_angsuran' => DB::raw('jumlah_angsuran + 1')
+                ]);
 
-        // Lakukan validasi, misalnya, pastikan status pinjaman adalah "Proses Angsuran"
-
-        // Update status pinjaman menjadi "Lunas"
-        $pinjaman->status = 'Lunas';
-        $pinjaman->sisa_pinjaman = 0; // Jika ingin mengatur sisa_pinjaman menjadi 0
-        $pinjaman->jumlah_angsuran += 1; // Melakukan 1x angsuran lunas
-        $pinjaman->save();
-
-        // Redirect atau kirim respons sesuai dengan kebutuhan Anda
-        return redirect('/trx-pinjaman')->with('success', 'Pembayaran lunas berhasil.');
+            return redirect('/trx-pinjaman')->with('success', 'Pembayaran lunas berhasil.');
+        } catch (\Exception $e) {
+            // Tangani kesalahan
+            Log::error('Terjadi kesalahan saat melakukan pembayaran lunas: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat melakukan pembayaran lunas. Silakan coba lagi.');
+        }
     }
+
 
 
     /**
@@ -189,10 +185,15 @@ class PinjamanController extends Controller
      */
     public function destroy(string $id)
     {
-        //
-        $pinjaman = Pinjaman::findOrFail($id);
-        $pinjaman->delete();
+        try {
+            // Find the Pinjaman by ID and delete it
+            Pinjaman::destroy($id);
 
-        return redirect()->route('pinjaman.index')->with('success', 'Pinjaman berhasil dihapus.');
+            return redirect()->route('pinjaman.index')->with('success', 'Pinjaman berhasil dihapus.');
+        } catch (\Exception $e) {
+            // Handle any errors that occur during deletion
+            Log::error('Terjadi kesalahan saat menghapus Pinjaman: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat menghapus Pinjaman. Silakan coba lagi.');
+        }
     }
 }

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\BukuTabungan;
-use App\Models\Simpanan;
 use App\Models\Nasabah;
+use App\Models\Simpanan;
+use App\Models\BukuTabungan;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\SimpananRequest;
 use Illuminate\Support\Facades\Log; // Impor Log class
 
 class SimpananController extends Controller
@@ -19,27 +21,41 @@ class SimpananController extends Controller
 
     public function index()
     {
-        //
-        // $data = Simpanan::all()->sortByDesc('created_at');
-        // Mendapatkan semua data anggota beserta data pinjaman yang dimilikinya
-        $data = Simpanan::with('Nasabah')->get()->sortByDesc('created_at');
-        $back = url()->previous();
+        try {
+            // Retrieve all Simpanan data with related Nasabah, sorted by created_at in descending order
+            $data = Simpanan::with('Nasabah')->latest('created_at')->get();
+            $back = url()->previous();
 
-        return view('transaksi.simpanan.list', compact('data', 'back'));
+            return view('transaksi.simpanan.list', compact('data', 'back'));
+        } catch (\Exception $e) {
+            // Handle any errors that occur
+            Log::error('Terjadi kesalahan saat mengambil data Simpanan: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat mengambil data Simpanan. Silakan coba lagi.');
+        }
     }
+
     public function riwayatSimpanan($nasabah_id)
     {
-        // Cari nasabah berdasarkan ID
-        $nasabah = Nasabah::find($nasabah_id);
-        $previousUrl = url()->previous();
+        try {
+            // Retrieve Nasabah data and their Simpanan transaction history by ID
+            $nasabah = Nasabah::with('Simpanan')->find($nasabah_id);
+            $previousUrl = url()->previous();
 
-        if (!$nasabah) {
-            return back()->with('warning', 'Nasabah tidak ditemukan.');
+            if (!$nasabah) {
+                return back()->with('warning', 'Nasabah tidak ditemukan.');
+            }
+
+            // Access the Simpanan transactions directly through the relationship
+            $riwayatSimpanan = $nasabah->Simpanan->sortByDesc('created_at');
+
+            return view('transaksi.simpanan.riwayat', compact('nasabah', 'riwayatSimpanan', 'previousUrl'));
+        } catch (\Exception $e) {
+            // Handle any errors that occur
+            Log::error('Terjadi kesalahan saat mengambil riwayat Simpanan: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat mengambil riwayat Simpanan. Silakan coba lagi.');
         }
-        // Ambil riwayat transaksi simpanan nasabah berdasarkan ID nasabah
-        $riwayatSimpanan = Simpanan::where('nasabah_id', $nasabah_id)->orderBy('created_at', 'desc')->get();
-        return view('transaksi.simpanan.riwayat', compact('nasabah', 'riwayatSimpanan', 'previousUrl'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -48,34 +64,29 @@ class SimpananController extends Controller
      */
     public function create()
     {
-        // Generate kode transaksi
-        $kodeInput = $this->generateTransactionCode();
-        // Create a new Simpanan instance
-        $data = new Simpanan;
-        // Fetch all Nasabah data
-        $nasabahList = Nasabah::all();
-        // Get the previous URL for navigation
-        $previousUrl = url()->previous();
-        // Confirmation message for data input
-        $confirmMessage = "Pastikan Data sudah di isi dengan benar, karena data transaksi tidak dapat di ubah lagi";
-        // Pass data to the view using compact()
-        return view('transaksi.simpanan.add', compact('data', 'nasabahList', 'previousUrl', 'confirmMessage', 'kodeInput'));
-    }
+        try {
+            // Generate kode transaksi
+            $kodeInput = $this->generateTransactionCode();
 
-    private function generateTransactionCode()
-    {
-        $now = now();
-        $year = $now->format('y');
-        $month = $now->format('m');
-        $baseCode = "S{$year}{$month}";
+            // Create a new Simpanan instance
+            $data = new Simpanan;
 
-        // Mengecek apakah kode sudah terdaftar di database
-        $existingCount = Simpanan::where('kode_simpanan', 'like', "{$baseCode}%")->count();
+            // Fetch all Nasabah data
+            $nasabahList = Nasabah::all();
 
-        // Menghasilkan kode dengan nomor urut yang sesuai
-        $transactionCount = $existingCount + 1;
+            // Get the previous URL for navigation
+            $previousUrl = url()->previous();
 
-        return $baseCode . sprintf("%03d", $transactionCount);
+            // Confirmation message for data input
+            $confirmMessage = "Pastikan Data sudah di isi dengan benar, karena data transaksi tidak dapat di ubah lagi";
+
+            // Pass data to the view using compact()
+            return view('transaksi.simpanan.add', compact('data', 'kodeInput', 'nasabahList', 'previousUrl', 'confirmMessage'));
+        } catch (\Exception $e) {
+            // Handle any errors that occur
+            Log::error('Terjadi kesalahan saat membuat transaksi Simpanan: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat membuat transaksi Simpanan. Silakan coba lagi.');
+        }
     }
 
     /**
@@ -84,7 +95,7 @@ class SimpananController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SimpananRequest $request)
     {
         // Pesan-pesan yang akan digunakan
         $nasabahNotFoundWarning = 'Nasabah tidak ditemukan. Mohon tambahkan terlebih dahulu.';
@@ -131,6 +142,8 @@ class SimpananController extends Controller
         }
     }
 
+
+
     /**
      * Display the specified resource.
      *
@@ -139,9 +152,24 @@ class SimpananController extends Controller
      */
     public function show($id)
     {
-        //
+        try {
+            // Find the Simpanan by ID
+            $simpanan = Simpanan::findOrFail($id);
 
+            // Fetch the related Nasabah data
+            $nasabah = Nasabah::findOrFail($simpanan->nasabah_id);
+
+            // Pass the found Simpanan and Nasabah data to the view
+            return view('transaksi.simpanan.show', compact('simpanan', 'nasabah'));
+        } catch (\Exception $e) {
+            // Handle the error, for example, log it
+            Log::error('Error while showing Simpanan: ' . $e->getMessage());
+
+            // Redirect back with an error message
+            return back()->with('error', 'Error while showing Simpanan. Please try again.');
+        }
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -151,8 +179,30 @@ class SimpananController extends Controller
      */
     public function edit($id)
     {
-        //
+        try {
+            // Find the Simpanan by ID
+            $data = Simpanan::findOrFail($id);
+
+            // Fetch all Nasabah data
+            $nasabahList = Nasabah::all();
+
+            // Generate kode transaksi
+            $kodeInput = $this->generateTransactionCode();
+
+            //back URL
+            $previousUrl = url()->previous();
+
+            // Pass the found Simpanan and Nasabah data to the view
+            return view('transaksi.simpanan.edit', compact('data', 'nasabahList', 'kodeInput','previousUrl'));
+        } catch (\Exception $e) {
+            // Handle the error, for example, log it
+            Log::error('Error while editing Simpanan: ' . $e->getMessage());
+
+            // Redirect back with an error message
+            return back()->with('error', 'Error while editing Simpanan. Please try again.');
+        }
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -161,10 +211,35 @@ class SimpananController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+
+    public function update(SimpananRequest $request, $id)
     {
-        //
+        try {
+            // Find the Simpanan by ID
+            $simpanan = Simpanan::findOrFail($id);
+
+            // Get the validated data from the request
+            $validatedData = $request->validated();
+
+            // Update the Simpanan data with the validated values
+            $simpanan->type = $validatedData['type'];
+            $simpanan->amount = $validatedData['amount'];
+            $simpanan->desc = $validatedData['desc'];
+
+            // Save the updated Simpanan data
+            $simpanan->save();
+
+            // Redirect to the Simpanan details page with a success message
+            return redirect('/trx-simpanan')->with('success', 'Simpanan data updated successfully.');
+        } catch (\Exception $e) {
+            // Handle the error, for example, log it
+            Log::error('Error while updating Simpanan: ' . $e->getMessage());
+
+            // Redirect back with an error message
+            return back()->with('error', 'Error while updating Simpanan. Please try again.');
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -175,5 +250,20 @@ class SimpananController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function generateTransactionCode()
+    {
+        $now = now();
+        $yearMonth = $now->format('ym');
+        $baseCode = "S{$yearMonth}";
+
+        // Find the maximum existing code
+        $latestCode = Simpanan::where('kode_simpanan', 'like', "{$baseCode}%")->max('kode_simpanan');
+
+        // Extract the numeric part and increment it
+        $transactionCount = (int)substr($latestCode, 6) + 1;
+
+        return "{$baseCode}" . sprintf("%03d", $transactionCount);
     }
 }

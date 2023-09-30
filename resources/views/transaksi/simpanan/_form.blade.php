@@ -1,46 +1,47 @@
 <div class="card-body">
-    <div class="form-group ">
-        
-        @if ($nasabahList->count() > 0)
-            <div class="form-group">
-                <label for="kode">Kode Transaksi</label>
-                <input class="form-control" type="text" name="kode" id="kode" value="{{ $kodeInput }}" readonly>
-            </div>
-            <label>Data Nasabah</label>
-            <select class="form-control" name="nasabah" id="nasabah">
-                <!--NANTI AKAN MENGGUNAKAN DATA MASTER JABATAN-->
-                @foreach ($nasabahList as $x)
-                    <option value={{ $x->id }} data-nama="{{ $x->name }}">{{ $x->id }} -
-                        {{ $x->name }}</option>
-                @endforeach
-            </select>
-        @else
-            <a class="form-control btn btn-success" href="{{ url('nasabah/create/') }}" class="btn btn-primary"><i
-                    class="fas fa-plus"></i><span> Tambah Data Nasabah</span></a>
-        @endif
-
+    <div class="form-group">
+        <label for="kode">Kode Transaksi</label>
+        <input class="form-control" type="text" name="kode" id="kode" value="{{ $kodeInput }}" readonly>
+    </div>
+    <div class="form-group">
+        <label>Data Nasabah</label>
+        <select class="form-control @error('nasabah') is-invalid @enderror" name="nasabah" id="nasabah">
+            @foreach ($nasabahList as $x)
+                <option value="{{ $x->id }}" data-nama="{{ $x->name }}"
+                    {{ old('nasabah', $data->nasabah_id) == $x->id ? 'selected' : '' }}>
+                    {{ $x->id }} - {{ $x->name }}
+                </option>
+            @endforeach
+        </select>
+        @error('nasabah')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
     <div class="form-group">
         <label for="type">Jenis Simpanan</label>
-        <select class="form-control" name="type" id="type" id="jenis_simpanan">
-            <option value="pokok">Pokok</option>
-            <option value="wajib">Wajib</option>
-            <option value="sukarela">Sukarela</option>
+        <select class="form-control @error('type') is-invalid @enderror" name="type" id="type">
+            <option value="pokok" {{ old('type', $data->type) == 'pokok' ? 'selected' : '' }}>Pokok</option>
+            <option value="wajib" {{ old('type', $data->type) == 'wajib' ? 'selected' : '' }}>Wajib</option>
+            <option value="sukarela" {{ old('type', $data->type) == 'sukarela' ? 'selected' : '' }}>Sukarela</option>
         </select>
+        @error('type')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
+
     <div class="form-group">
         <label for="name">Jumlah</label>
         <div class="input-group">
-            <input type="text" class="form-control  @if ($errors->has('amount')) is-invalid @endif"
-                id="amount" name="amount" placeholder="Masukan nominal yang akan di Simpan"
-                value="{{ $data->amount }}" required data-mask>
+            <input type="text" class="form-control @error('amount') is-invalid @enderror" id="amount"
+                name="amount" placeholder="Masukan nominal yang akan di Simpan"
+                value="{{ old('amount', $data->amount) }}" required data-mask>
+            @error('amount')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
-        @if ($errors->has('amount'))
-            <div class="text-danger">Minimal Transaksi Rp.5.000</div>
-        @endif
     </div>
     <div class="form-group">
         <label for="name">Keterangan</label>
-        <textarea name="desc" id="desc" cols="30" rows="3" class="form-control"></textarea>
+        <textarea name="desc" id="desc" cols="30" rows="3" class="form-control">{{ old('desc', $data->desc) }}</textarea>
     </div>
 </div>
