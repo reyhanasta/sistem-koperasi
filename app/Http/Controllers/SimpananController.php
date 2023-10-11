@@ -7,7 +7,6 @@ use App\Models\Simpanan;
 use App\Models\BukuTabungan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\SimpananRequest;
 use Illuminate\Support\Facades\Log; // Impor Log class
 
@@ -69,7 +68,7 @@ class SimpananController extends Controller
             $kodeInput = $this->generateTransactionCode();
 
             // Create a new Simpanan instance
-            $data = new Simpanan;
+            $data = new Simpanan();
 
             // Fetch all Nasabah data
             $nasabahList = Nasabah::all();
@@ -193,7 +192,7 @@ class SimpananController extends Controller
             $previousUrl = url()->previous();
 
             // Pass the found Simpanan and Nasabah data to the view
-            return view('transaksi.simpanan.edit', compact('data', 'nasabahList', 'kodeInput','previousUrl'));
+            return view('transaksi.simpanan.edit', compact('data', 'nasabahList', 'kodeInput', 'previousUrl'));
         } catch (\Exception $e) {
             // Handle the error, for example, log it
             Log::error('Error while editing Simpanan: ' . $e->getMessage());
@@ -203,18 +202,11 @@ class SimpananController extends Controller
         }
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-
     public function update(SimpananRequest $request, $id)
     {
         try {
+            DB::beginTransaction();
+
             // Find the Simpanan by ID
             $simpanan = Simpanan::findOrFail($id);
 
@@ -223,15 +215,40 @@ class SimpananController extends Controller
 
             // Update the Simpanan data with the validated values
             $simpanan->type = $validatedData['type'];
-            $simpanan->amount = $validatedData['amount'];
+            $newAmount = $validatedData['amount'];
+            $previousAmount = $simpanan->amount;
+
+            if ($newAmount < $previousAmount) {
+                // Cek apakah saldo cukup
+                $rekeningNasabah = BukuTabungan::where('nasabah_id', $request->nasabah)->first();
+                if ($rekeningNasabah->balance < ($previousAmount - $newAmount)) {
+                    throw new \Exception('Saldo buku tabungan tidak mencukupi.');
+                }
+            }
+
+            $simpanan->amount = $newAmount;
             $simpanan->desc = $validatedData['desc'];
+
+            // Hitung selisih jumlah baru dan jumlah lama
+            $amountDiff = $newAmount - $previousAmount;
+
+            // Perbarui saldo buku tabungan yang sesuai dengan Simpanan
+            $rekeningNasabah = BukuTabungan::where('nasabah_id', $request->nasabah)->first();
+            if ($rekeningNasabah) {
+                $rekeningNasabah->balance += $amountDiff;
+                $rekeningNasabah->save();
+            }
 
             // Save the updated Simpanan data
             $simpanan->save();
 
+            DB::commit();
+
             // Redirect to the Simpanan details page with a success message
             return redirect('/trx-simpanan')->with('success', 'Simpanan data updated successfully.');
         } catch (\Exception $e) {
+            DB::rollback();
+
             // Handle the error, for example, log it
             Log::error('Error while updating Simpanan: ' . $e->getMessage());
 
@@ -241,16 +258,47 @@ class SimpananController extends Controller
     }
 
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
-        //
+        try {
+            // Mulai transaksi database
+            DB::beginTransaction();
+
+            // Temukan data Simpanan berdasarkan ID
+            $simpanan = Simpanan::findOrFail($id);
+
+            // Simpan saldo awal sebelum menghapus Simpanan
+            $previousAmount = $simpanan->amount;
+
+            // Temukan rekening nasabah terkait
+            $rekeningNasabah = BukuTabungan::where('nasabah_id', $simpanan->nasabah_id)->first();
+
+            // Jika rekening nasabah ditemukan
+            if ($rekeningNasabah) {
+                // Kurangi saldo buku tabungan dengan jumlah Simpanan yang akan dihapus
+                $rekeningNasabah->balance -= $previousAmount;
+                $rekeningNasabah->save();
+            }
+
+            // Hapus data Simpanan
+            $simpanan->delete();
+
+            // Commit transaksi jika berhasil
+            DB::commit();
+
+            // Redirect atau kirim respons sesuai dengan kebutuhan Anda
+            return redirect('/trx-simpanan')->with('success', 'Data Simpanan berhasil dihapus.');
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollBack();
+
+            // Tangani kesalahan
+            Log::error('Terjadi kesalahan saat menghapus Simpanan: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat menghapus Simpanan. Silakan coba lagi.');
+        }
     }
+
 
     private function generateTransactionCode()
     {

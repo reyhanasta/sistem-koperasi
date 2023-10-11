@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
@@ -16,7 +15,7 @@ return new class extends Migration
             $table->unsignedBigInteger('no_rek');
             $table->foreignId('nasabah_id');
             $table->bigInteger('balance');
-            $table->enum('status',['aktif','non-aktif']);
+            $table->enum('status', ['aktif','non-aktif']);
             $table->string('notes')->nullable();
             $table->timestamp('closed_date')->nullable();
             $table->timestamps();

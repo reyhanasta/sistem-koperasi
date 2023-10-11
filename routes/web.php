@@ -29,11 +29,11 @@ Route::get('/', function () {
 
 Route::get('/dashboard', [DashboardController::class,'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth','verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     Route::resource('pegawai', PegawaiController::class);
     Route::resource('nasabah', NasabahController::class);
     Route::resource('buku-tabungan', BukuTabunganController::class);
@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
 
 });
 
-Route::get('/ujicoba',function(){
+Route::get('/ujicoba', function () {
     return "hello world";
 })->middleware(['auth', 'verified','role:admin'])->name('ujicoba');
 

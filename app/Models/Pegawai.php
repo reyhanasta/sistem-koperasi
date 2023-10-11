@@ -11,7 +11,8 @@ class Pegawai extends Model
 
     protected $guarded = ['id'];
 
-    public function pinjaman(){
+    public function pinjaman()
+    {
         return $this->hasMany(Pinjaman::class);
     }
 }

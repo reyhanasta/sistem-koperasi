@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Nasabah;
 use App\Models\Simpanan;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class ArsipSimpananController extends Controller
 {

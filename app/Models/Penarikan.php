@@ -12,10 +12,12 @@ class Penarikan extends Model
     use SoftDeletes;
     protected $guarded = ['id'];
 
-    public function bukuTabungan(){
-        return $this->belongsTo(BukuTabungan::class,'id_rekening');
+    public function bukuTabungan()
+    {
+        return $this->belongsTo(BukuTabungan::class, 'id_rekening');
     }
-    public function nasabah(){
-        return $this->belongsTo(Nasabah::class,'nasabah_id');
+    public function nasabah()
+    {
+        return $this->belongsTo(Nasabah::class, 'nasabah_id');
     }
 }

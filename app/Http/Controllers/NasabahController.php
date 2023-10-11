@@ -12,11 +12,7 @@ use App\Models\Simpanan;
 use App\Models\BukuTabungan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\NasabahRequest;
-
-
-
 
 class NasabahController extends Controller
 {
@@ -40,7 +36,7 @@ class NasabahController extends Controller
     public function create()
     {
         //
-        $data = new Nasabah;
+        $data = new Nasabah();
         $back = url()->previous();
         return view('nasabah.add', compact('data', 'back'));
     }
@@ -248,7 +244,7 @@ class NasabahController extends Controller
         return view('transaksi.index', compact('nasabah', 'transaksiSimpanan'));
     }
 
-    function generateAccountNumber($nasabahId, $dateOfBirth)
+    public function generateAccountNumber($nasabahId, $dateOfBirth)
     {
         // Format nomor rekening sesuai dengan kebutuhan Anda
         // Misalnya, Anda ingin format nomor rekening: "N000012345678"

@@ -17,7 +17,7 @@ class MasterJabatanController extends Controller
         //
         $data = MasterJabatan::all();
         $back = url()->previous();
-        return view('master.jabatan.list',compact('data','back'));
+        return view('master.jabatan.list', compact('data', 'back'));
     }
 
     /**
@@ -28,9 +28,9 @@ class MasterJabatanController extends Controller
     public function create()
     {
         //
-        $data = new MasterJabatan;
+        $data = new MasterJabatan();
         $back = url()->previous();
-        return view('master.jabatan.add',compact('data','back'));
+        return view('master.jabatan.add', compact('data', 'back'));
     }
 
     /**
@@ -42,11 +42,11 @@ class MasterJabatanController extends Controller
     public function store(Request $request)
     {
         //
-        $data = new MasterJabatan;
+        $data = new MasterJabatan();
         $data->name = $request->name;
         $data->save();
 
-        return redirect('/master-jabatan')->with('success','Data berhasil ditambahkan !');
+        return redirect('/master-jabatan')->with('success', 'Data berhasil ditambahkan !');
     }
 
     /**
@@ -72,7 +72,7 @@ class MasterJabatanController extends Controller
         //
         $data = MasterJabatan::find($id);
         $back = url()->previous();
-        return view('master.jabatan.edit',compact('data','back'));
+        return view('master.jabatan.edit', compact('data', 'back'));
     }
 
     /**
@@ -88,7 +88,7 @@ class MasterJabatanController extends Controller
         $data = MasterJabatan::findorFail($id);
         $data->name = $request->name;
         $data->save();
-        return redirect('master-jabatan')->with('success','Data Berhasil di Ubah !');
+        return redirect('master-jabatan')->with('success', 'Data Berhasil di Ubah !');
     }
 
     /**
@@ -102,7 +102,7 @@ class MasterJabatanController extends Controller
         //
         $data = MasterJabatan::find($id);
         $data->delete();
-        
-        return redirect('/master-jabatan')->with('success','Data Berhasil di Hapus !');
+
+        return redirect('/master-jabatan')->with('success', 'Data Berhasil di Hapus !');
     }
 }
