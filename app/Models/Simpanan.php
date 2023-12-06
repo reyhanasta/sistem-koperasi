@@ -10,12 +10,14 @@ class Simpanan extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    
+
     protected $guarded = ['id'];
-    public function bukuTabungan(){
+    public function bukuTabungan()
+    {
         return $this->belongsTo(BukuTabungan::class);
     }
-    public function nasabah(){
-        return $this->belongsTo(Nasabah::class,'nasabah_id');
+    public function nasabah()
+    {
+        return $this->belongsTo(Nasabah::class, 'nasabah_id');
     }
 }

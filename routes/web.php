@@ -29,21 +29,21 @@ Route::get('/', function () {
 
 Route::get('/dashboard', [DashboardController::class,'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth','verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     Route::resource('pegawai', PegawaiController::class);
     Route::resource('nasabah', NasabahController::class);
-    Route::resource('buku-tabungan', BukuTabunganController::class);
+    // Route::resource('buku-tabungan', BukuTabunganController::class);
     Route::resource('master-jabatan', MasterJabatanController::class);
     Route::resource('trx-simpanan', SimpananController::class);
     Route::resource('trx-penarikan', PenarikanController::class);
     Route::resource('trx-pinjaman', PinjamanController::class);
     Route::resource('trx-angsuran', AngsuranController::class);
 
-
+    Route::get('/saldoNasabah/{id}', [BukuTabunganController::class, 'getSaldo']);
 
     Route::put('/pinjaman/{id}/update-status/{newStatus}', [PinjamanController::class, 'updateStatus'])->name('pinjaman.updateStatus');
     Route::put('/pinjaman/{id}/lunasi', [PinjamanController::class, 'lunasi'])->name('pinjaman.lunasi');
@@ -53,7 +53,7 @@ Route::middleware('auth')->group(function () {
 
 });
 
-Route::get('/ujicoba',function(){
+Route::get('/ujicoba', function () {
     return "hello world";
 })->middleware(['auth', 'verified','role:admin'])->name('ujicoba');
 

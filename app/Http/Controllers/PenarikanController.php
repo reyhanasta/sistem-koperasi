@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Nasabah;
 use App\Models\Penarikan;
 use App\Models\BukuTabungan;
-use App\Http\Controllers\Controller;
 
 
 use Illuminate\Http\Request;
@@ -21,7 +20,7 @@ class PenarikanController extends Controller
     {
         //
         $data = Penarikan::with('bukuTabungan')->get()->sortByDesc('created_at');
-       
+
         return view('transaksi.penarikan.list', compact('data'));
     }
 
@@ -32,8 +31,9 @@ class PenarikanController extends Controller
      */
     public function create()
     {
-        $data = new Penarikan;
+        $data = new Penarikan();
         $nasabahList = Nasabah::all();
+
         $previousUrl = url()->previous();
         $confirmationMessage = "Pastikan Data sudah di isi dengan benar, karena data transaksi tidak dapat di ubah lagi";
 
@@ -51,7 +51,7 @@ class PenarikanController extends Controller
     public function store(Request $request)
     {
         $rekeningNasabah = BukuTabungan::where('nasabah_id', $request->nasabah)->first();
-
+        
         $validateData = $request->validate([
             'nasabah' => 'required', // Change 'Nasabah' to 'nasabah'
             'amount' => [
@@ -59,8 +59,9 @@ class PenarikanController extends Controller
                 'min:20000',
                 'numeric',
                 function ($attribute, $value, $fail) use ($rekeningNasabah) {
+                  
                     $balance = $rekeningNasabah->balance;
-                    
+
                     if ($value > $balance) {
                         $fail("The $attribute must not be greater than the account balance.");
                     }
@@ -69,13 +70,13 @@ class PenarikanController extends Controller
         ]);
 
         if ($validateData) {
-            $data = new Penarikan; // Move the creation of $data inside the validation check
+            $data = new Penarikan(); // Move the creation of $data inside the validation check
             $data->id_rekening = $rekeningNasabah->id;
             $data->nasabah_id = $request->nasabah;
             $data->amount = $request->amount;
             $data->desc = $request->desc;
             $rekeningNasabah->balance -= $request->amount;
-            
+
             $rekeningNasabah->save();
             $data->save();
             return redirect('trx-penarikan')->with('success', 'Data Berhasil Ditambahkan!');

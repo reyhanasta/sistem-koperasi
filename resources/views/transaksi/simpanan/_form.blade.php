@@ -17,7 +17,7 @@
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-    <div class="form-group">
+    <div class="form-group"> 
         <label for="type">Jenis Simpanan</label>
         <select class="form-control @error('type') is-invalid @enderror" name="type" id="type">
             <option value="pokok" {{ old('type', $data->type) == 'pokok' ? 'selected' : '' }}>Pokok</option>

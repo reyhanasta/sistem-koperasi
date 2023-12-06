@@ -9,10 +9,8 @@ use App\Models\Pinjaman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\PinjamanRequest;
-
 
 class PinjamanController extends Controller
 {
@@ -50,7 +48,7 @@ class PinjamanController extends Controller
     public function create()
     {
         //
-        $data = new Pinjaman;
+        $data = new Pinjaman();
         $nasabahList = Nasabah::all();
         $previousUrl = url()->previous();
         $confirmMessage = "Pastikan Data sudah di isi dengan benar, karena data transaksi tidak dapat di ubah lagi";

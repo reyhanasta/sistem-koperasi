@@ -12,7 +12,8 @@ class Angsuran extends Model
     use SoftDeletes;
     protected $guarded = ['id'];
 
-    public function nasabah(){
-        return $this->belongsTo(Nasabah::class,'nasabah_id');
+    public function nasabah()
+    {
+        return $this->belongsTo(Nasabah::class, 'nasabah_id');
     }
 }

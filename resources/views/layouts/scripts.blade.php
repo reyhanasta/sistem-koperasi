@@ -30,6 +30,8 @@
 <script src="{{ asset('adminlte/') }}/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="{{ asset('adminlte/') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="{{ asset('adminlte/') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+
 <!-- Page specific script -->
 <script>
     //Initialize Select2 Elements
@@ -39,6 +41,29 @@
     $('.select2bs4').select2({
         theme: 'bootstrap4'
     })
+
+
+    //MENGAMBIL SALDO NASABAH
+    $(document).ready(function() {
+        $('#selectNasabah').on('change', function() {
+            var id = $(this).val();
+            if (id) {
+                $.ajax({
+                    url: '/saldoNasabah/' + id, // Adjusted URL
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                       
+                        $('#balance').val(data[0].balance); // Set the value to the input field
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText); // Log any errors for debugging
+                    }
+                });
+            }
+        });
+    });
+
 
     $(function() {
         $("#example1").DataTable({
