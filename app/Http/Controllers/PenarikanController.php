@@ -41,6 +41,7 @@ class PenarikanController extends Controller
     }
 
 
+
     /**
      * Store a newly created resource in storage.
      *
@@ -90,7 +91,9 @@ class PenarikanController extends Controller
      */
     public function show($id)
     {
-        //
+        $x = BukuTabungan::where('nasabah_id', $id)->first();
+
+        return response()->json($x);
     }
 
     /**

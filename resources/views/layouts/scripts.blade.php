@@ -2,6 +2,8 @@
 <script src="{{ asset('adminlte/') }}/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="{{ asset('adminlte/') }}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Select2 -->
+<script src="{{ asset('adminlte/') }}/plugins/select2/js/select2.full.min.js"></script>
 <!-- Ekko Lightbox -->
 <script src="{{ asset('adminlte/') }}/plugins/ekko-lightbox/ekko-lightbox.min.js"></script>
 <!-- SweetAlert2 -->
@@ -30,6 +32,14 @@
 <script src="{{ asset('adminlte/') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <!-- Page specific script -->
 <script>
+    //Initialize Select2 Elements
+    $('.select2').select2()
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+        theme: 'bootstrap4'
+    })
+
     $(function() {
         $("#example1").DataTable({
             "responsive": true,
@@ -94,7 +104,7 @@
         document.getElementById('modal-kode').textContent = kode;
         document.getElementById('modal-nasabah').textContent = nasabah;
         document.getElementById('modal-jumlah').textContent = amount;
-        document.getElementById('modal-type').textContent = type;
+        document.getElementById('modal-type').textContent = type.charAt(0).toUpperCase() + type.slice(1);
         document.getElementById('modal-desc').textContent = desc;
 
         // Mendengarkan kejadian "keydown" di elemen input
@@ -137,7 +147,7 @@
             showConfirmButton: false,
             timer: 3000
         });
-        toastr.success('{{session('success')}}')
+        toastr.success('{{ session('success') }}')
     @endif
     @if (session('error'))
         var Toast = Swal.mixin({
@@ -146,6 +156,16 @@
             showConfirmButton: false,
             timer: 3000
         });
-        toastr.warning('{{session('error')}}')
+        toastr.warning('{{ session('error') }}')
     @endif
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#nasabah').change(function() {
+            var selectedUserId = $(this).val();
+
+            console.log(selectedUserId);
+        });
+    });
 </script>

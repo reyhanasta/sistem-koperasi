@@ -30,13 +30,12 @@
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Nomor Pinjaman</th>
+                                        <th width="10px">No</th>
+                                        <th width="10px">Nomor Pinjaman</th>
                                         <th>Nama Peminjam</th>
-                                        <th>Tanggal Peminjaman</th>
-                                        <th>Jumlah Pinjaman</th>
-                                        <th>Jangka Waktu</th>
-                                        <th>Status Pinjaman</th>
+                                        <th width="10px">Tanggal Peminjaman</th>
+                                        <th width="10px">Jumlah Pinjaman</th>
+                                        <th width="10px">Status Pinjaman</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -46,10 +45,11 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $index->kode_pinjaman }}</td>
-                                            <td><a href="{{ url('nasabah/' . $index->nasabah->id) }}">{{ $index->nasabah->name }}</a></td>
-                                            <td>{{ $index->created_at }}</td>
+                                            <td><a
+                                                    href="{{ url('nasabah/' . $index->nasabah->id) }}">{{ $index->nasabah->name }}</a>
+                                            </td>
+                                            <td>{{ $index->created_at->format('d-m-Y') }}</td>
                                             <td>Rp.{{ number_format($index->jumlah_pinjaman) }}</td>
-                                            <td>{{ $index->jangka_waktu }} Kali</td>
                                             <td>{{ $index->status }}</td>
 
                                             <td>

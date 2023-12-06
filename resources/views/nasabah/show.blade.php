@@ -119,10 +119,10 @@
                                             <div class="ktp">
                                                 <br>
                                                 <a href="{{ asset('storage/ktp_images/' . $data->ktp_image_path) }}"
-                                                    data-toggle="lightbox" data-title="sample 1 - white"
+                                                    data-toggle="lightbox" data-title="KTP"
                                                     data-gallery="gallery">
                                                     <img src="{{ asset('storage/ktp_images/' . $data->ktp_image_path) }}"
-                                                        class="img-fluid mb-2" alt="white sample" width="50%"
+                                                        class="img-fluid mb-2" alt="Foto Identitas Nasabah" width="50%"
                                                         height="50%" />
 
                                                 </a>

@@ -40,6 +40,8 @@
             @enderror
         </div>
     </div>
+   
+    
     <div class="form-group">
         <label for="name">Keterangan</label>
         <textarea name="desc" id="desc" cols="30" rows="3" class="form-control">{{ old('desc', $data->desc) }}</textarea>

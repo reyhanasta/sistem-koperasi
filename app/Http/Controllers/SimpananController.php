@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Nasabah;
 use App\Models\Simpanan;
 use App\Models\BukuTabungan;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SimpananRequest;
