@@ -74,6 +74,7 @@ class PinjamanController extends Controller
                 'id_pegawai' => $pegawai->id,
                 'tanggal_pengajuan' => $request->tanggal_pengajuan,
                 'jumlah_pinjaman' => $request->jumlah_pinjaman,
+                'jenis_pinjaman' => $request->jenis_pinjaman,
                 'tujuan_pinjaman' => $request->tujuan_pinjaman,
                 'jangka_waktu' => $request->jangka_waktu,
                 'catatan' => $request->catatan,
