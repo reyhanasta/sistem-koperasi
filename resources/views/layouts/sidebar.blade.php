@@ -30,7 +30,7 @@
         <!-- Add icons to the links using the .nav-icon class
              with font-awesome or any other icon font library -->
         <li class="nav-item">
-          <a href="/" class="nav-link {{ request()->is('/') ? 'active' : '' }}">
+          <a href="/dashboard" class="nav-link {{ request()->is('/') ? 'active' : '' }}">
               <i class="fas fa-home nav-icon"></i>
               <p>Dashboard</p>
             </a>
