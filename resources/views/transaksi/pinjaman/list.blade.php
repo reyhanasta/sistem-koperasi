@@ -31,7 +31,7 @@
                                 <thead>
                                     <tr>
                                         <th width="10px">No</th>
-                                        <th width="10px">Nomor Pinjaman</th>
+                                        <th width="10px">Kode Pinjaman</th>
                                         <th>Nama Peminjam</th>
                                         <th width="10px">Tanggal Peminjaman</th>
                                         <th width="10px">Jumlah Pinjaman</th>
@@ -53,7 +53,7 @@
                                             <td>{{ $index->status }}</td>
 
                                             <td>
-                                                <div class="btn-group">
+                                                {{-- <div class="btn-group">
                                                     <button type="button" class="btn btn-default">Tindakan</button>
                                                     <button type="button"
                                                         class="btn btn-default dropdown-toggle dropdown-icon"
@@ -84,30 +84,48 @@
                                                                     Lunas
                                                                 </button>
                                                             </form>
-                                                        @endif
+                                                        @endif --}}
 
-
-                                                        {{-- <a class="dropdown-item"
-                                                            href="{{ url('trx-angsuran/' . $index->id . '/add') }}"><i
-                                                                class="fas fa-edit nav-icon"></i> Perpanjang Pinjaman</a> --}}
-                                                        {{-- <a class="dropdown-item"
-                                                            href="{{ url('trx-angsuran/' . $index->id . '/add') }}"><i
-                                                                class="fas fa-edit nav-icon"></i>Status Pengajuan</a> --}}
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                    </tfoot>
-                            </table>
+                                                <a href="{{ url('trx-pinjaman/' . $index->id) }}" class="btn btn-app">
+                                                    <i class="fas fa-search nav-icon"></i> Detail Pinjaman
+                                                </a>
+                                                @if (auth()->user()->hasRole('admin'))
+                                                    <a class="btn btn-app"
+                                                        href="{{ url('trx-angsuran/' . $index->id . '/add') }}"><i
+                                                            class="fas fa-edit nav-icon"></i> Edit Pinjaman</a>
+                                                    <form action="{{ url('trx-pinjaman/' . $index->id) }}" method="post">
+                                                        @method('delete')
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-app" id="deleteData">
+                                                            <i class="fas fa-trash nav-icon"></i> Delete</button>
+                                                    </form>
+                                                @endif
+                                                @if ($index->status !== 'Lunas')
+                                                    <form action="{{ route('pinjaman.lunasi', ['id' => $index->id]) }}"
+                                                        method="post">
+                                                        @csrf
+                                                        @method('PUT') <!-- Ganti dengan PATCH jika sesuai -->
+                                                        <button type="submit" class="btn btn-app" href=""><i
+                                                                class="fas fa-cash-register nav-icon"></i> Bayar
+                                                            Lunas
+                                                        </button>
+                                                    </form>
+                                                @endif
                         </div>
-                        <!-- /.card-body -->
                     </div>
-                    <!-- /.card -->
+                    </td>
+                    </tr>
+                    @endforeach
+                    </tfoot>
+                    </table>
                 </div>
-                <!-- /.col -->
+                <!-- /.card-body -->
             </div>
-            <!-- /.row -->
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+        </div>
+        <!-- /.row -->
         </div>
         <!-- /.container-fluid -->
     </section>

@@ -53,8 +53,9 @@
                     type: 'GET',
                     dataType: 'json',
                     success: function(data) {
-                       
-                        $('#balance').val(data[0].balance); // Set the value to the input field
+
+                        $('#balance').val(data[0]
+                            .balance); // Set the value to the input field
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText); // Log any errors for debugging
@@ -183,6 +184,30 @@
         });
         toastr.warning('{{ session('error') }}')
     @endif
+
+    $('#deleteData').on('click', function(e) {
+        e.preventDefault();
+        var form = $(this).parents('form');
+        Swal.fire({
+            title: 'Apakah yakin akna menghapus data ini?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                ).then(() => {
+                    form.submit();
+                });
+            }
+        });
+    });
 </script>
 
 <script>

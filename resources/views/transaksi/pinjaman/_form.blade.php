@@ -31,17 +31,12 @@
 
 
     <div class="form-group">
-        <label for="jenis_pinjaman">Jenis Pinjaman</label>
-        <select class="form-control" name="jenis_pinjaman" id="jenis_pinjaman" required>
-            <option value="usaha">Usaha</option>
-            <option value="pribadi">Pribadi</option>
-            <!-- Tambahkan pilihan jenis pinjaman lainnya sesuai kebutuhan -->
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="tujuan_pinjaman">Tujuan Pinjaman</label>
-        <input type="text" class="form-control" name="tujuan_pinjaman" id="tujuan_pinjaman"
-            value="{{ old('tujuan_pinjaman') }}" required>
+        <label for="jenis_pinjaman">Jenis Usaha</label>
+        <input type="text" class="form-control"id="jenis_usaha" name="jenis_usaha"
+            value="{{ old('jenis_usaha') }}"id="">
+        @error('jenis_usaha')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
     <div class="form-group">
         <label for="jangka_waktu">Jangka Waktu Pembayaran</label>

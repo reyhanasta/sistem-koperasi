@@ -287,7 +287,7 @@ class SimpananController extends Controller
             DB::commit();
 
             // Redirect atau kirim respons sesuai dengan kebutuhan Anda
-            return redirect('/trx-simpanan')->with('success', 'Data Simpanan berhasil dihapus.');
+            return redirect('/trx-simpanan');
         } catch (\Exception $e) {
             // Rollback transaksi jika terjadi kesalahan
             DB::rollBack();
@@ -306,11 +306,12 @@ class SimpananController extends Controller
         $baseCode = "S{$yearMonth}";
 
         // Find the maximum existing code
-        $latestCode = Simpanan::where('kode_simpanan', 'like', "{$baseCode}%")->max('kode_simpanan');
+        $latestCode = Simpanan::withTrashed()->where('kode_simpanan', 'like', "{$baseCode}%")->max('kode_simpanan');
 
         // Extract the numeric part and increment it
         $transactionCount = (int)substr($latestCode, 6) + 1;
-
+        
+        // dd($baseCode.sprintf("%03d", $transactionCount));
         return "{$baseCode}" . sprintf("%03d", $transactionCount);
     }
 }

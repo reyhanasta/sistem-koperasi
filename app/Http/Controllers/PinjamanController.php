@@ -98,7 +98,7 @@ class PinjamanController extends Controller
         $baseCode = "P{$now->format('ym')}";
 
         // Increment the transaction count
-        $transactionCount = Pinjaman::where('kode_pinjaman', 'like', "{$baseCode}%")->count() + 1;
+        $transactionCount = Pinjaman::withTrashed()->where('kode_pinjaman', 'like', "{$baseCode}%")->count() + 1;
 
         return "{$baseCode}" . str_pad($transactionCount, 3, '0', STR_PAD_LEFT);
     }
@@ -186,8 +186,7 @@ class PinjamanController extends Controller
         try {
             // Find the Pinjaman by ID and delete it
             Pinjaman::destroy($id);
-
-            return redirect()->route('pinjaman.index')->with('success', 'Pinjaman berhasil dihapus.');
+            return redirect('/trx-pinjaman');
         } catch (\Exception $e) {
             // Handle any errors that occur during deletion
             Log::error('Terjadi kesalahan saat menghapus Pinjaman: ' . $e->getMessage());

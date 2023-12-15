@@ -18,8 +18,7 @@ return new class () extends Migration {
             $table->date('tanggal_pengajuan');
             $table->date('tanggal_persetujuan')->nullable();
             $table->decimal('jumlah_pinjaman', 10, 2);
-            $table->string('jenis_pinjaman')->default('usaha');
-            $table->string('tujuan_pinjaman')->default('usaha kelontong');
+            $table->string('jenis_usaha')->default('kelontong');
             $table->integer('jangka_waktu'); // dalam bulan
             $table->decimal('bunga', 5, 2)->default(0);
             $table->string('status')->default('Diajukan');

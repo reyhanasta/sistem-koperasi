@@ -74,8 +74,7 @@
                                                                 method="post">
                                                                 @method('delete')
                                                                 @csrf
-                                                                <button type="submit" class="dropdown-item"
-                                                                    onclick="return confirm('Apakah anda sudah yakin ?')">
+                                                                <button type="submit" class="dropdown-item" id="deleteData">
                                                                     <i class="fas fa-trash nav-icon"></i> Delete</button>
                                                             </form>
                                                         @endif

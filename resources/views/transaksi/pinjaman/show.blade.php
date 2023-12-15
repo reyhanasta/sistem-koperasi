@@ -64,7 +64,7 @@
                         <a href="{{ $previousUrl }}" class="btn btn-secondary">Kembali</a>
                         <button type="button" class="btn btn-primary" onclick="tampilkanModalAngsuran()"
                             data-toggle="modal" data-target="#modal-default">
-                            Lakukan Angsuran
+                            Bayar Angsuran
                         </button>
                     @endif
                 </div>
