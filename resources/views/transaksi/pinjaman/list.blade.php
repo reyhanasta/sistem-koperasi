@@ -32,8 +32,8 @@
                                     <tr>
                                         <th width="10px">No</th>
                                         <th width="10px">Kode Pinjaman</th>
-                                        <th>Nama Peminjam</th>
-                                        <th width="10px">Tanggal Peminjaman</th>
+                                        <th width="10px">Nama Peminjam</th>
+                                        <th width="5px">Tanggal Peminjaman</th>
                                         <th width="10px">Jumlah Pinjaman</th>
                                         <th width="10px">Status Pinjaman</th>
                                         <th>Action</th>
@@ -53,79 +53,58 @@
                                             <td>{{ $index->status }}</td>
 
                                             <td>
-                                                {{-- <div class="btn-group">
-                                                    <button type="button" class="btn btn-default">Tindakan</button>
-                                                    <button type="button"
-                                                        class="btn btn-default dropdown-toggle dropdown-icon"
-                                                        data-toggle="dropdown">
-                                                        <span class="sr-only">Toggle Dropdown</span>
-                                                    </button>
-                                                    <div class="dropdown-menu" role="menu">
-                                                        <a class="dropdown-item"
-                                                            href="{{ url('trx-pinjaman/' . $index->id) }}"><i
-                                                                class="fas fa-search nav-icon"></i> Detail Peminjaman</a>
-                                                        @if (auth()->user()->hasRole('admin'))
-                                                            <a class="dropdown-item"
-                                                                href="{{ url('trx-angsuran/' . $index->id . '/add') }}"><i
-                                                                    class="fas fa-edit nav-icon"></i> Edit Pinjaman</a>
-                                                            <a class="dropdown-item"
-                                                                href="{{ url('trx-angsuran/' . $index->id . '/add') }}"><i
-                                                                    class="fas fa-trash nav-icon"></i> Hapus Pinjaman</a>
-                                                        @endif
-                                                        @if ($index->status !== 'Lunas')
-                                                            <form
-                                                                action="{{ route('pinjaman.lunasi', ['id' => $index->id]) }}"
-                                                                method="post">
-                                                                @csrf
-                                                                @method('PUT') <!-- Ganti dengan PATCH jika sesuai -->
-                                                                <button type="submit" class="dropdown-item"
-                                                                    href=""><i
-                                                                        class="fas fa-cash-register nav-icon"></i> Bayar
-                                                                    Lunas
-                                                                </button>
-                                                            </form>
-                                                        @endif --}}
-
-                                                <a href="{{ url('trx-pinjaman/' . $index->id) }}" class="btn btn-app">
-                                                    <i class="fas fa-search nav-icon"></i> Detail Pinjaman
-                                                </a>
-                                                @if (auth()->user()->hasRole('admin'))
-                                                    <a class="btn btn-app"
-                                                        href="{{ url('trx-angsuran/' . $index->id . '/add') }}"><i
-                                                            class="fas fa-edit nav-icon"></i> Edit Pinjaman</a>
-                                                    <form action="{{ url('trx-pinjaman/' . $index->id) }}" method="post">
-                                                        @method('delete')
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-app" id="deleteData">
-                                                            <i class="fas fa-trash nav-icon"></i> Delete</button>
-                                                    </form>
-                                                @endif
-                                                @if ($index->status !== 'Lunas')
-                                                    <form action="{{ route('pinjaman.lunasi', ['id' => $index->id]) }}"
-                                                        method="post">
-                                                        @csrf
-                                                        @method('PUT') <!-- Ganti dengan PATCH jika sesuai -->
-                                                        <button type="submit" class="btn btn-app" href=""><i
-                                                                class="fas fa-cash-register nav-icon"></i> Bayar
-                                                            Lunas
+                                                <div class="btn-group">
+                                                    <div class="btn-group">
+                                                        <button type="button" class="btn btn-default">Tindakan</button>
+                                                        <button type="button"
+                                                            class="btn btn-default dropdown-toggle dropdown-icon"
+                                                            data-toggle="dropdown">
+                                                            <span class="sr-only">Toggle Dropdown</span>
                                                         </button>
-                                                    </form>
-                                                @endif
+                                                        <div class="dropdown-menu" role="menu">
+                                                            <a class="dropdown-item"
+                                                                href="{{ url('trx-pinjaman/' . $index->id) }}"><i
+                                                                    class="fas fa-search nav-icon"></i> Detail
+                                                                Angsuran</a>
+                                                            @if (auth()->user()->hasRole('admin'))
+                                                                <a class="dropdown-item"
+                                                                    href="{{ url('trx-angsuran/' . $index->id . '/add') }}"><i
+                                                                        class="fas fa-edit nav-icon"></i> Edit Pinjaman</a>
+                                                                <a class="dropdown-item"
+                                                                    href="{{ url('trx-angsuran/' . $index->id . '/add') }}"><i
+                                                                        class="fas fa-trash nav-icon"></i> Hapus
+                                                                    Pinjaman</a>
+                                                            @endif
+                                                            @if ($index->status !== 'Lunas')
+                                                                <form
+                                                                    action="{{ route('pinjaman.lunasi', ['id' => $index->id]) }}"
+                                                                    method="post">
+                                                                    @csrf
+                                                                    @method('PUT')
+                                                                    <!-- Ganti dengan PATCH jika sesuai -->
+                                                                    <button type="submit" class="dropdown-item"
+                                                                        href=""><i
+                                                                            class="fas fa-cash-register nav-icon"></i> Bayar
+                                                                        Lunas
+                                                                    </button>
+                                                                </form>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tfoot>
+                            </table>
                         </div>
+                        <!-- /.card-body -->
                     </div>
-                    </td>
-                    </tr>
-                    @endforeach
-                    </tfoot>
-                    </table>
+                    <!-- /.card -->
                 </div>
-                <!-- /.card-body -->
+                <!-- /.col -->
             </div>
-            <!-- /.card -->
-        </div>
-        <!-- /.col -->
-        </div>
-        <!-- /.row -->
+            <!-- /.row -->
         </div>
         <!-- /.container-fluid -->
     </section>
