@@ -53,7 +53,6 @@
                     type: 'GET',
                     dataType: 'json',
                     success: function(data) {
-
                         $('#balance').val(data[0]
                             .balance); // Set the value to the input field
                     },
@@ -64,6 +63,7 @@
             }
         });
     });
+   
 
 
     $(function() {

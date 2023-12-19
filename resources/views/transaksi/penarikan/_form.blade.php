@@ -3,6 +3,7 @@
         <label>Data Nasabah</label>
         @if ($nasabahList->count() > 0)
             <select class="form-control select2" style="width: 100%;" id="selectNasabah" name="nasabah">
+                <option value="" disabled selected>Pilih Nasbah</option>
                 <!--NANTI AKAN MENGGUNAKAN DATA MASTER JABATAN-->
                 @foreach ($nasabahList as $x)
                     <option value={{ $x->id }}>{{ $x->id }} - {{ $x->name }}</option>
@@ -18,8 +19,7 @@
         <label for="name">Saldo Tabungan</label>
         <div class="input-group">
             <input type="text" class="form-control  @if ($errors->has('amount')) is-invalid @endif"
-                id="balance" name="balance" placeholder="Saldo Nasabah" value="" required
-                data-mask readonly>
+                id="balance" name="balance" placeholder="Saldo Nasabah" value="" required data-mask readonly>
         </div>
         @if ($errors->has('amount'))
             <div class="text-danger">{{ $errors->first('amount') }}</div>
@@ -44,5 +44,3 @@
         <textarea name="desc" id="desc" cols="30" rows="3" class="form-control"></textarea>
     </div>
 </div>
-
-
