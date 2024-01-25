@@ -113,6 +113,7 @@ class PinjamanController extends Controller
     {
         //
         $pinjaman = Pinjaman::findOrFail($id);
+        
         $previousUrl = url()->previous();
         return view('transaksi.pinjaman.show', compact('pinjaman', 'previousUrl'));
     }

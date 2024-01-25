@@ -26,47 +26,52 @@
                                     <div class="col-12 col-sm-12">
                                         <div class="info-box bg-primary">
                                             <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
-                              
+
                                             <div class="info-box-content">
-                                              <span class="info-box-text">Nominal Pinjaman</span>
-                                              <span class="info-box-number">Rp.{{ number_format($pinjaman->jumlah_pinjaman) }}</span>
+                                                <span class="info-box-text">Nominal Pinjaman</span>
+                                                <span
+                                                    class="info-box-number">Rp.{{ number_format($pinjaman->jumlah_pinjaman) }}</span>
                                             </div>
                                             <!-- /.info-box-content -->
-                                          </div>
-                                          <!-- /.info-box -->
+                                        </div>
+                                        <!-- /.info-box -->
                                     </div>
                                     <div class="col-12 col-sm-12">
                                         <div class="info-box bg-gradient-warning">
                                             <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
                                             <div class="info-box-content">
-                                              <span class="info-box-text">Angsuran</span>
-                                              <span class="info-box-number">Rp.{{number_format($pinjaman->angsuran)}}</span>
-                              
-                                              <div class="progress">
-                                                <div class="progress-bar" style="width: {{$pinjaman->jumlah_angsuran}}%"></div>
-                                              </div>
-                                              <span class="progress-description">
-                                                {{$pinjaman->jumlah_angsuran}}/100
-                                              </span>
+                                                <span class="info-box-text">Angsuran</span>
+                                                <span
+                                                    class="info-box-number">Rp.{{ number_format($pinjaman->angsuran) }}</span>
+
+                                                <div class="progress">
+                                                    <div class="progress-bar"
+                                                        style="width: {{ $pinjaman->jumlah_angsuran }}%"></div>
+                                                </div>
+                                                <span class="progress-description">
+                                                    Jumlah angsuran : {{ $pinjaman->jumlah_angsuran }}/100
+                                                </span>
                                             </div>
                                             <!-- /.info-box-content -->
-                                          </div>
-                                          <!-- /.info-box -->
+                                        </div>
+                                        <!-- /.info-box -->
                                     </div>
                                 </div>
                                 <hr>
                                 <div class="row">
                                     <div class="col-sm-8 invoice-col">
-                                        <b>Transaction Code #{{$pinjaman->kode_pinjaman}}</b>
+                                        <b>Transaction Code #{{ $pinjaman->kode_pinjaman }}</b>
                                         <br>
                                         <br>
                                     </div>
                                     <div class="col-sm-4 invoice-col">
                                         <h4>
-                                            <small class="float-right"> Tanggal : {{$pinjaman->created_at->format('d-m-Y')}}</small>
-                                          </h4>
+                                            <small class="float-right"> Tanggal :
+                                                {{ $pinjaman->created_at->format('d-m-Y') }}</small>
+                                        </h4>
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="col-sm-6 invoice-col">
                                         <b>Nama Peminjam:</b> {{ $pinjaman->nasabah->name }}<br>
@@ -75,7 +80,7 @@
 
                                     </div>
                                     <div class="col-sm-6 invoice-col">
-                                        <b>Jenis Usaha:</b> {{ucwords($pinjaman->jenis_usaha)}}<br>
+                                        <b>Jenis Usaha:</b> {{ ucwords($pinjaman->jenis_usaha) }}<br>
                                         <br>
                                         <b>Status Pinjaman:</b>
                                         @if ($pinjaman->status === 'lunas')
@@ -88,7 +93,7 @@
                                             <span class="badge badge-danger">{{ ucwords($pinjaman->status) }}</span>
                                         @endif
                                         <br>
-                                        <b>Petugas Transaksi:</b> {{$pinjaman->pegawai->name}}<br>
+                                        <b>Petugas Transaksi:</b> {{ $pinjaman->pegawai->name }}<br>
 
                                     </div>
                                     <!-- /.col -->

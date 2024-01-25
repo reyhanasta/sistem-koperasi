@@ -2,7 +2,8 @@
     <div class="form-group ">
         <label>Data Nasabah</label>
         @if ($nasabahList->count() > 0)
-            <select class="form-control" name="nasabah" id="nasabah">
+            <select class="form-control select2" style="width: 100%;" id="selectNasabah" name="nasabah">
+                <option value="" disabled selected>Pilih Nasbah</option>
                 <!--NANTI AKAN MENGGUNAKAN DATA MASTER JABATAN-->
                 @foreach ($nasabahList as $x)
                     <option value={{ $x->id }}>{{ $x->id }} - {{ $x->name }}</option>
@@ -21,8 +22,18 @@
     </div>
     <div class="form-group">
         <label for="jumlah_pinjaman">Jumlah Pinjaman</label>
-        <input type="text" class="form-control @if ($errors->has('jumlah_pinjaman')) is-invalid @endif"
-            name="jumlah_pinjaman" value="{{ old('jumlah_pinjaman') }}" id="jumlah_pinjaman" required data-mask>
+        {{-- <input type="text" class="form-control @if ($errors->has('jumlah_pinjaman')) is-invalid @endif"
+            name="jumlah_pinjaman" value="{{ old('jumlah_pinjaman') }}" id="jumlah_pinjaman" required data-mask> --}}
+        <select class="form-control @if ($errors->has('jumlah_pinjaman')) is-invalid @endif"
+            name="jumlah_pinjaman" id="jumlah_pinjaman" >
+            <?php
+            // Tambahkan angka kelipatan 1.000.000 ke dropdown
+            for ($i = 1; $i <= 10; $i++) {
+                $value = $i * 1000000; // Hitung nilai kelipatan
+                echo "<option value=\"$value\">Rp " . number_format($value) . '</option>';
+            }
+            ?>
+        </select>
         @error('jumlah_pinjaman')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
