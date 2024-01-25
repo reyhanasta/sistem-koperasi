@@ -30,12 +30,12 @@
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th width="10px">No</th>
-                                        <th width="10px">Kode Pinjaman</th>
-                                        <th width="10px">Nama Peminjam</th>
+                                        <th width="5%">No</th>
+                                        <th width="10%">Kode Pinjaman</th>
+                                        <th width="30%">Nama Peminjam</th>
                                         <th width="5px">Tanggal Peminjaman</th>
-                                        <th width="10px">Jumlah Pinjaman</th>
-                                        <th width="10px">Status Pinjaman</th>
+                                        <th width="12%">Jumlah Pinjaman</th>
+                                        <th width="12%">Status </th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -49,8 +49,19 @@
                                                     href="{{ url('nasabah/' . $index->nasabah->id) }}">{{ $index->nasabah->name }}</a>
                                             </td>
                                             <td>{{ $index->created_at->format('d-m-Y') }}</td>
-                                            <td>Rp.{{ number_format($index->jumlah_pinjaman) }}</td>
-                                            <td>{{ $index->status }}</td>
+                                            <td><b>Rp.{{ number_format($index->jumlah_pinjaman) }}</b></td>
+                                            <td>
+                                                @if($index->status === 'lunas')
+                                                    <span class="badge badge-success">{{ ucwords($index->status) }}</span>
+                                                @elseif($index->status === 'proses')
+                                                    <span class="badge badge-primary">{{ ucwords($index->status) }}</span>
+                                                @elseif($index->status === 'diajukan')
+                                                    <span class="badge badge-warning">{{ ucwords($index->status) }}</span>
+                                                @else
+                                                    <span class="badge badge-danger">{{ ucwords($index->status) }}</span>
+                                                @endif
+                                            </td>
+                                            
 
                                             <td>
                                                 <div class="btn-group">

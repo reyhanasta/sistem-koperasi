@@ -1,151 +1,118 @@
 @extends('layouts.template')
-@section('title', 'Nasabah')
+@section('title', 'Detail Pinjaman')
 @section('content')
-    <div class="container mt-5">
-        <h1>Detail Pinjaman</h1>
-        <hr>
-        <div class="row">
-            <div class="col-md-3"></div>
-            <div class="col-md-5">
-                <div class="list-group">
-                    {{-- <li class="list-group-item"><strong>ID Pinjaman:</strong> {{ $pinjaman->id }}</li> --}}
-                    <li class="list-group-item"><strong>Kode Pinjaman:</strong> {{ $pinjaman->kode_pinjaman }}</li>
-                    <li class="list-group-item"><strong>ID Anggota:</strong> <a
-                            href="{{ url('nasabah/' . $pinjaman->nasabah_id) }}">{{ $pinjaman->nasabah_id }}</a></li>
-                    <li class="list-group-item"><strong>Tanggal Pengajuan:</strong> {{ $pinjaman->tanggal_pengajuan }}</li>
-                    <li class="list-group-item"><strong>Jumlah Pinjaman:</strong>
-                        Rp.{{ number_format($pinjaman->jumlah_pinjaman) }}</li>
-                    <li class="list-group-item"><strong>Jenis Pinjaman:</strong> {{ ucwords($pinjaman->jenis_pinjaman) }}
-                    </li>
-                    <li class="list-group-item"><strong>Tujuan Pinjaman:</strong> {{ ucwords($pinjaman->tujuan_pinjaman) }}
-                    </li>
-                    <li class="list-group-item"><strong>Jangka Waktu (bulan):</strong> {{ $pinjaman->jangka_waktu }}</li>
-                    <li class="list-group-item"><strong>Bunga (%):</strong> {{ $pinjaman->bunga }}</li>
-                    <li class="list-group-item"><strong>Metode Pembayaran:</strong>
-                        {{ ucwords($pinjaman->metode_pembayaran) }}</li>
-                    <li class="list-group-item"><strong>Catatan:</strong> {{ $pinjaman->catatan ?? 'Tidak ada catatan' }}
-                    </li>
-                    <li class="list-group-item"><strong>Status:</strong>
-                        <span
-                            class="badge
-                            {{ $pinjaman->status === 'Disetujui'
-                                ? 'bg-success'
-                                : ($pinjaman->status === 'Lunas'
-                                    ? 'bg-success'
-                                    : ($pinjaman->status === ' Diajukan'
-                                        ? 'bg-warning'
-                                        : ($pinjaman->status === 'Proses Angsuran'
-                                            ? 'bg-info'
-                                            : ($pinjaman->status === 'Ditolak'
-                                                ? 'bg-danger'
-                                                : '')))) }}">
-                            {{ ucwords($pinjaman->status) }}
-                        </span>
-                    </li>
-                    </li>
-                </div>
-                <div class="text-center mt-3">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="col-8 mx-auto">
+                <!-- Default box -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Detail Pinjaman</h3>
 
-                    @if ($pinjaman->status == 'Diajukan')
-                        @if (auth()->user()->hasRole('admin'))
-                            <form
-                                action="{{ route('pinjaman.updateStatus', ['id' => $pinjaman->id, 'newStatus' => 'Disetujui']) }}"
-                                method="POST">
-                                @csrf
-                                @method('PUT') <!-- Ganti dengan PATCH jika sesuai -->
-                                <a href="{{ $previousUrl }}" class="btn btn-secondary">Kembali</a>
-                                <button class="btn btn-success" type="submit">Setujui Pinjaman</button>
-                            </form>
-                        @else
-                            <a href="{{ $previousUrl }}" class="btn btn-secondary">Kembali</a>
-                            <button class="btn btn-info">Menunggu Persetujuan</button>
-                        @endif
-                    @else
-                        <a href="{{ $previousUrl }}" class="btn btn-secondary">Kembali</a>
-                        <button type="button" class="btn btn-primary" onclick="tampilkanModalAngsuran()"
-                            data-toggle="modal" data-target="#modal-default">
-                            Bayar Angsuran
-                        </button>
-                    @endif
-                </div>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-md-12 col-lg-12">
+                                <div class="row">
 
+                                    <div class="col-12 col-sm-12">
+                                        <div class="info-box bg-primary">
+                                            <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
+                              
+                                            <div class="info-box-content">
+                                              <span class="info-box-text">Nominal Pinjaman</span>
+                                              <span class="info-box-number">Rp.{{ number_format($pinjaman->jumlah_pinjaman) }}</span>
+                                            </div>
+                                            <!-- /.info-box-content -->
+                                          </div>
+                                          <!-- /.info-box -->
+                                    </div>
+                                    <div class="col-12 col-sm-12">
+                                        <div class="info-box bg-gradient-warning">
+                                            <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
+                                            <div class="info-box-content">
+                                              <span class="info-box-text">Angsuran</span>
+                                              <span class="info-box-number">Rp.{{number_format($pinjaman->angsuran)}}</span>
+                              
+                                              <div class="progress">
+                                                <div class="progress-bar" style="width: {{$pinjaman->jumlah_angsuran}}%"></div>
+                                              </div>
+                                              <span class="progress-description">
+                                                {{$pinjaman->jumlah_angsuran}}/100
+                                              </span>
+                                            </div>
+                                            <!-- /.info-box-content -->
+                                          </div>
+                                          <!-- /.info-box -->
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-8 invoice-col">
+                                        <b>Transaction Code #{{$pinjaman->kode_pinjaman}}</b>
+                                        <br>
+                                        <br>
+                                    </div>
+                                    <div class="col-sm-4 invoice-col">
+                                        <h4>
+                                            <small class="float-right"> Tanggal : {{$pinjaman->created_at->format('d-m-Y')}}</small>
+                                          </h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 invoice-col">
+                                        <b>Nama Peminjam:</b> {{ $pinjaman->nasabah->name }}<br>
+                                        <b>Nomor Telepon:</b> {{ $pinjaman->nasabah->phone }}<br>
+                                        <b>Alamat:</b> {{ $pinjaman->nasabah->address }}
+
+                                    </div>
+                                    <div class="col-sm-6 invoice-col">
+                                        <b>Jenis Usaha:</b> {{ucwords($pinjaman->jenis_usaha)}}<br>
+                                        <br>
+                                        <b>Status Pinjaman:</b>
+                                        @if ($pinjaman->status === 'lunas')
+                                            <span class="badge badge-success">{{ ucwords($pinjaman->status) }}</span>
+                                        @elseif($pinjaman->status === 'proses')
+                                            <span class="badge badge-primary">{{ ucwords($pinjaman->status) }}</span>
+                                        @elseif($pinjaman->status === 'diajukan')
+                                            <span class="badge badge-warning">{{ ucwords($pinjaman->status) }}</span>
+                                        @else
+                                            <span class="badge badge-danger">{{ ucwords($pinjaman->status) }}</span>
+                                        @endif
+                                        <br>
+                                        <b>Petugas Transaksi:</b> {{$pinjaman->pegawai->name}}<br>
+
+                                    </div>
+                                    <!-- /.col -->
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-12 text-right mb-1">
+                                        <a href="#" class="btn btn-sm btn-success">Terima</a>
+                                        <a href="#" class="btn btn-sm btn-danger">Tolak</a>
+                                        <a href="#" class="btn btn-sm btn-default">Kembali</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-body -->
             </div>
+            <!-- /.card -->
         </div>
-        <br>
-    </div>
-    {{-- Modal --}}
-    <div class="modal fade" id="modal-default">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Verifikasi Data</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Pastikan kembali bahwa data yang diinputkan sudah benar.</p>
-                    <p><strong>Data yang akan disimpan:</strong></p>
-                    <form action="{{ url('trx-angsuran') }}" method="POST">
-                        @csrf
-                        <table border="0">
-                            <tr>
-                                <td>Kode Transaksi</td>
-                                <td><input type="text" name="kode_transaksi" id="modal-kode"
-                                        value="{{ $pinjaman->kode_pinjaman }}" readonly class="form-control"></td>
-                            </tr>
-                            <tr>
-                                <td>Nama Nasabah</td>
-                                <td><input type="text" name="nama_nasabah" id="modal-nasabah"
-                                        value="{{ $pinjaman->nasabah->name }}" readonly class="form-control"></td>
-                            </tr>
-                            <tr>
-                                <td>Total Tagihan</td>
-                                <td>
-                                    <div class="input-group">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">Rp</span>
-                                        </div>
-                                        <input type="text" name="jumlah_simpanan" id="modal-jumlah-bayar"
-                                            value="{{ number_format($pinjaman->total_pembayaran) }}" readonly
-                                            class="form-control">
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Jumlah Angsuran</td>
-                                <td>
-                                    <div class="input-group">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">Rp</span>
-                                        </div>
-                                        <input type="text" name="angsuran" id="modal-jumlah-angsuran"
-                                            value="{{ number_format($pinjaman->angsuran) }}" readonly class="form-control">
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Angsuran ke </td>
-                                <td>
-                                    <div class="input-group">
-                                        <input type="number" name="jumlah_angsuran" required class="form-control"
-                                            value="{{ $pinjaman->jumlah_angsuran + 1 }}" readonly>
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">/ {{ $pinjaman->jangka_waktu }}</span>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <input type="hidden" name="id_pinjaman" value="{{ $pinjaman->id }}">
-                            <input type="hidden" name="nasabah_id" value="{{ $pinjaman->nasabah->id }}">
-                        </table>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Batalkan</button>
-                    <button type="submit" id="simpanButton" class="btn btn-primary">Simpan</button>
-                </div>
-                </form>
-            </div>
         </div>
-    </div>
+
+    </section>
+
+
 @endsection

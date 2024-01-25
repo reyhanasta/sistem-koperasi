@@ -14,12 +14,12 @@ class Pinjaman extends Model
 
     public function nasabah()
     {
-        return $this->belongsTo(Nasabah::class, 'nasabah_id');
+        return $this->belongsTo(Nasabah::class, 'nasabah_id', 'id');
     }
 
     public function pegawai()
     {
-        return $this->belongsTo(Pegawai::class, 'pegawai_id');
+        return $this->belongsTo(Pegawai::class, 'pegawai_id','id');
     }
 
     public function angsuran()
