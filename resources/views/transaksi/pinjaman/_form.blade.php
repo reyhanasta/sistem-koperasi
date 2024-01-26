@@ -24,23 +24,21 @@
         <label for="jumlah_pinjaman">Jumlah Pinjaman</label>
         {{-- <input type="text" class="form-control @if ($errors->has('jumlah_pinjaman')) is-invalid @endif"
             name="jumlah_pinjaman" value="{{ old('jumlah_pinjaman') }}" id="jumlah_pinjaman" required data-mask> --}}
-        <select class="form-control @if ($errors->has('jumlah_pinjaman')) is-invalid @endif"
-            name="jumlah_pinjaman" id="jumlah_pinjaman" >
+        <select class="form-control select2 @if ($errors->has('jumlah_pinjaman')) is-invalid @endif" name="jumlah_pinjaman"
+            id="jumlah_pinjaman">
             <?php
             // Tambahkan angka kelipatan 1.000.000 ke dropdown
-            for ($i = 1; $i <= 10; $i++) {
+            for ($i = 1; $i <= 30; $i++) {
                 $value = $i * 1000000; // Hitung nilai kelipatan
-                echo "<option value=\"$value\">Rp " . number_format($value) . '</option>';
+                echo "<option value=\"$value\">Rp " . number_format($value, 0, ',', '.') . '</option>';
             }
             ?>
         </select>
+
         @error('jumlah_pinjaman')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-
-
-
     <div class="form-group">
         <label for="jenis_pinjaman">Jenis Usaha</label>
         <input type="text" class="form-control"id="jenis_usaha" name="jenis_usaha"

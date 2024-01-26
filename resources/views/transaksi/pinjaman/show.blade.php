@@ -103,7 +103,7 @@
                                     <div class="col-md-12 text-right mb-1">
                                         <a href="#" class="btn btn-sm btn-success">Terima</a>
                                         <a href="#" class="btn btn-sm btn-danger">Tolak</a>
-                                        <a href="#" class="btn btn-sm btn-default">Kembali</a>
+                                        <a href="{{ $previousUrl }}" class="btn btn-sm btn-default">Kembali</a>
                                     </div>
                                 </div>
 

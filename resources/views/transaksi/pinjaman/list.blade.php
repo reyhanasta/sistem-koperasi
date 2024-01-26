@@ -51,7 +51,7 @@
                                             <td>{{ $index->created_at->format('d-m-Y') }}</td>
                                             <td><b>Rp.{{ number_format($index->jumlah_pinjaman) }}</b></td>
                                             <td>
-                                                @if($index->status === 'lunas')
+                                                @if ($index->status === 'lunas')
                                                     <span class="badge badge-success">{{ ucwords($index->status) }}</span>
                                                 @elseif($index->status === 'proses')
                                                     <span class="badge badge-primary">{{ ucwords($index->status) }}</span>
@@ -61,7 +61,7 @@
                                                     <span class="badge badge-danger">{{ ucwords($index->status) }}</span>
                                                 @endif
                                             </td>
-                                            
+
 
                                             <td>
                                                 <div class="btn-group">
@@ -76,7 +76,8 @@
                                                             <a class="dropdown-item"
                                                                 href="{{ url('trx-pinjaman/' . $index->id) }}"><i
                                                                     class="fas fa-search nav-icon"></i> Detail
-                                                                Angsuran</a>
+                                                                Angsuran
+                                                            </a>
                                                             @if (auth()->user()->hasRole('admin'))
                                                                 <a class="dropdown-item"
                                                                     href="{{ url('trx-angsuran/' . $index->id . '/add') }}"><i
