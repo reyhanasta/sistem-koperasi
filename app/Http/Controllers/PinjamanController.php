@@ -17,11 +17,22 @@ class PinjamanController extends Controller
     /**
      * Display a listing of the resource.
      */
+    // Deklarasikan properti untuk menyimpan data yang dapat diakses di seluruh fungsi
+    private $urlPinjaman;
+    private $redirect;
+
+    // Fungsi konstruktor untuk menginisialisasi nilai properti
+    public function __construct()
+    {
+        $this->urlPinjaman = 'trx-pinjaman/'; // Ganti dengan nilai default yang sesuai
+        $this->redirect = '/trx-pinjaman'; // Ganti dengan nilai default yang sesuai
+    }
+
     public function index()
     {
         //
         $data = Pinjaman::all(); // Ambil semua data pinjaman dari database
-        $urlCreate = url('trx-pinjaman/create/');
+        $urlCreate = url($this->urlPinjaman.'create/');
         return view('transaksi.pinjaman.list', compact('data', 'urlCreate'));
     }
 
@@ -83,11 +94,12 @@ class PinjamanController extends Controller
                 'total_pembayaran' => $total_pembayaran,
             ]);
 
-            return redirect('/trx-pinjaman')->with('success', 'Data ditambahkan, buku tabungan nasabah diupdate.');
+            return redirect($this->redirect)->with('success', 'Data ditambahkan, buku tabungan nasabah diupdate.');
         } catch (\Exception $e) {
             // Log kesalahan
             Log::error('Terjadi kesalahan saat menyimpan data pinjaman: ' . $e->getMessage());
-            return redirect('/trx-pinjaman')->with('error', 'Terjadi kesalahan saat menambahkan data Nasabah. Silakan coba lagi.');
+            return redirect($this->redirect)
+            ->with('error', 'Terjadi kesalahan saat menambahkan data Nasabah. Silakan coba lagi.');
         }
     }
 
@@ -113,7 +125,7 @@ class PinjamanController extends Controller
     {
         //
         $pinjaman = Pinjaman::findOrFail($id);
-        
+
         $previousUrl = url()->previous();
         return view('transaksi.pinjaman.show', compact('pinjaman', 'previousUrl'));
     }
@@ -150,7 +162,7 @@ class PinjamanController extends Controller
         try {
             Pinjaman::findOrFail($id)->update(['status' => $newStatus]);
 
-            return redirect('/trx-pinjaman')->with('success', 'Status berhasil diperbarui.');
+            return redirect($this->redirect)->with('success', 'Status berhasil diperbarui.');
         } catch (\Exception $e) {
             // Tangani kesalahan
             Log::error('Terjadi kesalahan saat memperbarui status pinjaman: ' . $e->getMessage());
@@ -170,7 +182,7 @@ class PinjamanController extends Controller
                     'jumlah_angsuran' => DB::raw('jumlah_angsuran + 1')
                 ]);
 
-            return redirect('/trx-pinjaman')->with('success', 'Pembayaran lunas berhasil.');
+            return redirect($this->redirect)->with('success', 'Pembayaran lunas berhasil.');
         } catch (\Exception $e) {
             // Tangani kesalahan
             Log::error('Terjadi kesalahan saat melakukan pembayaran lunas: ' . $e->getMessage());
@@ -188,7 +200,7 @@ class PinjamanController extends Controller
         try {
             // Find the Pinjaman by ID and delete it
             Pinjaman::destroy($id);
-            return redirect('/trx-pinjaman');
+            return redirect($this->redirect);
         } catch (\Exception $e) {
             // Handle any errors that occur during deletion
             Log::error('Terjadi kesalahan saat menghapus Pinjaman: ' . $e->getMessage());
