@@ -186,6 +186,7 @@
     @endif
 
     $('#deleteData').on('click', function(e) {
+        console.log('hey');
         e.preventDefault();
         var form = $(this).parents('form');
         Swal.fire({

@@ -5,7 +5,7 @@
     </div>
     <div class="form-group">
         <label>Data Nasabah</label>
-        <select class="form-control @error('nasabah') is-invalid @enderror" name="nasabah" id="nasabah">
+        <select class="form-control select2 @error('nasabah') is-invalid @enderror" name="nasabah" id="nasabah">
             @foreach ($nasabahList as $x)
                 <option value="{{ $x->id }}" data-nama="{{ $x->name }}"
                     {{ old('nasabah', $data->nasabah_id) == $x->id ? 'selected' : '' }}>
@@ -17,7 +17,7 @@
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-    <div class="form-group"> 
+    <div class="form-group">
         <label for="type">Jenis Simpanan</label>
         <select class="form-control @error('type') is-invalid @enderror" name="type" id="type">
             <option value="pokok" {{ old('type', $data->type) == 'pokok' ? 'selected' : '' }}>Pokok</option>
@@ -40,10 +40,12 @@
             @enderror
         </div>
     </div>
-   
-    
+
+
     <div class="form-group">
         <label for="name">Keterangan</label>
-        <textarea name="desc" id="desc" cols="30" rows="3" class="form-control">{{ old('desc', $data->desc) }}</textarea>
+        <textarea name="desc" id="desc" cols="30" rows="3" class="form-control">
+         {{ old('desc', $data->desc) }}
+        </textarea>
     </div>
 </div>

@@ -53,7 +53,8 @@
                         <form action="{{ url('nasabah/'.$nasabah->id)}}" method="post">
                           @method('delete')
                           @csrf
-                          <button type="submit" class="dropdown-item" onclick="return confirm('Apakah anda sudah yakin ?')"> <i class="fas fa-trash nav-icon"></i> Delete</button>
+                          <button type="submit" class="dropdown-item" 
+                          onclick="return confirm('Apakah anda sudah yakin ?')"> <i class="fas fa-trash nav-icon"></i> Delete</button>
                         </form>
                       </div>
                     </div>

@@ -18,12 +18,10 @@
     <div class="form-group">
         <label for="name">Saldo Tabungan</label>
         <div class="input-group">
-            <input type="text" class="form-control  @if ($errors->has('amount')) is-invalid @endif"
-                id="balance" name="balance" placeholder="Saldo Nasabah" value="" required data-mask readonly>
+            <input type="text" class="form-control"
+                id="balance" name="balance"
+                placeholder="Saldo Nasabah" value="" required data-mask readonly>
         </div>
-        @if ($errors->has('amount'))
-            <div class="text-danger">{{ $errors->first('amount') }}</div>
-        @endif
     </div>
 
     <div class="form-group">

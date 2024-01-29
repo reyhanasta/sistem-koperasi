@@ -27,9 +27,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', [DashboardController::class,'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware(['auth','verified'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -48,14 +48,12 @@ Route::middleware(['auth','verified'])->group(function () {
     Route::put('/pinjaman/{id}/update-status/{newStatus}', [PinjamanController::class, 'updateStatus'])->name('pinjaman.updateStatus');
     Route::put('/pinjaman/{id}/lunasi', [PinjamanController::class, 'lunasi'])->name('pinjaman.lunasi');
     Route::get('/pinjaman/{nasabah_id}', [PinjamanController::class, 'riwayatPinjaman'])->name('pinjaman.riwayat');
-    Route::get('/simpanan/{nasabah_id}', [SimpananController::class,'riwayatSimpanan'])->name('simpanan.riwayat');
-
-
+    Route::get('/simpanan/{nasabah_id}', [SimpananController::class, 'riwayatSimpanan'])->name('simpanan.riwayat');
 });
 
 Route::get('/ujicoba', function () {
     return "hello world";
-})->middleware(['auth', 'verified','role:admin'])->name('ujicoba');
+})->middleware(['auth', 'verified', 'role:admin'])->name('ujicoba');
 
 // //DASHBOARD
 // Route::get('/',[DashboardController::class,'index'])->middleware('auth');
@@ -65,7 +63,6 @@ Route::get('/ujicoba', function () {
 // Route::post('/logout',[LoginController::class,'logout']);
 //RESOURCE
 // Route::middleware('auth','log.crud.activity')->group(function () {
-
 // });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

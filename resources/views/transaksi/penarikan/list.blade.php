@@ -31,6 +31,7 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
+                                        <th>Nama Nasabah</th>
                                         <th>Nomor Rekening</th>
                                         <th>Jumlah Penarikan</th>
                                         <th>Tanggal Transaksi</th>
@@ -42,8 +43,11 @@
                                     @foreach ($data as $index)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $index->nasabah->name }}</td>
                                             <td><a
-                                                    href="{{ url('nasabah/' . $index->bukuTabungan->id_nasabah) }}">{{ $index->bukuTabungan->no_rek }}</a>
+                                                    href="{{ url('nasabah/' . $index->bukuTabungan->id_nasabah) }}">
+                                                    {{ $index->bukuTabungan->no_rek }}
+                                                </a>
                                             </td>
                                             <td>Rp.{{ number_format($index->amount) }}</td>
                                             <td>{{ $index->created_at }}</td>

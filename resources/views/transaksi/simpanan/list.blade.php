@@ -31,9 +31,10 @@
                                     @foreach ($data as $index)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ ($index->kode_simpanan) }}</td>
+                                            <td>{{ $index->kode_simpanan }}</td>
                                             <td>
-                                                <a href="{{ url('nasabah/' . $index->nasabah->id) }}">{{ $index->nasabah->name }}</a>
+                                                <a
+                                                    href="{{ url('nasabah/' . $index->nasabah->id) }}">{{ $index->nasabah->name }}</a>
                                             </td>
                                             <td>{{ ucfirst($index->type) }}</td>
                                             <td>Rp.{{ number_format($index->amount) }}</td>
@@ -60,7 +61,10 @@
                                                                 method="post">
                                                                 @method('delete')
                                                                 @csrf
-                                                                <button type="submit" class="dropdown-item" id="deleteData">
+                                                                {{-- <button type="submit" class="dropdown-item" id="deleteData">
+                                                                    <i class="fas fa-trash nav-icon"></i> Delete </button> --}}
+                                                                <button type="submit" class="dropdown-item"
+                                                                    onclick="return confirm('Apakah anda sudah yakin ?')">
                                                                     <i class="fas fa-trash nav-icon"></i> Delete</button>
                                                             </form>
                                                         @endif

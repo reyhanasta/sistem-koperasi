@@ -6,8 +6,9 @@ use App\Models\Nasabah;
 use App\Models\Penarikan;
 use App\Models\BukuTabungan;
 
-
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use App\Http\Requests\PenarikanRequest;
 
 class PenarikanController extends Controller
 {
@@ -35,7 +36,8 @@ class PenarikanController extends Controller
         $nasabahList = Nasabah::all();
 
         $previousUrl = url()->previous();
-        $confirmationMessage = "Pastikan Data sudah di isi dengan benar, karena data transaksi tidak dapat di ubah lagi";
+        $confirmationMessage = "Pastikan Data sudah di isi dengan benar,
+        karena data transaksi tidak dapat di ubah lagi";
 
         return view('transaksi.penarikan.add', compact('nasabahList', 'data', 'previousUrl', 'confirmationMessage'));
     }
@@ -48,41 +50,37 @@ class PenarikanController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+  
+    public function store(PenarikanRequest $request)
     {
+        // Retrieve the RekeningNasabah
         $rekeningNasabah = BukuTabungan::where('nasabah_id', $request->nasabah)->first();
-        
-        $validateData = $request->validate([
-            'nasabah' => 'required', // Change 'Nasabah' to 'nasabah'
-            'amount' => [
-                'required',
-                'min:20000',
-                'numeric',
-                function ($attribute, $value, $fail) use ($rekeningNasabah) {
-                  
-                    $balance = $rekeningNasabah->balance;
+      
+        // Validate the request data
+        $validatedData = $request->validated();
 
-                    if ($value > $balance) {
-                        $fail("The $attribute must not be greater than the account balance.");
-                    }
-                },
-            ],
-        ]);
-
-        if ($validateData) {
-            $data = new Penarikan(); // Move the creation of $data inside the validation check
+        // Check if validation passes
+        if ($validatedData) {
+            // Create a new Penarikan instance
+            $data = new Penarikan();
             $data->id_rekening = $rekeningNasabah->id;
             $data->nasabah_id = $request->nasabah;
             $data->amount = $request->amount;
             $data->desc = $request->desc;
+
+            // Update the balance of RekeningNasabah
             $rekeningNasabah->balance -= $request->amount;
 
+            // Save changes to RekeningNasabah and Penarikan
             $rekeningNasabah->save();
             $data->save();
+
             return redirect('trx-penarikan')->with('success', 'Data Berhasil Ditambahkan!');
+        } else {
+            // Redirect back with the old input and validation errors
+            return redirect()->back()->withErrors($validatedData)->withInput();
         }
     }
-
 
     /**
      * Display the specified resource.

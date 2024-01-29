@@ -24,7 +24,9 @@
         <label for="jumlah_pinjaman">Jumlah Pinjaman</label>
         {{-- <input type="text" class="form-control @if ($errors->has('jumlah_pinjaman')) is-invalid @endif"
             name="jumlah_pinjaman" value="{{ old('jumlah_pinjaman') }}" id="jumlah_pinjaman" required data-mask> --}}
-        <select class="form-control select2 @if ($errors->has('jumlah_pinjaman')) is-invalid @endif" name="jumlah_pinjaman"
+        <select class="form-control select2 
+        @if ($errors->has('jumlah_pinjaman')) is-invalid 
+        @endif" name="jumlah_pinjaman"
             id="jumlah_pinjaman">
             <?php
             // Tambahkan angka kelipatan 1.000.000 ke dropdown
