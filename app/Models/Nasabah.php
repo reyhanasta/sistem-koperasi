@@ -29,4 +29,8 @@ class Nasabah extends Model
     {
         return $this->hasMany(Penarikan::class);
     }
+    public function riwayat()
+    {
+        return $this->hasMany(RiwayatTransaksi::class);
+    }
 }

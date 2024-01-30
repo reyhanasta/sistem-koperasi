@@ -2,17 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RiwayatTransaksi;
+
+use App\Models\BukuTabungan;
 use Illuminate\Http\Request;
+use App\Models\RiwayatTransaksi;
+
 
 class RiwayatTransaksiController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    protected $nasabahService;
+    protected $previousUrl;
+
+    public function __construct()
+    {
+        
+    }
+
     public function index()
     {
         //
+
     }
 
     /**
@@ -29,14 +41,21 @@ class RiwayatTransaksiController extends Controller
     public function store(Request $request)
     {
         //
+
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(RiwayatTransaksi $riwayatTransaksi)
+    public function show($id)
     {
-        //
+     
+        $previousUrl = url()->previous();
+        $bukuTabungan = BukuTabungan::where('nasabah_id',$id)->first();
+        // Ambil riwayat transaksi peminjaman nasabah berdasarkan ID nasabah
+        $riwayatTransaksi = RiwayatTransaksi::where('tabungan_id', 
+        $bukuTabungan->id)->orderBy('created_at', 'desc')->paginate(3);
+        return view('transaksi.riwayat.riwayat', compact('riwayatTransaksi', 'previousUrl'));
     }
 
     /**

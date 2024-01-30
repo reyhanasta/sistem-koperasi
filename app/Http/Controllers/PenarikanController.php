@@ -7,6 +7,7 @@ use App\Models\Penarikan;
 use App\Models\BukuTabungan;
 
 use Illuminate\Http\Request;
+use App\Models\RiwayatTransaksi;
 use Illuminate\Routing\Controller;
 use App\Http\Requests\PenarikanRequest;
 
@@ -70,9 +71,17 @@ class PenarikanController extends Controller
 
             // Update the balance of RekeningNasabah
             $rekeningNasabah->balance -= $request->amount;
-
-            // Save changes to RekeningNasabah and Penarikan
             $rekeningNasabah->save();
+
+            //Update Riwayat Transaksi
+            $history = new RiwayatTransaksi();
+            $history->tabungan_id = $rekeningNasabah->id;
+            $history->nominal = $request->amount;
+            $history->saldo_akhir = $rekeningNasabah->balance;
+            $history->type = "kredit";
+            $history->save();
+            
+            // Save changes to RekeningNasabah and Penarikan
             $data->save();
 
             return redirect('trx-penarikan')->with('success', 'Data Berhasil Ditambahkan!');

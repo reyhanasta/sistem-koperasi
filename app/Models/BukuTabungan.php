@@ -18,4 +18,9 @@ class BukuTabungan extends Model
     {
         return $this->hasMany(Penarikan::class);
     }
+
+    public function riwayatTransaksi()
+    {
+        return $this->hasMany(BukuTabungan::class);
+    }
 }

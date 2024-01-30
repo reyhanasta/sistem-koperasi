@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('riwayat_transaksis', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('tabungan_id');
+            $table->decimal('nominal', 10, 2);
+            $table->decimal('saldo_akhir',10,2);
+            $table->enum('type', ['debit', 'kredit']);
             $table->timestamps();
+            $table->foreign('tabungan_id')->references('id')->on('buku_tabungans');
         });
     }
 

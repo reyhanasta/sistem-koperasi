@@ -7,6 +7,7 @@ use App\Models\Simpanan;
 use App\Models\BukuTabungan;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\SimpananRequest;
+use App\Models\RiwayatTransaksi;
 use Illuminate\Support\Facades\Log; // Impor Log class
 
 class SimpananController extends Controller
@@ -123,6 +124,14 @@ class SimpananController extends Controller
             // Update saldo buku tabungan nasabah
             $rekeningNasabah->balance += $request->amount;
             $rekeningNasabah->save();
+
+            //Update Riwayat Transaksi
+            $history = new RiwayatTransaksi();
+            $history->tabungan_id = $rekeningNasabah->id;
+            $history->nominal = $request->amount;
+            $history->saldo_akhir = $rekeningNasabah->balance;
+            $history->type = "debit";
+            $history->save();
 
             // Simpan data transaksi Simpanan
             $data->save();

@@ -26,8 +26,8 @@
                             </ul>
                             <a href="{{ url('nasabah/' . $data->id . '/edit') }}" class="btn btn-primary btn-block"><b>Ubah
                                     Data</b></a>
-                            <a href="{{ route('simpanan.riwayat', ['nasabah_id' => $data->id]) }}"
-                                class="btn btn-info btn-block"><b>Riwayat Simpanan</b></a>
+                            <a href="{{ route('riwayatTransaksi', ['nasabah_id' => $data->id]) }}"
+                                class="btn btn-info btn-block"><b>Riwayat Transaksi</b></a>
                             <a href="{{ route('pinjaman.riwayat', ['nasabah_id' => $data->id]) }}"
                                 class="btn btn-warning btn-block"><b>Riwayat Pinjaman</b></a>
                         </div>
