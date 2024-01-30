@@ -43,17 +43,23 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+                                <br>
+                                <div class="d-flex justify-content-center">
+                                    {{ $riwayatTransaksi->links('pagination::bootstrap-4') }}
+                                </div>
+                                <a href="{{ $previousUrl }}" class="btn btn-secondary">Kembali</a>
+
                             @else
                                 <p>Tidak ada riwayat transaksi simpanan.</p>
                             @endif
 
 
-                            
+
                         </div>
                         {{-- <a href="{{ $previousUrl }}" class="btn btn-secondary">Kembali</a> --}}
                         <!-- /.card-body -->
-                         <!-- Tambahkan kode pagination berikut -->
-                         {{ $riwayatTransaksi->links('pagination::bootstrap-4') }}
+                        <!-- Tambahkan kode pagination berikut -->
+
 
                     </div>
                     <!-- /.card -->
