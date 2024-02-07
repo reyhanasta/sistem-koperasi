@@ -47,12 +47,11 @@
                                 <div class="d-flex justify-content-center">
                                     {{ $riwayatTransaksi->links('pagination::bootstrap-4') }}
                                 </div>
-                                <a href="{{ $previousUrl }}" class="btn btn-secondary">Kembali</a>
-
                             @else
                                 <p>Tidak ada riwayat transaksi simpanan.</p>
                             @endif
 
+                            <a href="{{ $previousUrl }}" class="btn btn-secondary">Kembali</a>
 
 
                         </div>

@@ -149,8 +149,6 @@ class NasabahController extends Controller
                         unlink($oldImagePath);
                     }
                 }
-
-
                 // Simpan gambar KTP yang baru
                 $imagePath = $request->file('ktp_image_path')->store('ktp_images/', 'public');
                 $imageName = basename($imagePath);

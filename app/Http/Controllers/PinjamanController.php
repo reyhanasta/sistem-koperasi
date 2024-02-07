@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\PinjamanRequest;
 
+use App\Services\PinjamanService;
+
 class PinjamanController extends Controller
 {
     /**
@@ -21,11 +23,14 @@ class PinjamanController extends Controller
     private $urlPinjaman;
     private $redirect;
 
+    private $pinjamanServices;
+
     // Fungsi konstruktor untuk menginisialisasi nilai properti
-    public function __construct()
+    public function __construct(PinjamanService $pinjamanService)
     {
         $this->urlPinjaman = 'trx-pinjaman/'; // Ganti dengan nilai default yang sesuai
         $this->redirect = '/trx-pinjaman'; // Ganti dengan nilai default yang sesuai
+        $this->pinjamanServices = $pinjamanService; // Ganti dengan nilai default yang sesuai
     }
 
     public function index()
@@ -72,28 +77,11 @@ class PinjamanController extends Controller
     public function store(PinjamanRequest $request)
     {
         try {
-            // Validasi data yang masuk telah dilakukan oleh PinjamanRequest
-            $user = Auth::user();
-            $pegawai = Pegawai::where('user_id', $user->id)->firstOrFail();
-
-            $total_pembayaran = $request->jumlah_pinjaman * (1 - ($request->bunga / 100));
-            $angsuran = $total_pembayaran / $request->jangka_waktu;
-
-            Pinjaman::create([
-                'nasabah_id' => $request->nasabah,
-                'kode_pinjaman' => $this->generateTransactionCode(),
-                'id_pegawai' => $pegawai->id,
-                'tanggal_pengajuan' => $request->tanggal_pengajuan,
-                'jumlah_pinjaman' => $request->jumlah_pinjaman,
-                'jenis_pinjaman' => $request->jenis_pinjaman,
-                'tujuan_pinjaman' => $request->tujuan_pinjaman,
-                'jangka_waktu' => $request->jangka_waktu,
-                'catatan' => $request->catatan,
-                'angsuran' => $angsuran,
-                'sisa_pinjaman' => $total_pembayaran,
-                'total_pembayaran' => $total_pembayaran,
-            ]);
-
+             // Validasi data yang masuk telah dilakukan oleh PinjamanRequest
+            $code = $this->generateTransactionCode();
+            $totalBayar = $this->pinjamanServices->totalBayar($request);
+            $angsuran = $this->pinjamanServices->angsuran($request,$totalBayar);
+            $storePinjaman = $this->pinjamanServices->store($request,$angsuran,$totalBayar,$code);
             return redirect($this->redirect)->with('success', 'Data ditambahkan, buku tabungan nasabah diupdate.');
         } catch (\Exception $e) {
             // Log kesalahan
