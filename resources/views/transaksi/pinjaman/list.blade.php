@@ -61,8 +61,6 @@
                                                     <span class="badge badge-danger">{{ ucwords($index->status) }}</span>
                                                 @endif
                                             </td>
-
-
                                             <td>
                                                 <div class="btn-group">
                                                     <div class="btn-group">
@@ -79,15 +77,19 @@
                                                                 Angsuran
                                                             </a>
                                                             @if (auth()->user()->hasRole('admin'))
-                                                                <a class="dropdown-item"
-                                                                    href="{{ url('trx-angsuran/' . $index->id . '/add') }}"><i
-                                                                        class="fas fa-edit nav-icon"></i> Edit Pinjaman</a>
-                                                                <a class="dropdown-item"
-                                                                    href="{{ url('trx-angsuran/' . $index->id . '/add') }}"><i
-                                                                        class="fas fa-trash nav-icon"></i> Hapus
-                                                                    Pinjaman</a>
+                                                                @if ($index->status === 'diajukan')
+                                                                    <a class="dropdown-item"
+                                                                        href="{{ url('trx-angsuran/' . $index->id . '/add') }}"><i
+                                                                            class="fas fa-edit nav-icon"></i> Edit
+                                                                        Pinjaman</a>
+                                                                    <a class="dropdown-item"
+                                                                        href="{{ url('trx-pinjaman/' . $index->id . '/add') }}"><i
+                                                                            class="fas fa-trash nav-icon"></i> Hapus
+                                                                        Pinjaman</a>
+                                                                @else
+                                                                @endif
                                                             @endif
-                                                            @if ($index->status !== 'Lunas')
+                                                            @if ($index->status !== 'Lunas' && $index->tanggal_persetujuan !== null)
                                                                 <form
                                                                     action="{{ route('pinjaman.lunasi', ['id' => $index->id]) }}"
                                                                     method="post">

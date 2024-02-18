@@ -20,24 +20,24 @@ class PinjamanController extends Controller
      * Display a listing of the resource.
      */
     // Deklarasikan properti untuk menyimpan data yang dapat diakses di seluruh fungsi
-    private $urlPinjaman;
+    private $pinjaman;
     private $redirect;
 
     private $pinjamanServices;
 
     // Fungsi konstruktor untuk menginisialisasi nilai properti
-    public function __construct(PinjamanService $pinjamanService)
+    public function __construct(PinjamanService $pinjamanService, Pinjaman $pinjaman)
     {
-        $this->urlPinjaman = 'trx-pinjaman/'; // Ganti dengan nilai default yang sesuai
         $this->redirect = '/trx-pinjaman'; // Ganti dengan nilai default yang sesuai
         $this->pinjamanServices = $pinjamanService; // Ganti dengan nilai default yang sesuai
+        $this->pinjaman = $pinjaman; // Ganti dengan nilai default yang sesuai
     }
 
     public function index()
     {
         //
-        $data = Pinjaman::all(); // Ambil semua data pinjaman dari database
-        $urlCreate = url($this->urlPinjaman.'create/');
+        $data = Pinjaman::with('nasabah')->paginate(10); // Ambil semua data pinjaman dari database
+        $urlCreate = route('pinjaman.create');
         return view('transaksi.pinjaman.list', compact('data', 'urlCreate'));
     }
 
@@ -79,9 +79,9 @@ class PinjamanController extends Controller
         try {
              // Validasi data yang masuk telah dilakukan oleh PinjamanRequest
             $code = $this->generateTransactionCode();
-            $totalBayar = $this->pinjamanServices->totalBayar($request);
-            $angsuran = $this->pinjamanServices->angsuran($request,$totalBayar);
-            $storePinjaman = $this->pinjamanServices->store($request,$angsuran,$totalBayar,$code);
+            $totalBayar = $request->jumlah_pinjaman * (1 - ($request->bunga / 100));
+            $angsuran = $totalBayar / $request->jangka_waktu;
+            $this->pinjamanServices->store($request,$angsuran,$totalBayar,$code);
             return redirect($this->redirect)->with('success', 'Data ditambahkan, buku tabungan nasabah diupdate.');
         } catch (\Exception $e) {
             // Log kesalahan
@@ -95,9 +95,8 @@ class PinjamanController extends Controller
 
     private function generateTransactionCode()
     {
-        $now = now();
-        $baseCode = "P{$now->format('ym')}";
-
+        $currentTime = now()->format('ym');
+        $baseCode = "P{$currentTime}";
         // Increment the transaction count
         $transactionCount = Pinjaman::withTrashed()->where('kode_pinjaman', 'like', "{$baseCode}%")->count() + 1;
 
@@ -113,7 +112,6 @@ class PinjamanController extends Controller
     {
         //
         $pinjaman = Pinjaman::findOrFail($id);
-
         $previousUrl = url()->previous();
         return view('transaksi.pinjaman.show', compact('pinjaman', 'previousUrl'));
     }
@@ -163,12 +161,15 @@ class PinjamanController extends Controller
     {
         try {
             // Update status pinjaman menjadi "Lunas" dan sisa_pinjaman menjadi 0
-            Pinjaman::where('id', $id)
-                ->update([
-                    'status' => 'Lunas',
-                    'sisa_pinjaman' => 0,
-                    'jumlah_angsuran' => DB::raw('jumlah_angsuran + 1')
-                ]);
+               // Pinjaman::where('id', $id)
+        //         ->update([
+        //             'status' => 'Lunas',
+        //             'sisa_pinjaman' => 0,
+        //             'jumlah_angsuran' => DB::raw('jumlah_angsuran + 1')
+        //         ]);
+
+            $this->pinjaman->lunaskanTransaksi($id);
+            
 
             return redirect($this->redirect)->with('success', 'Pembayaran lunas berhasil.');
         } catch (\Exception $e) {

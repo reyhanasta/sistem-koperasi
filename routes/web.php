@@ -24,17 +24,23 @@ use App\Http\Controllers\RiwayatTransaksiController;
 |
 */
 
+// Halaman utama
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
-
+// Semua rute yang memerlukan autentikasi dan verifikasi
 Route::middleware(['auth', 'verified'])->group(function () {
+
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Profil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // Resource routes
     Route::resource('pegawai', PegawaiController::class);
     Route::resource('nasabah', NasabahController::class);
     // Route::resource('buku-tabungan', BukuTabunganController::class);
@@ -44,13 +50,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('trx-pinjaman', PinjamanController::class);
     Route::resource('trx-angsuran', AngsuranController::class);
 
+    // Saldo Nasabah
     Route::get('/saldoNasabah/{id}', [BukuTabunganController::class, 'getSaldo']);
 
+    // Pinjaman
     Route::put('/pinjaman/{id}/update-status/{newStatus}', [PinjamanController::class, 'updateStatus'])->name('pinjaman.updateStatus');
     Route::put('/pinjaman/{id}/lunasi', [PinjamanController::class, 'lunasi'])->name('pinjaman.lunasi');
     Route::get('/pinjaman/{nasabah_id}', [PinjamanController::class, 'riwayatPinjaman'])->name('pinjaman.riwayat');
+
+    // Simpanan
     Route::get('/simpanan/{nasabah_id}', [SimpananController::class, 'riwayatSimpanan'])->name('simpanan.riwayat');
+
+    // Riwayat Transaksi
     Route::get('/riwayattransaksi/{nasabah_id}', [RiwayatTransaksiController::class, 'show'])->name('riwayatTransaksi');
+
+    // Membuat Pinjaman
+    Route::get('/trx-pinjaman/create', [PinjamanController::class, 'create'])->name('pinjaman.create');
 });
 
 Route::get('/ujicoba', function () {

@@ -22,7 +22,7 @@ class SimpananController extends Controller
     {
         try {
             // Retrieve all Simpanan data with related Nasabah, sorted by created_at in descending order
-            $data = Simpanan::with('Nasabah')->latest('created_at')->get();
+            $data = Simpanan::with('Nasabah')->latest('created_at')->paginate(10);
             $back = url()->previous();
 
             return view('transaksi.simpanan.list', compact('data', 'back'));
