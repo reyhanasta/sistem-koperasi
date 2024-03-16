@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Nasabah;
 use App\Models\Pinjaman;
 use App\Models\Angsuran;
 use Illuminate\Support\Facades\Log;

@@ -23,7 +23,7 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             @if (count($riwayatTransaksi) > 0)
-                                <table class="table table-bordered">
+                                <table class="table table-bordered" aria-label>
                                     <thead>
                                         <tr>
                                             <th>Tanggal</th>
