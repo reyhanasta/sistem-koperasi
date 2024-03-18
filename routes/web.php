@@ -32,40 +32,48 @@ Route::get('/', function () {
 // Semua rute yang memerlukan autentikasi dan verifikasi
 Route::middleware(['auth', 'verified'])->group(function () {
 
+    Route::controller(ProfileController::class)->group(function () {
+        // Profil
+        Route::get('/profile', 'edit')->name('profile.edit');
+        Route::patch('/profile', 'update')->name('profile.update');
+        Route::delete('/profile', 'destroy')->name('profile.destroy');
+    });
+
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    // Profil
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Resource routes
     Route::resource('pegawai', PegawaiController::class);
     Route::resource('nasabah', NasabahController::class);
-    // Route::resource('buku-tabungan', BukuTabunganController::class);
     Route::resource('master-jabatan', MasterJabatanController::class);
-    Route::resource('trx-simpanan', SimpananController::class);
     Route::resource('trx-penarikan', PenarikanController::class);
-    Route::resource('trx-pinjaman', PinjamanController::class);
     Route::resource('trx-angsuran', AngsuranController::class);
 
     // Saldo Nasabah
     Route::get('/saldoNasabah/{id}', [BukuTabunganController::class, 'getSaldo']);
 
-    // Pinjaman
-    Route::put('/pinjaman/{id}/update-status/{newStatus}', [PinjamanController::class, 'updateStatus'])->name('pinjaman.updateStatus');
-    Route::put('/pinjaman/{id}/lunasi', [PinjamanController::class, 'lunasi'])->name('pinjaman.lunasi');
-    Route::get('/pinjaman/{nasabah_id}', [PinjamanController::class, 'riwayatPinjaman'])->name('pinjaman.riwayat');
+    Route::controller(PinjamanController::class)->group(function () {
+        // Pinjaman
+        Route::resource('trx-pinjaman');
+        Route::put('/pinjaman/{id}/update-status/{newStatus}', 'updateStatus')->name('pinjaman.updateStatus');
+        Route::put('/pinjaman/{id}/lunasi', 'lunasi')->name('pinjaman.lunasi');
+        Route::get('/pinjaman/{nasabah_id}', 'riwayatPinjaman')->name('pinjaman.riwayat');
+        // Membuat Pinjaman
+        Route::get('/trx-pinjaman/create', 'create')->name('pinjaman.create');
+    });
 
-    // Simpanan
-    Route::get('/simpanan/{nasabah_id}', [SimpananController::class, 'riwayatSimpanan'])->name('simpanan.riwayat');
+    Route::controller(ProfileController::class)->group(function () {
+        // Simpanan
+        Route::resource('trx-simpanan');
+        Route::get('/simpanan/{nasabah_id}','riwayatSimpanan')->name('simpanan.riwayat');
+    });
 
     // Riwayat Transaksi
     Route::get('/riwayattransaksi/{nasabah_id}', [RiwayatTransaksiController::class, 'show'])->name('riwayatTransaksi');
+});
 
-    // Membuat Pinjaman
-    Route::get('/trx-pinjaman/create', [PinjamanController::class, 'create'])->name('pinjaman.create');
+Route::middleware(['auth','verified','role:admin'])->group(function(){
+
 });
 
 Route::get('/ujicoba', function () {
