@@ -34,7 +34,7 @@
                                             <td>{{ $index->kode_simpanan }}</td>
                                             <td>
                                                 <a
-                                                    href="{{ url('nasabah/' . $index->nasabah_id) }}">{{$index->nasabah_id}}</a>
+                                                    href="{{ url('nasabah/' . $index->nasabah_id) }}">{{ $index->nasabah_id }}</a>
                                             </td>
                                             <td>{{ ucfirst($index->type) }}</td>
                                             <td>Rp.{{ number_format($index->amount) }}</td>

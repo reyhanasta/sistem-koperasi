@@ -79,6 +79,7 @@ class PenarikanController extends Controller
             $history->nominal = $request->amount;
             $history->saldo_akhir = $rekeningNasabah->balance;
             $history->type = "kredit";
+            $history->id_pegawai =  auth()->user()->id;
             $history->save();
             
             // Save changes to RekeningNasabah and Penarikan

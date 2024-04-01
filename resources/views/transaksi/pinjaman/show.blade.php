@@ -49,7 +49,7 @@
                                                         style="width: {{ $pinjaman->jumlah_angsuran }}%"></div>
                                                 </div>
                                                 <span class="progress-description">
-                                                    Jumlah angsuran : {{ $pinjaman->jumlah_angsuran }}/100
+                                                    Proses angsuran : {{ $pinjaman->jumlah_angsuran }}%
                                                 </span>
                                             </div>
                                             <!-- /.info-box-content -->
@@ -85,7 +85,7 @@
                                         <b>Status Pinjaman:</b>
                                         @if ($pinjaman->status === 'lunas')
                                             <span class="badge badge-success">{{ ucwords($pinjaman->status) }}</span>
-                                        @elseif($pinjaman->status === 'proses')
+                                        @elseif($pinjaman->status === 'diproses')
                                             <span class="badge badge-primary">{{ ucwords($pinjaman->status) }}</span>
                                         @elseif($pinjaman->status === 'diajukan')
                                             <span class="badge badge-warning">{{ ucwords($pinjaman->status) }}</span>
@@ -101,9 +101,29 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-12 text-right mb-1">
-                                        <a href="#" class="btn btn-sm btn-success">Terima</a>
-                                        <a href="#" class="btn btn-sm btn-danger">Tolak</a>
-                                        <a href="{{ $previousUrl }}" class="btn btn-sm btn-default">Kembali</a>
+                                        @if ($pinjaman->status == 'diajukan')
+                                            <div class="d-flex justify-content-end">
+                                                <form
+                                                    action="{{ route('pinjaman.updateStatus', ['id' => $pinjaman->id, 'newStatus' => 'diproses']) }}"
+                                                    method="post" class="mr-2">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-sm btn-success">Terima</button>
+                                                </form>
+                                                <form
+                                                    action="{{ route('pinjaman.updateStatus', ['id' => $pinjaman->id, 'newStatus' => 'ditolak']) }}"
+                                                    method="post" class="mr-2">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-sm btn-danger">Tolak</button>
+                                                </form>
+                                                <a href="{{ $previousUrl }}" class="btn btn-sm btn-default">Kembali</a>
+                                            </div>
+                                        @else
+                                            <a href="{{ $previousUrl }}" class="btn btn-sm btn-default">Kembali</a>
+                                        @endif
+
+
                                     </div>
                                 </div>
 

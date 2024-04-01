@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('riwayat_transaksis', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('tabungan_id');
+            $table->unsignedBigInteger('id_pegawai');
             $table->decimal('nominal', 10, 2);
             $table->decimal('saldo_akhir',10,2);
-            $table->enum('type', ['debit', 'kredit']);
+            $table->enum('type', ['debit', 'kredit','angsuran']);
             $table->timestamps();
             $table->foreign('tabungan_id')->references('id')->on('buku_tabungans');
+            $table->foreign('id_pegawai')->references('id')->on('pegawais');
         });
     }
 

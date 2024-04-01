@@ -52,8 +52,8 @@
                                             <td><b>Rp.{{ number_format($index->jumlah_pinjaman) }}</b></td>
                                             <td>
                                                 @if ($index->status === 'lunas')
-                                                    <span class="badge badge-success">{{ ucwords($index->status) }}</span>
-                                                @elseif($index->status === 'proses')
+                                                    <span class="badge badge-success ">{{ ucwords($index->status) }}</span>
+                                                @elseif($index->status === 'diproses')
                                                     <span class="badge badge-primary">{{ ucwords($index->status) }}</span>
                                                 @elseif($index->status === 'diajukan')
                                                     <span class="badge badge-warning">{{ ucwords($index->status) }}</span>

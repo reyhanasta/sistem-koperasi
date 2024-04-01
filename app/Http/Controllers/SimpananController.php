@@ -100,6 +100,8 @@ class SimpananController extends Controller
         $nasabahNotFoundWarning = 'Nasabah tidak ditemukan. Mohon tambahkan terlebih dahulu.';
         $confirmMessage = 'Data ditambahkan, buku tabungan nasabah diupdate.';
 
+   
+
         try {
             // Memulai transaksi database
             DB::beginTransaction();
@@ -131,6 +133,7 @@ class SimpananController extends Controller
             $history->nominal = $request->amount;
             $history->saldo_akhir = $rekeningNasabah->balance;
             $history->type = "debit";
+            $history->id_pegawai =  auth()->user()->id;
             $history->save();
 
             // Simpan data transaksi Simpanan
@@ -311,15 +314,20 @@ class SimpananController extends Controller
     private function generateTransactionCode()
     {
         $now = now();
+        $transactionCount = 1;
         $yearMonth = $now->format('ym');
         $baseCode = "S{$yearMonth}";
 
         // Find the maximum existing code
         $latestCode = Simpanan::withTrashed()->where('kode_simpanan', 'like', "{$baseCode}%")->max('kode_simpanan');
 
-        // Extract the numeric part and increment it
-        $transactionCount = (int)substr($latestCode, 6) + 1;
-        
+     if($latestCode){
+          // Extract the numeric part and increment it
+          $transactionCount = (int)substr($latestCode, 6) + 1;
+        }
+         
+      
+        // dd($transactionCount);
         // dd($baseCode.sprintf("%03d", $transactionCount));
         return "{$baseCode}" . sprintf("%03d", $transactionCount);
     }

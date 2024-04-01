@@ -146,7 +146,10 @@ class PinjamanController extends Controller
     public function updateStatus($id, $newStatus)
     {
         try {
-            Pinjaman::findOrFail($id)->update(['status' => $newStatus]);
+            Pinjaman::findOrFail($id)->update([
+                'status' => $newStatus,
+                'tanggal_persetujuan' => now()
+            ]);
 
             return redirect($this->redirect)->with('success', 'Status berhasil diperbarui.');
         } catch (\Exception $e) {
