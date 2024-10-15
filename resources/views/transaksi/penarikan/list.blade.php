@@ -50,7 +50,7 @@
                                                 </a>
                                             </td>
                                             <td>Rp.{{ number_format($index->amount) }}</td>
-                                            <td>{{ $index->created_at }}</td>
+                                            <td>{{ $index->created_at->isoFormat('D MMMM Y, HH:mm:ss') }}</td>
                                             <td>{{ $index->desc }}</td>
                                             {{-- <td>
                     <div class="btn-group">

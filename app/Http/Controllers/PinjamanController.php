@@ -38,7 +38,7 @@ class PinjamanController extends Controller
         //
         $data = Pinjaman::with('nasabah')->paginate(10); // Ambil semua data pinjaman dari database
         $urlCreate = route('pinjaman.create');
-        dd($urlCreate);
+        // dd($urlCreate);
         return view('transaksi.pinjaman.list', compact('data', 'urlCreate'));
     }
 

@@ -38,7 +38,7 @@
                 </li>
               </ul>
 
-              <a href="{{url('officer/'.$dataPegawai->id.'/edit')}}" class="btn btn-primary btn-block"><b>Edit Data</b></a>
+              <a href="{{url('pegawai/'.$dataPegawai->id.'/edit')}}" class="btn btn-primary btn-block"><b>Edit Data</b></a>
             </div>
             <!-- /.card-body -->
           </div>

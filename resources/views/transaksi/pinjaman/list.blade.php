@@ -48,7 +48,7 @@
                                             <td><a
                                                     href="{{ url('nasabah/' . $index->nasabah->id) }}">{{ $index->nasabah->name }}</a>
                                             </td>
-                                            <td>{{ $index->created_at->format('d-m-Y') }}</td>
+                                            <td>{{ $index->created_at->isoFormat('D MMMM Y, HH:mm:ss') }}</td>
                                             <td><b>Rp.{{ number_format($index->jumlah_pinjaman) }}</b></td>
                                             <td>
                                                 @if ($index->status === 'lunas')
