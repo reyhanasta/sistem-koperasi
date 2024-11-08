@@ -18,11 +18,10 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Kode Simpanan</th>
-                                        <th>Nama Nasabah</th>
+                                        {{-- <th>Nama Nasabah</th> --}}
                                         <th>Jenis Simpanan</th>
                                         <th>Jumlah Simpanan</th>
                                         <th>Tanggal Transaksi</th>
-                                        <th>Deskripsi</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -32,14 +31,13 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $index->kode_simpanan }}</td>
-                                            <td>
+                                            {{-- <td>
                                                 <a
                                                     href="{{ url('nasabah/' . $index->nasabah_id) }}">{{ $index->nasabah_id }}</a>
-                                            </td>
+                                            </td> --}}
                                             <td>{{ ucfirst($index->type) }}</td>
                                             <td>Rp.{{ number_format($index->amount) }}</td>
                                             <td>{{ $index->created_at->isoFormat('D MMMM Y, HH:mm:ss') }}</td>
-                                            <td>{{ $index->desc }}</td>
                                             <td>
                                                 <div class="btn-group">
                                                     <button type="button" class="btn btn-default">Tindakan</button>
