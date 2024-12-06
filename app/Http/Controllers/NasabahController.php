@@ -172,61 +172,53 @@ class NasabahController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        DB::beginTransaction();
+    public function destroy($id){
+    DB::beginTransaction();
+       
+    try {
+        
+        // Cari Nasabah berdasarkan ID
+        $nasabah = Nasabah::with(['pinjaman', 'simpanan', 'penarikan', 'angsuran'])->findOrFail($id);
+     
+        // Periksa apakah ada peminjaman yang belum lunas
+        $hasUnpaidLoans = $nasabah->pinjaman->contains(function ($pinjaman) {
+            return $pinjaman->status !== 'Lunas';
+        });
 
-        try {
-            // Cari Nasabah berdasarkan ID
-            $nasabah = Nasabah::findOrFail($id);
-
-            // Periksa status peminjaman
-            $pinjamanLunas = true; // Inisialisasi status lunas
-            foreach ($nasabah->pinjaman as $pinjaman) {
-                if ($pinjaman->status !== 'Lunas') {
-                    $pinjamanLunas = false;
-                    break; // Hentikan iterasi jika ada peminjaman yang belum lunas
-                }
-            }
-
-            // Hapus Nasabah jika semua peminjamannya sudah lunas
-            if ($pinjamanLunas) {
-                // Hapus Nasabah dan transaksi terkait
-                $nasabah->simpanan()->delete();
-                $nasabah->penarikan()->delete();
-                $nasabah->angsuran()->delete();
-                $nasabah->pinjaman()->delete();
-
-                // Hapus gambar KTP (jika ada)
-                if ($nasabah->ktp_image_path) {
-                    $ktpImagePath = public_path('storage/ktp_images/' . $nasabah->ktp_image_path);
-
-                    if (file_exists($ktpImagePath)) {
-                        unlink($ktpImagePath);
-                    }
-                }
-
-                // Hapus Nasabah
-                $nasabah->delete();
-
-                // Commit transaksi jika semuanya berhasil
-                DB::commit();
-
-                // Redirect kembali ke halaman daftar Nasabah dengan pesan sukses
-                return redirect('/nasabah')->with('success', 'Data Nasabah berhasil diarsipkan.');
-            } else {
-                // Nasabah memiliki peminjaman yang belum lunas, tidak bisa diarsipkan
-                // Redirect kembali ke halaman daftar Nasabah dengan pesan kesalahan
-                return redirect('/nasabah')->with('error', 'Nasabah memiliki transaksi peminjaman yang belum lunas sehingga data nasabah tidak dapat diarsipkan.');
-            }
-        } catch (\Exception $e) {
-            // Rollback transaksi jika terjadi kesalahan
-            DB::rollback();
-
-            Log::error('Error while archiving Nasabah: ' . $e->getMessage());
-            return redirect('/nasabah')->with('error', 'Terjadi kesalahan saat mengarsipkan Nasabah. Silakan coba lagi.');
+        if ($hasUnpaidLoans) {
+            // Redirect dengan pesan error jika ada pinjaman yang belum lunas
+            return redirect('/nasabah')->with('error', 'Nasabah memiliki transaksi peminjaman yang belum lunas sehingga data nasabah tidak dapat diarsipkan.');
         }
+
+        // Hapus semua data terkait Nasabah
+        $nasabah->simpanan()->delete();
+        $nasabah->penarikan()->delete();
+        $nasabah->angsuran()->delete();
+        $nasabah->pinjaman()->delete();
+
+        // Hapus gambar KTP jika ada
+        if ($nasabah->ktp_image_path) {
+            $ktpImagePath = public_path('storage/ktp_images/' . $nasabah->ktp_image_path);
+            if (file_exists($ktpImagePath)) {
+                unlink($ktpImagePath);
+            }
+        }
+
+        // Hapus data Nasabah
+        $nasabah->delete();
+
+        DB::commit();
+
+        // Redirect dengan pesan sukses
+        return redirect('/nasabah')->with('success', 'Data Nasabah berhasil diarsipkan.');
+    } catch (\Exception $e) {
+        DB::rollback();
+
+        Log::error('Error while archiving Nasabah: ' . $e->getMessage());
+        return redirect('/nasabah')->with('error', 'Terjadi kesalahan saat mengarsipkan Nasabah. Silakan coba lagi.');
     }
+}
+
 
 
     public function showTransactions($id)
