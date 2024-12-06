@@ -99,9 +99,6 @@ class SimpananController extends Controller
         // Pesan-pesan yang akan digunakan
         $nasabahNotFoundWarning = 'Nasabah tidak ditemukan. Mohon tambahkan terlebih dahulu.';
         $confirmMessage = 'Data ditambahkan, buku tabungan nasabah diupdate.';
-
-   
-
         try {
             // Memulai transaksi database
             DB::beginTransaction();

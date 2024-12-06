@@ -14,9 +14,9 @@ return new class () extends Migration {
             $table->id();
             $table->foreignId('id_rekening');
             $table->foreignId('nasabah_id');
-            $table->string('kode_simpanan');
+            $table->string('kode_simpanan',100);
             $table->string('type');
-            $table->bigInteger('amount');
+            $table->bigInteger('amount')->default(0);
             $table->string('desc')->nullable();
             $table->timestamps();
             $table->softDeletes(); // Soft Delete

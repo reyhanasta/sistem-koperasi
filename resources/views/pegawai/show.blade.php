@@ -23,10 +23,14 @@
                      alt="User profile picture">
               </div>
               @endif
-              <h3 class="profile-username text-center">{{$dataPegawai->name}}</h3>
-              <p class="text-muted text-center">{{$dataPegawai->position}}</p>
+      
+              <h3 class="text-center profile-username">{{$dataPegawai->name}}</h3>
+              <p class="text-center text-muted">NIK</p>
               
-              <ul class="list-group list-group-unbordered mb-3">
+              <ul class="mb-3 list-group list-group-unbordered">
+                <li class="list-group-item">
+                  <b>Posisi</b> <span class="float-right">{{$dataPegawai->position}}</span>
+                </li>
                 <li class="list-group-item">
                   <b>Salary</b> <span class="float-right">{{$salary}}</span>
                 </li>
@@ -52,19 +56,19 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <strong><i class="fas fa-venus-mars mr-1"></i> Jenis Kelamin</strong>
+              <strong><i class="mr-1 fas fa-venus-mars"></i> Jenis Kelamin</strong>
               <p class="text-muted">{{$gender}}</p>
               <hr>
-              <strong><i class="fas fa-envelope mr-1"></i> Alamat Email</strong>
+              <strong><i class="mr-1 fas fa-envelope"></i> Alamat Email</strong>
               <p class="text-muted">{{$dataPegawai->email}}</p>
               <hr>
-              <strong><i class="fas fa-map-marker-alt mr-1"></i> Alamat Rumah</strong>
+              <strong><i class="mr-1 fas fa-map-marker-alt"></i> Alamat Rumah</strong>
               <p class="text-muted">{{$dataPegawai->address}}</p>
               <hr>
-              <strong><i class="fas fa-phone-alt mr-1"></i> Contact</strong>
+              <strong><i class="mr-1 fas fa-phone-alt"></i> Contact</strong>
               <p class="text-muted">{{$dataPegawai->phone}}</p>
               <hr>
-              <strong><i class="far fa-file-alt mr-1"></i> Notes</strong>
+              <strong><i class="mr-1 far fa-file-alt"></i> Notes</strong>
               <p class="text-muted">{{$desc}}</p>
             </div>
             <!-- /.card-body -->

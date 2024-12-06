@@ -8,6 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 class RiwayatTransaksi extends Model
 {
     use HasFactory;
+    protected $casts = [
+        'nominal' => 'float',
+        'saldo_akhir' => 'float',
+    ];
+
+    public static function boot()
+{
+    parent::boot();
+
+    static::creating(function ($model) {
+        if ($model->nominal > 1000000000) { // Sesuaikan batas maksimum
+            throw new \Exception('Nominal terlalu besar.');
+        }
+    });
+}
 
     public function nasabah()
     {

@@ -19,12 +19,12 @@ return new class () extends Migration {
             $table->string('phone')->nullable();
             $table->string('position')->nullable();
             $table->string('email')->unique()->nullable();
-            $table->integer('gaji')->default(1000000);
-            $table->enum('gender', ['male','female']);
+            $table->bigInteger('gaji')->default(1000000)->nullable(false);
+            $table->enum('gender', ['male','female'])->nullable(false)->default('male');
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('join_date')->default(now());
-            $table->string('desc')->nullable();
-            $table->enum('status', ['kontrak','tetap'])->nullable();
+            $table->text('desc')->nullable();
+            $table->enum('status', ['kontrak','tetap'])->nullable(false)->default('kontrak');
             $table->timestamps();
             $table->softDeletes(); // Soft Delete
 
