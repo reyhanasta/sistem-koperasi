@@ -21,7 +21,7 @@ return new class () extends Migration {
             $table->string('jenis_usaha')->default('kelontong');
             $table->integer('jangka_waktu'); // dalam bulan
             $table->decimal('bunga', 5, 2)->default(0);
-            $table->enum('status', ['lunas', 'diproses','diajukan','ditolak'])->default('diajukan');
+            $table->enum('status', ['diajukan', 'diproses', 'disetujui', 'dicairkan', 'tertunggak', 'ditolak', 'lunas', 'dibatalkan'])->default('diajukan');
             $table->string('metode_pembayaran')->default('cash');
             $table->date('tanggal_pelunasan')->nullable();
             $table->decimal('total_pembayaran', 10, 2)->default(0);

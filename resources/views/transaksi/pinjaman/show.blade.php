@@ -3,7 +3,7 @@
 @section('content')
     <section class="content">
         <div class="container-fluid">
-            <div class="col-8 mx-auto">
+            <div class="mx-auto col-8">
                 <!-- Default box -->
                 <div class="card">
                     <div class="card-header">
@@ -100,7 +100,7 @@
                                 </div>
                                 <hr>
                                 <div class="row">
-                                    <div class="col-md-12 text-right mb-1">
+                                    <div class="mb-1 text-right col-md-12">
                                         @if ($pinjaman->status == 'diajukan')
                                             <div class="d-flex justify-content-end">
                                                 <form

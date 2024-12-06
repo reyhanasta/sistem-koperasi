@@ -25,9 +25,9 @@ use App\Http\Controllers\RiwayatTransaksiController;
 */
 
 // Halaman utama
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return view('welcome');
+});
 
 // Semua rute yang memerlukan autentikasi dan verifikasi
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -73,9 +73,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/riwayattransaksi/{nasabah_id}', [RiwayatTransaksiController::class, 'show'])->name('riwayatTransaksi');
 });
 
-Route::middleware(['auth','verified','role:admin'])->group(function(){
+// Route::middleware(['auth','verified','role:admin'])->group(function(){
 
-});
+// });
 
 // Route::get('/ujicoba', function () {
 //     return "hello world";

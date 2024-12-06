@@ -77,7 +77,7 @@
                                                                 Angsuran
                                                             </a>
                                                             @if (auth()->user()->hasRole('admin'))
-                                                                @if ($index->status === 'diajukan')
+                                                                @if ($index->status === 'diajukan'||$index->status === 'diproses' )
                                                                     <a class="dropdown-item"
                                                                         href="{{ url('trx-angsuran/' . $index->id . '/add') }}"><i
                                                                             class="fas fa-edit nav-icon"></i> Edit
