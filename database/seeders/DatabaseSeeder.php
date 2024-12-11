@@ -33,11 +33,20 @@ class DatabaseSeeder extends Seeder
         //JABATAB SEEDER
         Pegawai::create([
             'name' => 'Muhammad Reyhan Perdana Asta',
-            'email' => 'reyhan.perdana48@example.com',
+            'email' => 'astareyhan@gmail.com',
             'user_id' => 1,
-            'position' => 'Staff',
+            'position' => 'Admin',
             'gaji' => 1000000,
             'gender' => 'male',
+            'join_date' => now()
+        ]);
+        Pegawai::create([
+            'name' => 'Hilwa Puti Imani Asta',
+            'email' => 'astahilwa@gmail.com',
+            'user_id' => 2,
+            'position' => 'Staff',
+            'gaji' => 1000000,
+            'gender' => 'female',
             'join_date' => now()
         ]);
         Nasabah::create([
@@ -48,6 +57,7 @@ class DatabaseSeeder extends Seeder
             'gender' => 'female',
             'ktp' => '1402010909970003',
         ]);
+
         BukuTabungan::create([
             'no_rek' => '230916080911',
             'nasabah_id' => '1',

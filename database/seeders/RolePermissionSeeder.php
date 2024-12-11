@@ -20,10 +20,18 @@ class RolePermissionSeeder extends Seeder
         Role::create(['name' => 'admin']);
 
         // Membuat permission
+        Permission::create(['name' => 'add-nasabah']);
         Permission::create(['name' => 'edit-nasabah']);
+        Permission::create(['name' => 'delete-nasabah']);
+        Permission::create(['name' => 'detail-nasabah']);
+        
+        Permission::create(['name' => 'add-simpanan']);
+        Permission::create(['name' => 'edit-simpanan']);
+        Permission::create(['name' => 'delete-simpanan']);
+        Permission::create(['name' => 'detail-simpanan']);
 
         // Memberikan permission ke role yang sesuai
         $roleAdmin = Role::findByName('admin');
-        $roleAdmin->givePermissionTo('edit-nasabah');
+        $roleAdmin->givePermissionTo(['add-nasabah','edit-nasabah']);
     }
 }
