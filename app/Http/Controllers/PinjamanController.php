@@ -28,7 +28,7 @@ class PinjamanController extends Controller
     // Fungsi konstruktor untuk menginisialisasi nilai properti
     public function __construct(PinjamanService $pinjamanService, Pinjaman $pinjaman)
     {
-        $this->redirect = '/trx-pinjaman'; // Ganti dengan nilai default yang sesuai
+        $this->redirect = '/trx/pinjaman'; // Ganti dengan nilai default yang sesuai
         $this->pinjamanServices = $pinjamanService; // Ganti dengan nilai default yang sesuai
         $this->pinjaman = $pinjaman; // Ganti dengan nilai default yang sesuai
     }
@@ -37,9 +37,8 @@ class PinjamanController extends Controller
     {
         //
         $data = Pinjaman::with('nasabah')->paginate(10); // Ambil semua data pinjaman dari database
-        $urlCreate = route('pinjaman.create');
         // dd($urlCreate);
-        return view('transaksi.pinjaman.list', compact('data', 'urlCreate'));
+        return view('transaksi.pinjaman.list', compact('data'));
     }
 
     public function riwayatPinjaman($nasabah_id)
@@ -65,6 +64,7 @@ class PinjamanController extends Controller
     public function create()
     {
         //
+        
         $data = new Pinjaman();
         $nasabahList = Nasabah::all();
         $previousUrl = url()->previous();
@@ -77,6 +77,7 @@ class PinjamanController extends Controller
      */
     public function store(PinjamanRequest $request)
     {
+      
         try {
              // Validasi data yang masuk telah dilakukan oleh PinjamanRequest
             $code = $this->generateTransactionCode();

@@ -8,7 +8,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <a href="{{ url('trx-simpanan/create/') }}" class="btn btn-primary"><i
+                            <a href="{{ route('simpanan.create') }}" class="btn btn-primary"><i
                                     class="fas fa-plus"></i><span> Tambah</span></a>
                         </div>
                         <!-- /.card-header -->
@@ -50,7 +50,7 @@
                                                         <a class="dropdown-item"
                                                             href="{{ url('trx-simpanan/' . $index->id) }}"><i
                                                                 class="fas fa-search nav-icon"></i> Detail</a>
-                                                        @if (auth()->user()->hasRole('admin'))
+                                                        @role('admin')
                                                             <a class="dropdown-item"
                                                                 href="{{ url('trx-simpanan/' . $index->id . '/edit') }}"><i
                                                                     class="fas fa-edit nav-icon"></i> Edit</a>
@@ -65,7 +65,7 @@
                                                                     onclick="return confirm('Apakah anda sudah yakin ?')">
                                                                     <i class="fas fa-trash nav-icon"></i> Delete</button>
                                                             </form>
-                                                        @endif
+                                                        @endrole
                                                     </div>
                                                 </div>
                                             </td>

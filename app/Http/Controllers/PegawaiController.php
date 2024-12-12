@@ -62,8 +62,9 @@ class PegawaiController extends Controller
                 'email_verified_at' => now(),
                 'level' => 'staff',
                 'name' => ucwords(strtolower($request->name)),
-                'password' => Hash::make('btm100'),
+                'password' => Hash::make('staff'),
             ]);
+            $newUser->assignRole('staff');
             $newUser->save();
 
             // Create Pegawai instance and associate it with the newly created User

@@ -1,5 +1,5 @@
 @extends('layouts.template')
-@section('title', 'Simpanan')
+@section('title', 'Penarikan')
 @section('content')
     <section class="content">
         <div class="container-fluid">
@@ -12,7 +12,7 @@
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form action="{{ url('trx-penarikan') }}" method="post" enctype="multipart/form-data">
+                        <form action="{{ route('penarikan.index') }}" method="post" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             @include('transaksi.penarikan._form')
                             <!-- /.card-body -->

@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
 
-        $staff->assignRole('admin');
+        $staff->assignRole('staff');
 
         $nasabah = User::create(attributes: [
             'name' => 'Putri Novia',

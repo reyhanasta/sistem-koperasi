@@ -22,7 +22,7 @@
                     @endif --}}
                     <div class="card">
                         <div class="card-header">
-                            <a href="{{ url('trx-penarikan/create/') }}" class="btn btn-primary"><i
+                            <a href="{{ route('penarikan.create') }}" class="btn btn-primary"><i
                                     class="fas fa-plus"></i><span> Tambah</span></a>
                         </div>
                         <!-- /.card-header -->

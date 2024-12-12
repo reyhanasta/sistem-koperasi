@@ -140,7 +140,7 @@ class SimpananController extends Controller
             DB::commit();
 
             // Redirect ke halaman yang sesuai dan sertakan pesan sukses
-            return redirect('/trx-simpanan')->with('success', $confirmMessage);
+            return redirect('/trx/simpanan')->with('success', $confirmMessage);
         } catch (\Exception $e) {
             // Jika terjadi kesalahan, batalkan transaksi, tampilkan pesan kesalahan, dan log error
             DB::rollBack();

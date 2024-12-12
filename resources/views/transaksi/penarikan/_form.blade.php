@@ -10,7 +10,7 @@
                 @endforeach
             </select>
         @else
-            <a class="form-control btn btn-success" href="{{ url('nasabah/create/') }}" class="btn btn-primary"><i
+            <a class="form-control btn btn-success" href="{{ route('nasabah.create') }}" class="btn btn-primary"><i
                     class="fas fa-plus"></i><span> Tambah Data Nasabah</span></a>
         @endif
 

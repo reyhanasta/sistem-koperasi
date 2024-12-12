@@ -25,7 +25,7 @@ return new class () extends Migration {
             $table->string('metode_pembayaran')->default('cash');
             $table->date('tanggal_pelunasan')->nullable();
             $table->decimal('total_pembayaran', 10, 2)->default(0);
-            $table->decimal('angsuran', 10, 2)->default(0);
+            $table->decimal('angsuran', 10, 2)->default(0); 
             $table->integer('jumlah_angsuran')->default(0); // dalam satuan
             $table->decimal('sisa_pinjaman', 10, 2)->default(0);
             $table->text('catatan')->nullable();

@@ -103,6 +103,7 @@
                                     <div class="mb-1 text-right col-md-12">
                                         @if ($pinjaman->status == 'diajukan')
                                             <div class="d-flex justify-content-end">
+                                                @role('admin')
                                                 <form
                                                     action="{{ route('pinjaman.updateStatus', ['id' => $pinjaman->id, 'newStatus' => 'diproses']) }}"
                                                     method="post" class="mr-2">
@@ -117,6 +118,7 @@
                                                     @method('PUT')
                                                     <button type="submit" class="btn btn-sm btn-danger">Tolak</button>
                                                 </form>
+                                                @endrole
                                                 <a href="{{ $previousUrl }}" class="btn btn-sm btn-default">Kembali</a>
                                             </div>
                                         @else

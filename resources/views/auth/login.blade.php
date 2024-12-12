@@ -8,7 +8,7 @@
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="email" />
+            <x-text-input id="email" class="block w-full mt-1" type="email" name="email" :value="old('email')" required autofocus autocomplete="email" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
@@ -16,7 +16,7 @@
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
 
-            <x-text-input id="password" class="block mt-1 w-full"
+            <x-text-input id="password" class="block w-full mt-1"
                             type="password"
                             name="password"
                             required autocomplete="current-password" />
@@ -27,14 +27,14 @@
         <!-- Remember Me -->
         <div class="block mt-4">
             <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
+                <input id="remember_me" type="checkbox" class="text-indigo-600 border-gray-300 rounded shadow-sm dark:bg-gray-900 dark:border-gray-700 focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
                 <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
             </label>
         </div>
 
         <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
+                <a class="text-sm text-gray-600 underline rounded-md dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
                     {{ __('Forgot your password?') }}
                 </a>
             @endif
@@ -69,7 +69,7 @@
         <x-auth-session-status class="mb-4" :status="session('status')" />
         <!-- /.login-logo -->
         <div class="card card-outline card-danger">
-            <div class="card-header text-center">
+            <div class="text-center card-header">
                 <a href="{{ asset('adminlte/') }}/index2.html" class="h1"><b>BTM</b>WM</a>
             </div>
             <div class="card-body">
@@ -77,7 +77,7 @@
 
                 <form action="{{ route('login') }}" method="post">
                     @csrf
-                    <div class="input-group mb-3">
+                    <div class="mb-3 input-group">
                         <x-text-input id="email" class="form-control @error('email') is-invalid @enderror"
                             type="email" name="email" :value="old('email')" required autofocus autocomplete="email" />
                         <div class="input-group-append">
@@ -90,7 +90,7 @@
           @enderror --}}
                         <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
-                    <div class="input-group mb-3">
+                    <div class="mb-3 input-group">
                         <x-text-input id="password" class="form-control" type="password" name="password" required
                             autocomplete="current-password" />
                         <div class="input-group-append">
@@ -99,17 +99,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="input-group mb-3">
+                    <div class="mb-3 input-group">
                         <label for="remember_me" class="inline-flex items-center">
                             <input id="remember_me" type="checkbox"
-                                class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800"
+                                class="text-indigo-600 border-gray-300 rounded shadow-sm dark:bg-gray-900 dark:border-gray-700 focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800"
                                 name="remember">
                             <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
                         </label>
                     </div>
-                    <div class="input-group mb-3">
+                    <div class="mb-3 input-group">
                         @if (Route::has('password.request'))
-                            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                            <a class="text-sm text-gray-600 underline rounded-md dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                                 href="{{ route('password.request') }}">
                                 {{ __('Forgot your password?') }}
                             </a>
@@ -120,6 +120,13 @@
                         <div class="col-12">
                             <x-primary-button type="submit"
                                 class="btn btn-primary btn-block">{{ __('Log in') }}</x-primary-button>
+                        </div>
+
+                        <div class="col-12">
+                            <br>
+                            <span>Hint Password</span><br>
+                            <span>admin : admin</span><br>
+                            <span>staff : staff</span><br>
                         </div>
                         <!-- /.col -->
                     </div>

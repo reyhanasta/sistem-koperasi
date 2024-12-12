@@ -85,7 +85,7 @@ class PenarikanController extends Controller
             // Save changes to RekeningNasabah and Penarikan
             $data->save();
 
-            return redirect('trx-penarikan')->with('success', 'Data Berhasil Ditambahkan!');
+            return redirect('trx/penarikan')->with('success', 'Data Berhasil Ditambahkan!');
         } else {
             // Redirect back with the old input and validation errors
             return redirect()->back()->withErrors($validatedData)->withInput();

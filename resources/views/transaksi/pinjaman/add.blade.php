@@ -25,7 +25,7 @@
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form action="{{ url('trx-pinjaman') }}" method="post" enctype="multipart/form-data">
+                        <form action="{{ url('trx/pinjaman') }}" method="post" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             @include('transaksi.pinjaman._form')
                             <!-- /.card-body -->

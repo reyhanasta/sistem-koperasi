@@ -22,7 +22,7 @@
                             <h3 class="card-title">Formulir Transaksi Simpanan</h3>
                         </div>
                         {{-- Form  --}}
-                        <form action="{{ url('trx-simpanan') }}" method="post" id="form-simpanan"
+                        <form action="{{ route('simpanan.index') }}" method="post" id="form-simpanan"
                             enctype="multipart/form-data">
                             @csrf
                             @include('transaksi.simpanan._form')
