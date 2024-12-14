@@ -32,56 +32,65 @@ class AngsuranController extends Controller
     public function store(Request $request)
     {
         $nasabahNotFoundWarning = 'Nasabah tidak ditemukan. Mohon tambahkan terlebih dahulu.';
-        $successMessage = 'Data ditambahkan, buku tabungan nasabah diupdate.';
-
+        $successMessage = 'Data angsuran berhasil ditambahkan, dan data pinjaman diupdate.';
+    
+        // Validasi input
+        $validated = $request->validate([
+            'id_pinjaman' => 'required|exists:pinjamen,id',
+        ]);
+    
         try {
             // Mulai transaksi database
             DB::beginTransaction();
-
-            // Implementasikan logika angsuran di sini
             // Cari pinjaman berdasarkan ID
-            $pinjaman = Pinjaman::findOrFail($request->id_pinjaman);
-
-            // Lakukan validasi, misalnya, pastikan status pinjaman adalah "Pencairan" dan nasabah memiliki saldo cukup
-            // Hilangkan tanda ribuan dan ganti tanda desimal jika perlu
-            $angsuran_harian = (float) str_replace([',', '.'], ['', '.'], $request->angsuran);
-            $sisaPinjaman = (float) str_replace([',', '.'], ['', '.'], $pinjaman->sisa_pinjaman);
-            // // Lakukan pengurangan saldo nasabah
-            // $nasabah = Nasabah::findOrFail($pinjaman->nasabah_id);
-            // $nasabah->saldo -= $request->jumlah_angsuran;
-            // $nasabah->save();
-            // Update status pinjaman (misalnya, periksa jika pinjaman sudah lunas)
-            if ($sisaPinjaman <= $angsuran_harian) {
-                $pinjaman->status = 'Lunas';
-            } else {
-                $pinjaman->sisa_pinjaman = $sisaPinjaman - $angsuran_harian;
-                $pinjaman->jumlah_angsuran += 1;
-                $pinjaman->status = 'Proses Angsuran';
+            $pinjaman = Pinjaman::findOrFail($validated['id_pinjaman']);
+          
+    
+            // Validasi tambahan: pastikan pinjaman dalam status tertentu, misalnya 'Proses Angsuran'
+            if (!in_array($pinjaman->status, ['disetujui','berlangsung'])) {
+                return back()->with('error', 'Pinjaman tidak dapat diangsur pada status ini.');
             }
+            // Hitung jumlah angsuran harian dan sisa pinjaman
+            $angsuranHarian = (float) $pinjaman->angsuran;
+            $sisaPinjaman = (float) $pinjaman->sisa_pinjaman;
+            
+            // Update status pinjaman berdasarkan sisa pinjaman
+            if ($sisaPinjaman <= $angsuranHarian) {
+                $pinjaman->status = 'lunas';
+                $pinjaman->sisa_pinjaman = 0;
+            } else {
+                $pinjaman->sisa_pinjaman -= $angsuranHarian;
+                $pinjaman->jumlah_angsuran += 1;
+                $pinjaman->status = 'berlangsung';
+            }
+            
+            // dd($pinjaman->status);
+            // Simpan perubahan pada pinjaman
             $pinjaman->save();
-
+    
             // Simpan data angsuran
-            $angsuran = new Angsuran();
-            $angsuran->id_pinjaman = $pinjaman->id;
-            $angsuran->nasabah_id = $pinjaman->nasabah_id;
-            $angsuran->jumlah_angsuran = $angsuran_harian;
-            $angsuran->tanggal_angsuran = now();
-            $angsuran->save();
-
+            Angsuran::create([
+                'id_pinjaman' => $pinjaman->id,
+                'nasabah_id' => $pinjaman->nasabah_id,
+                'jumlah_angsuran' => $angsuranHarian,
+                'tanggal_angsuran' => now(),
+            ]);
+    
             // Commit transaksi database jika semua berhasil
             DB::commit();
-
-            // Redirect atau kirim respons sesuai dengan kebutuhan Anda
-            return redirect('/trx-pinjaman')->with('success', $successMessage);
+    
+            return redirect('/trx/pinjaman')->with('success', $successMessage);
         } catch (\Exception $e) {
             // Rollback transaksi jika terjadi kesalahan
-            DB::rollback();
+            DB::rollBack();
+    
             // Log kesalahan
-            Log::error('Terjadi kesalahan saat menyimpan data pinjaman: ' . $e->getMessage());
-            // Tambahkan pesan kesalahan ke log atau tampilkan ke pengguna
-            return back()->with('error', 'Terjadi kesalahan: ' . $nasabahNotFoundWarning);
+            Log::error('Terjadi kesalahan saat menyimpan data angsuran: ' . $e->getMessage());
+    
+            return back()->with('error', 'Terjadi kesalahan saat menambahkan angsuran.');
         }
     }
+    
 
     /**
      * Display the specified resource.

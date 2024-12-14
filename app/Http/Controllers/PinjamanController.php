@@ -57,7 +57,6 @@ class PinjamanController extends Controller
         return view('transaksi.pinjaman.riwayat', compact('nasabah', 'riwayatPinjaman', 'previousUrl'));
     }
 
-
     /**
      * Show the form for creating a new resource.
      */
@@ -93,8 +92,6 @@ class PinjamanController extends Controller
         }
     }
 
-
-
     private function generateTransactionCode()
     {
         $currentTime = now()->format('ym');
@@ -104,8 +101,6 @@ class PinjamanController extends Controller
 
         return "{$baseCode}" . str_pad($transactionCount, 3, '0', STR_PAD_LEFT);
     }
-
-
 
     /**
      * Display the specified resource.
@@ -138,7 +133,7 @@ class PinjamanController extends Controller
         $validatedData = $request->validate([
             // Atur aturan validasi sesuai kebutuhan
         ]);
-
+        
         $pinjaman = Pinjaman::findOrFail($id);
         $pinjaman->update($validatedData);
 
@@ -160,7 +155,6 @@ class PinjamanController extends Controller
             return back()->with('error', 'Terjadi kesalahan saat memperbarui status pinjaman. Silakan coba lagi.');
         }
     }
-
 
     public function lunasi($id)
     {
@@ -184,8 +178,6 @@ class PinjamanController extends Controller
         }
     }
 
-
-
     /**
      * Remove the specified resource from storage.
      */
@@ -195,6 +187,16 @@ class PinjamanController extends Controller
             // Find the Pinjaman by ID and delete it
             Pinjaman::destroy($id);
             return redirect($this->redirect);
+        } catch (\Exception $e) {
+            // Handle any errors that occur during deletion
+            Log::error('Terjadi kesalahan saat menghapus Pinjaman: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat menghapus Pinjaman. Silakan coba lagi.');
+        }
+    }
+    public function pay(string $id)
+    {
+        try {
+            
         } catch (\Exception $e) {
             // Handle any errors that occur during deletion
             Log::error('Terjadi kesalahan saat menghapus Pinjaman: ' . $e->getMessage());

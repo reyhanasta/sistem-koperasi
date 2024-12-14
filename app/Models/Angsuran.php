@@ -11,11 +11,14 @@ class Angsuran extends Model
     use HasFactory;
     use SoftDeletes;
     protected $guarded = ['id'];
-    protected $connection = 'mysql2';
-    protected $table = 'sik2024';
 
     public function nasabah()
     {
-        return $this->belongsTo(Nasabah::class, 'nasabah_id');
+        return $this->belongsTo(Nasabah::class, 'nasabah_id','id');
+    }
+
+    public function pinjaman()
+    {
+        return $this->belongsTo(Pinjaman::class, 'id_pinjaman','id');
     }
 }

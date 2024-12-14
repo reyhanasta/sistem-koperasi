@@ -52,12 +52,14 @@
                                     <td>{{ $index->created_at->isoFormat('D MMMM Y, HH:mm:ss') }}</td>
                                     <td><b>Rp.{{ number_format($index->jumlah_pinjaman) }}</b></td>
                                     <td>
-                                        @if ($index->status === 'lunas')
+                                        @if ($index->status === 'disetujui')
                                         <span class="badge badge-success ">{{ ucwords($index->status) }}</span>
-                                        @elseif($index->status === 'diproses')
+                                        @elseif($index->status === 'validasi')
                                         <span class="badge badge-primary">{{ ucwords($index->status) }}</span>
                                         @elseif($index->status === 'diajukan')
                                         <span class="badge badge-warning">{{ ucwords($index->status) }}</span>
+                                        @elseif($index->status === 'berlangsung')
+                                        <span class="badge badge-info">{{ ucwords($index->status) }}</span> : {{$index->jumlah_angsuran .'/'. $index->jangka_waktu}}
                                         @else
                                         <span class="badge badge-danger">{{ ucwords($index->status) }}</span>
                                         @endif
@@ -78,7 +80,7 @@
                                                         Angsuran
                                                     </a>
                                                     @role('admin') 
-                                                        @if ($index->status === 'diajukan'||$index->status === 'diproses' )
+                                                        @if ($index->status === 'diajukan'||$index->status === 'validasi' )
                                                         <a class="dropdown-item"
                                                             href="{{ url('trx/angsuran/' . $index->id . '/add') }}"><i
                                                                 class="fas fa-edit nav-icon"></i> Edit
@@ -89,19 +91,7 @@
                                                             Pinjaman</a>
                                                         @endif
                                                     @endrole
-                                                    @if ($index->status != 'Lunas' && $index->tanggal_persetujuan !=
-                                                    null)
-                                                    <form action="{{ route('pinjaman.lunasi', ['id' => $index->id]) }}"
-                                                        method="post">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <!-- Ganti dengan PATCH jika sesuai -->
-                                                        <button type="submit" class="dropdown-item" href=""><i
-                                                                class="fas fa-cash-register nav-icon"></i> Bayar
-                                                            Lunas
-                                                        </button>
-                                                    </form>
-                                                    @endif
+                                                   
                                                 </div>
                                             </div>
                                         </div>

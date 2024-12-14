@@ -70,6 +70,7 @@ Route::middleware('role:admin')->group(function(){
         // Pinjaman
         Route::put('/pinjaman/{id}/update-status/{newStatus}','updateStatus')->name('pinjaman.updateStatus');
         Route::put('/pinjaman/{id}/lunasi','lunasi')->name('pinjaman.lunasi');
+        Route::put('/pinjaman/{id}/pay','pay')->name('pinjaman.pay');
         Route::resource('master-jabatan', MasterJabatanController::class);
         Route::resource('pegawai', PegawaiController::class);
     });
