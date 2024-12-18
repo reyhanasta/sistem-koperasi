@@ -25,7 +25,7 @@
 
                                 <div class="col-12 col-sm-12">
                                     <div class="info-box bg-primary">
-                                        <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
+                                        <span class="info-box-icon"><i class="fas fa-money-bill-wave"></i></span>
 
                                         <div class="info-box-content">
                                             <span class="info-box-text">Nominal Pinjaman</span>

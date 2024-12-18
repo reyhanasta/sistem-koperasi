@@ -49,14 +49,14 @@
                       <div class="dropdown-menu" role="menu">
                         <a class="dropdown-item" href="{{ url('nasabah/'.$nasabah->id)}}"><i class="fas fa-search nav-icon"></i> Detail</a>
                         <a class="dropdown-item" href="{{ url('nasabah/'.$nasabah->id.'/edit')}}"><i class="fas fa-edit nav-icon"></i> Edit</a>
-                        <div class="dropdown-divider"></div>
+                        {{-- <div class="dropdown-divider"></div>
                         <form action="{{ url('nasabah/'.$nasabah->id)}}" method="post">
                           @method('delete')
                           @csrf
                           <button type="submit" class="dropdown-item" 
                           onclick="return confirm('Apakah anda sudah yakin ?')"> <i class="fas fa-trash nav-icon"></i> Delete</button>
                         </form>
-                      </div>
+                      </div> --}}
                     </div>
                   
                 </td>

@@ -35,10 +35,12 @@
                             <b>Daftar Mutasi</b>
                         </a>
                         <a href="{{ route('pinjaman.riwayat', ['nasabah_id' => $data->id]) }}"
-                            class="btn btn-primary btn-block"><b>Daftar Peminjaman</b></a>
+                            class="btn btn-primary btn-block"><b>
+                                <i class="mr-1 fas fa-tasks"></i>
+                                Daftar Peminjaman</b></a>
                         <hr>
                         <a href="{{ url('nasabah/' . $data->id . '/edit') }}" class="btn btn-warning btn-block">
-                            <i class="mr-1 fas fa-gear"></i>
+                            <i class="mr-1 fas fa-user-cog"></i>
                             <b>Update Data Nasabah</b>
                         </a>
                     </div>
