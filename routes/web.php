@@ -41,8 +41,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //     Route::delete('/profile', 'destroy')->name('profile.destroy');
     // });
 
-    
-
     // Saldo Nasabah
     Route::get('/saldoNasabah/{id}', [BukuTabunganController::class, 'getSaldo']);
     //Pinjaman Group
@@ -88,7 +86,6 @@ Route::middleware('role:admin|staff')->group(function(){
         Route::resource('pinjaman',PinjamanController::class);
         Route::resource('simpanan',SimpananController::class);
         // Route::get('pinjaman/create','create')->name('pinjaman.create');
-
     });
 });
 

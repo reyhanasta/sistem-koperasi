@@ -172,52 +172,40 @@ class NasabahController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id){
-    DB::beginTransaction();
-       
-    try {
-        
-        // Cari Nasabah berdasarkan ID
-        $nasabah = Nasabah::with(['pinjaman', 'simpanan', 'penarikan', 'angsuran'])->findOrFail($id);
-     
-        // Periksa apakah ada peminjaman yang belum lunas
-        $hasUnpaidLoans = $nasabah->pinjaman->contains(function ($pinjaman) {
-            return $pinjaman->status !== 'Lunas';
-        });
-
-        if ($hasUnpaidLoans) {
-            // Redirect dengan pesan error jika ada pinjaman yang belum lunas
-            return redirect('/nasabah')->with('error', 'Nasabah memiliki transaksi peminjaman yang belum lunas sehingga data nasabah tidak dapat diarsipkan.');
-        }
-
-        // Hapus semua data terkait Nasabah
-        $nasabah->simpanan()->delete();
-        $nasabah->penarikan()->delete();
-        $nasabah->angsuran()->delete();
-        $nasabah->pinjaman()->delete();
-
-        // Hapus gambar KTP jika ada
-        if ($nasabah->ktp_image_path) {
-            $ktpImagePath = public_path('storage/ktp_images/' . $nasabah->ktp_image_path);
-            if (file_exists($ktpImagePath)) {
-                unlink($ktpImagePath);
+        public function destroy($id){
+        DB::beginTransaction();
+        try {
+            // Cari Nasabah berdasarkan ID
+            $nasabah = Nasabah::with(['pinjaman', 'simpanan', 'penarikan', 'angsuran'])->find($id);
+    
+            if (!$nasabah) {
+                // Redirect dengan pesan error jika Nasabah tidak ditemukan
+                return redirect('/nasabah')->with('error', 'Nasabah tidak ditemukan.');
             }
+    
+            // Periksa apakah ada peminjaman yang belum lunas
+            $hasUnpaidLoans = $nasabah->pinjaman->contains(function ($pinjaman) {
+                return $pinjaman->status !== 'Lunas';
+            });
+    
+            if ($hasUnpaidLoans) {
+                // Redirect dengan pesan error jika ada pinjaman yang belum lunas
+                return redirect('/nasabah')->with('error', 'Nasabah memiliki transaksi peminjaman yang belum lunas sehingga data nasabah tidak dapat diarsipkan.');
+            }
+    
+            // Hapus semua data terkait Nasabah
+            $nasabah->simpanan()->delete();
+            $nasabah->penarikan()->delete();
+            $nasabah->angsuran()->delete();
+            $nasabah->delete();
+    
+            DB::commit();
+            return redirect('/nasabah')->with('success', 'Nasabah berhasil dihapus.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect('/nasabah')->with('error', 'Terjadi kesalahan saat menghapus nasabah.');
         }
-
-        // Hapus data Nasabah
-        $nasabah->delete();
-
-        DB::commit();
-
-        // Redirect dengan pesan sukses
-        return redirect('/nasabah')->with('success', 'Data Nasabah berhasil diarsipkan.');
-    } catch (\Exception $e) {
-        DB::rollback();
-
-        Log::error('Error while archiving Nasabah: ' . $e->getMessage());
-        return redirect('/nasabah')->with('error', 'Terjadi kesalahan saat mengarsipkan Nasabah. Silakan coba lagi.');
     }
-}
 
 
 

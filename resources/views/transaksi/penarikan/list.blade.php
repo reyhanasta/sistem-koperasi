@@ -41,11 +41,12 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($data as $index)
+                                 
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $index->nasabah->name }}</td>
                                             <td><a
-                                                    href="{{ url('nasabah/' . $index->bukuTabungan->id_nasabah) }}">
+                                                    href="{{ url('nasabah/' . $index->bukuTabungan->nasabah_id) }}">
                                                     {{ $index->bukuTabungan->no_rek }}
                                                 </a>
                                             </td>

@@ -45,9 +45,9 @@ class Pinjaman extends Model
     }
 
     public function lunaskanTransaksi($id){
+        dd('ada');
      
         $pinjaman = Pinjaman::find($id); // Gantilah $id dengan nilai yang sesuai
-  
         // Memaksimalkan jumlah angsuran
         $pinjaman->jumlah_angsuran = $pinjaman->jangka_waktu;
         // Mengubah nilai kolom 'status'

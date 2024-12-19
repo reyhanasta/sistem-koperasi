@@ -96,7 +96,6 @@
                                     @endif
                                     <br>
                                     <b>Petugas Transaksi:</b> {{ $pinjaman->pegawai->name }}<br>
-
                                 </div>
                                 <!-- /.col -->
                             </div>
@@ -144,9 +143,19 @@
                                             @csrf
                                             <!-- Ganti dengan PATCH jika sesuai -->
                                             <input type="hidden" name="id_pinjaman" value="{{$pinjaman->id}}">
-                                            <button type="submit" class="btn btn-sm btn-primary" ><i
+                                            <button type="submit" class="btn btn-sm btn-primary"><i
                                                     class="fas fa-cash-register nav-icon"> </i>
                                                 Bayar Angsuran
+                                            </button>
+                                        </form>
+                                        <form action="{{route('pinjaman.lunasi',['id' => $pinjaman->id])}}" method="post" class="mr-2">
+                                            @csrf
+                                            @method('PUT')
+                                            <!-- Ganti dengan PATCH jika sesuai -->
+                                            <input type="hidden" name="id_pinjaman" value="{{$pinjaman->id}}">
+                                            <button type="submit" class="btn btn-sm btn-info">
+                                                <i class="fas fa-dollar-sign nav-icon"> </i>
+                                                Bayar Lunas
                                             </button>
                                         </form>
                                         @endrole

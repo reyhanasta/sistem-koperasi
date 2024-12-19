@@ -47,14 +47,11 @@
                                                         <span class="sr-only">Toggle Dropdown</span>
                                                     </button>
                                                     <div class="dropdown-menu" role="menu">
-                                                        <a class="dropdown-item"
-                                                            href="{{ url('trx-simpanan/' . $index->id) }}"><i
-                                                                class="fas fa-search nav-icon"></i> Detail</a>
                                                         @role('admin')
-                                                            <a class="dropdown-item"
+                                                            {{-- <a class="dropdown-item"
                                                                 href="{{ url('trx-simpanan/' . $index->id . '/edit') }}"><i
                                                                     class="fas fa-edit nav-icon"></i> Edit</a>
-                                                            <div class="dropdown-divider"></div>
+                                                            <div class="dropdown-divider"></div> --}}
                                                             <form action="{{ url('trx-simpanan/' . $index->id) }}"
                                                                 method="post">
                                                                 @method('delete')
