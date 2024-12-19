@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 
 class Pinjaman extends Model
 {
@@ -45,19 +46,31 @@ class Pinjaman extends Model
     }
 
     public function lunaskanTransaksi($id){
-        dd('ada');
-     
-        $pinjaman = Pinjaman::find($id); // Gantilah $id dengan nilai yang sesuai
-        // Memaksimalkan jumlah angsuran
-        $pinjaman->jumlah_angsuran = $pinjaman->jangka_waktu;
-        // Mengubah nilai kolom 'status'
-        $pinjaman->status = 'lunas';
-        // Mengubah nilai kolom 'sisa_pinjaman'
-        $pinjaman->sisa_pinjaman = 0;
-        // Mengubah nilai kolom 'sisa_pinjaman'
-        $pinjaman->tanggal_pelunasan = now();
+        DB::beginTransaction();
+        try {
+            $pinjaman = Pinjaman::find($id);
+            
+            if (!$pinjaman) {
+                return redirect('/pinjaman')->with('error', 'Pinjaman tidak ditemukan.');
+            }
 
-        // Menyimpan perubahan
-        $pinjaman->save();
+            // Memaksimalkan jumlah angsuran
+            $pinjaman->jumlah_angsuran = $pinjaman->jangka_waktu;
+            // Mengubah nilai kolom 'status'
+            $pinjaman->status = 'lunas';
+            // Mengubah nilai kolom 'sisa_pinjaman'
+            $pinjaman->sisa_pinjaman = 0;
+            // Mengubah nilai kolom 'tanggal_pelunasan'
+            $pinjaman->tanggal_pelunasan = now();
+
+            // Menyimpan perubahan
+            $pinjaman->save();
+
+            DB::commit();
+            return redirect('/pinjaman')->with('success', 'Pinjaman berhasil dilunaskan.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect('/pinjaman')->with('error', 'Terjadi kesalahan saat melunaskan pinjaman.');
+        }
     }
 }

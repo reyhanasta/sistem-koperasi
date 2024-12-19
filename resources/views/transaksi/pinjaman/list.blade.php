@@ -46,23 +46,29 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $index->kode_pinjaman }}</td>
-                                    <td><a href="{{ url('nasabah/' . $index->nasabah->id) }}">{{ $index->nasabah->name
-                                            }}</a>
-                                    </td>
+                                    <td><a href="{{ url('nasabah/' . $index->nasabah->id) }}">{{ $index->nasabah->name }}</a></td>
                                     <td>{{ $index->created_at->isoFormat('D MMMM Y, HH:mm:ss') }}</td>
                                     <td><b>Rp.{{ number_format($index->jumlah_pinjaman) }}</b></td>
                                     <td>
-                                        @if ($index->status === 'disetujui')
-                                        <span class="badge badge-success ">{{ ucwords($index->status) }}</span>
-                                        @elseif($index->status === 'validasi')
-                                        <span class="badge badge-primary">{{ ucwords($index->status) }}</span>
-                                        @elseif($index->status === 'diajukan')
-                                        <span class="badge badge-warning">{{ ucwords($index->status) }}</span>
-                                        @elseif($index->status === 'berlangsung')
-                                        <span class="badge badge-info">{{ ucwords($index->status) }}</span> : {{$index->jumlah_angsuran .'/'. $index->jangka_waktu}}
-                                        @else
-                                        <span class="badge badge-danger">{{ ucwords($index->status) }}</span>
-                                        @endif
+                                        @switch($index->status)
+                                            @case('disetujui')
+                                                <span class="badge badge-success">{{ ucwords($index->status) }}</span>
+                                                @break
+                                            @case('validasi')
+                                                <span class="badge badge-primary">{{ ucwords($index->status) }}</span>
+                                                @break
+                                            @case('diajukan')
+                                                <span class="badge badge-warning">{{ ucwords($index->status) }}</span>
+                                                @break
+                                            @case('berlangsung')
+                                                <span class="badge badge-info">{{ ucwords($index->status) }}</span> : {{ $index->jumlah_angsuran . '/' . $index->jangka_waktu }}
+                                                @break
+                                            @case('lunas')
+                                                <span class="badge badge-secondary">{{ ucwords($index->status) }}</span>
+                                                @break
+                                            @default
+                                                <span class="badge badge-danger">{{ ucwords($index->status) }}</span>
+                                        @endswitch
                                     </td>
                                     <td>
                                         <div class="btn-group">

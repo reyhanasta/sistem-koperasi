@@ -83,17 +83,28 @@
                                     <b>Jenis Usaha:</b> {{ ucwords($pinjaman->jenis_usaha) }}<br>
                                     <br>
                                     <b>Status Pinjaman:</b>
-                                    @if ($pinjaman->status == 'disetujui')
-                                    <span class="badge badge-success">{{ ucwords($pinjaman->status) }}</span>
-                                    @elseif($pinjaman->status === 'validasi')
-                                    <span class="badge badge-primary">{{ ucwords($pinjaman->status) }}</span>
-                                    @elseif($pinjaman->status === 'diajukan')
-                                    <span class="badge badge-warning">{{ ucwords($pinjaman->status) }}</span>
-                                    @elseif($pinjaman->status === 'berlangsung')
+                                    @switch($pinjaman->status)
+                                    @case('berlangsung')
                                     <span class="badge badge-info">{{ ucwords($pinjaman->status) }}</span>
-                                    @else
+                                    @break
+                                    @case('validasi')
+                                    <span class="badge badge-primary">{{ ucwords($pinjaman->status) }}</span>
+                                    @break
+                                    @case('diajukan')
+                                    <span class="badge badge-warning">{{ ucwords($pinjaman->status) }}</span>
+                                    @break
+                                    @case('lunas')
+                                    <span class="badge badge-secondary">{{ ucwords($pinjaman->status) }}</span>
+                                    @break
+                                    @case('proses')
+                                    <span class="badge badge-warning">{{ ucwords($pinjaman->status) }}</span>
+                                    @break
+                                    @case('disetujui')
+                                    <span class="badge badge-success">{{ ucwords($pinjaman->status) }}</span>
+                                    @break
+                                    @default
                                     <span class="badge badge-danger">{{ ucwords($pinjaman->status) }}</span>
-                                    @endif
+                                    @endswitch
                                     <br>
                                     <b>Petugas Transaksi:</b> {{ $pinjaman->pegawai->name }}<br>
                                 </div>
@@ -148,7 +159,8 @@
                                                 Bayar Angsuran
                                             </button>
                                         </form>
-                                        <form action="{{route('pinjaman.lunasi',['id' => $pinjaman->id])}}" method="post" class="mr-2">
+                                        <form action="{{route('pinjaman.lunasi',['id' => $pinjaman->id])}}"
+                                            method="post" class="mr-2">
                                             @csrf
                                             @method('PUT')
                                             <!-- Ganti dengan PATCH jika sesuai -->
