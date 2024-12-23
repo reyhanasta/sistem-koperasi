@@ -15,7 +15,6 @@ class Simpanan extends Model
 
     protected $fillable = [
         'nasabah_id',
-        'buku_tabungan_id',
         'amount',
         'id_rekening',
         'desc',
@@ -23,7 +22,7 @@ class Simpanan extends Model
    
     public function bukuTabungan()
     {
-        return $this->belongsTo(BukuTabungan::class);
+        return $this->belongsTo(BukuTabungan::class, 'id_rekening');
     }
     public function nasabah()
     {

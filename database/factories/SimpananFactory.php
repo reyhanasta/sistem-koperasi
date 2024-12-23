@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Simpanan;
+use App\Models\BukuTabungan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class SimpananFactory extends Factory
 {
+    protected $model = Simpanan::class;
     /**
      * Define the model's default state.
      *
@@ -17,7 +20,9 @@ class SimpananFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'id_rekening' => BukuTabungan::factory(),
+            'nasabah_id' => \App\Models\Nasabah::factory(),
         ];
     }
 }
+
