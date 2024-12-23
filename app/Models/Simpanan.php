@@ -12,6 +12,15 @@ class Simpanan extends Model
     use SoftDeletes;
 
     protected $guarded = ['id'];
+
+    protected $fillable = [
+        'nasabah_id',
+        'buku_tabungan_id',
+        'amount',
+        'id_rekening',
+        'desc',
+    ];
+   
     public function bukuTabungan()
     {
         return $this->belongsTo(BukuTabungan::class);

@@ -30,6 +30,7 @@
                                             <th>Type</th>
                                             <th>Nominal</th>
                                             <th>Saldo Akhir</th>
+                                            <th>Petugas</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -39,6 +40,7 @@
                                                 <td>{{ $transaksi->type }}</td>
                                                 <td>Rp.{{ number_format($transaksi->nominal) }}</td>
                                                 <td>Rp.{{ number_format($transaksi->saldo_akhir) }}</td>
+                                                <td>{{$transaksi->pegawai->name}}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

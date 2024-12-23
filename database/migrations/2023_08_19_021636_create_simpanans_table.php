@@ -12,10 +12,10 @@ return new class () extends Migration {
     {
         Schema::create('simpanans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_rekening');
-            $table->foreignId('nasabah_id');
-            $table->string('kode_simpanan',100);
-            $table->string('type');
+            $table->foreignId('id_rekening')->default(1);
+            $table->foreignId('nasabah_id')->default(1);
+            $table->string('kode_simpanan',100)->default('KS123456');
+            $table->string('type')->default('deposit');
             $table->bigInteger('amount')->default(0);
             $table->string('desc')->nullable();
             $table->timestamps();

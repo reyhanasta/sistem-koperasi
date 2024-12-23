@@ -8,6 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class RiwayatTransaksi extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'nominal',
+        'saldo_akhir',
+        'nasabah_id',
+        'tabungan_id',
+        'id_pegawai',
+    ];
+
     protected $casts = [
         'nominal' => 'float',
         'saldo_akhir' => 'float',
@@ -32,4 +40,9 @@ class RiwayatTransaksi extends Model
     {
         return $this->belongsTo(BukuTabungan::class, 'tabungan_id','id');
     }
+
+    public function pegawai()
+{
+    return $this->belongsTo(Pegawai::class, 'id_pegawai');
+}
 }

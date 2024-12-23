@@ -2,7 +2,7 @@
     <div class="form-group ">
         <label>Data Nasabah</label>
         @if ($nasabahList->count() > 0)
-            <select class="form-control select2" style="width: 100%;" id="selectNasabah" name="nasabah">
+            <select class="form-control select2" style="width: 100%;" id="selectNasabah" name="nasabah" required>
                 <option value="" disabled selected>Pilih Nasbah</option>
                 <!--NANTI AKAN MENGGUNAKAN DATA MASTER JABATAN-->
                 @foreach ($nasabahList as $x)

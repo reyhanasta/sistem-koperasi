@@ -186,7 +186,7 @@ class PinjamanController extends Controller
         try {
             // Find the Pinjaman by ID and delete it
             Pinjaman::destroy($id);
-            return redirect($this->redirect);
+            return redirect($this->redirect)->with('success', 'Data Pinjaman berhasil dihapus.');;
         } catch (\Exception $e) {
             // Handle any errors that occur during deletion
             Log::error('Terjadi kesalahan saat menghapus Pinjaman: ' . $e->getMessage());

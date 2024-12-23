@@ -46,28 +46,30 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $index->kode_pinjaman }}</td>
-                                    <td><a href="{{ url('nasabah/' . $index->nasabah->id) }}">{{ $index->nasabah->name }}</a></td>
+                                    <td><a href="{{ url('nasabah/' . $index->nasabah->id) }}">{{ $index->nasabah->name
+                                            }}</a></td>
                                     <td>{{ $index->created_at->isoFormat('D MMMM Y, HH:mm:ss') }}</td>
                                     <td><b>Rp.{{ number_format($index->jumlah_pinjaman) }}</b></td>
                                     <td>
                                         @switch($index->status)
-                                            @case('disetujui')
-                                                <span class="badge badge-success">{{ ucwords($index->status) }}</span>
-                                                @break
-                                            @case('validasi')
-                                                <span class="badge badge-primary">{{ ucwords($index->status) }}</span>
-                                                @break
-                                            @case('diajukan')
-                                                <span class="badge badge-warning">{{ ucwords($index->status) }}</span>
-                                                @break
-                                            @case('berlangsung')
-                                                <span class="badge badge-info">{{ ucwords($index->status) }}</span> : {{ $index->jumlah_angsuran . '/' . $index->jangka_waktu }}
-                                                @break
-                                            @case('lunas')
-                                                <span class="badge badge-secondary">{{ ucwords($index->status) }}</span>
-                                                @break
-                                            @default
-                                                <span class="badge badge-danger">{{ ucwords($index->status) }}</span>
+                                        @case('disetujui')
+                                        <span class="badge badge-success">{{ ucwords($index->status) }}</span>
+                                        @break
+                                        @case('validasi')
+                                        <span class="badge badge-primary">{{ ucwords($index->status) }}</span>
+                                        @break
+                                        @case('diajukan')
+                                        <span class="badge badge-warning">{{ ucwords($index->status) }}</span>
+                                        @break
+                                        @case('berlangsung')
+                                        <span class="badge badge-info">{{ ucwords($index->status) }}</span> : {{
+                                        $index->jumlah_angsuran . '/' . $index->jangka_waktu }}
+                                        @break
+                                        @case('lunas')
+                                        <span class="badge badge-secondary">{{ ucwords($index->status) }}</span>
+                                        @break
+                                        @default
+                                        <span class="badge badge-danger">{{ ucwords($index->status) }}</span>
                                         @endswitch
                                     </td>
                                     <td>
@@ -85,19 +87,23 @@
                                                             class="fas fa-search nav-icon"></i> Detail
                                                         Angsuran
                                                     </a>
-                                                    @role('admin') 
-                                                        @if ($index->status === 'diajukan'||$index->status === 'validasi' )
-                                                        <a class="dropdown-item"
-                                                            href="{{ url('trx/angsuran/' . $index->id . '/add') }}"><i
-                                                                class="fas fa-edit nav-icon"></i> Edit
-                                                            Pinjaman</a>
-                                                        <a class="dropdown-item"
-                                                            href="{{ url('trx/pinjaman/' . $index->id . '/add') }}"><i
-                                                                class="fas fa-trash nav-icon"></i> Hapus
-                                                            Pinjaman</a>
-                                                        @endif
+                                                    @role('admin')
+                                                    @if ($index->status === 'diajukan'||$index->status === 'validasi' )
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('pinjaman.edit',['pinjaman' => $index->id]) }}"><i
+                                                            class="fas fa-edit nav-icon"></i> Edit
+                                                        Pinjaman</a>
+                                                    <form action="{{ url('trx/pinjaman/' . $index->id) }}" method="post">
+                                                        @method('delete')
+                                                        @csrf
+                                                        <button type="submit" class="dropdown-item"
+                                                            onclick="return confirm('Apakah anda sudah yakin menghapus transaksi ini ?')">
+                                                            <i class="fas fa-trash nav-icon"></i> Delete
+                                                        </button>
+                                                    </form>
+                                                    @endif
                                                     @endrole
-                                                   
+
                                                 </div>
                                             </div>
                                         </div>

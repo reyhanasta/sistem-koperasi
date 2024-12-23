@@ -53,7 +53,7 @@ class RiwayatTransaksiController extends Controller
         $previousUrl = url()->previous();
         $bukuTabungan = BukuTabungan::where('nasabah_id',$id)->first();
         // Ambil riwayat transaksi peminjaman nasabah berdasarkan ID nasabah
-        $riwayatTransaksi = RiwayatTransaksi::where('tabungan_id',
+        $riwayatTransaksi = RiwayatTransaksi::with('pegawai')->where('tabungan_id',
         $bukuTabungan->id)->orderBy('created_at', 'desc')->paginate(10);
         return view('transaksi.riwayat.riwayat', compact('riwayatTransaksi', 'previousUrl'));
     }
