@@ -12,7 +12,8 @@ return new class () extends Migration {
     {
         Schema::create('master_jabatans', function (Blueprint $table) {
             $table->id();
-            $table->string('kode')->nullable();
+            $table->string('code')->nullable();
+            // The name of the position
             $table->string('name');
             $table->timestamps();
         });

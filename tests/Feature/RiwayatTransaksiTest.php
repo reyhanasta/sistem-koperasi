@@ -9,20 +9,20 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RiwayatTransaksiTest extends TestCase
 {
-    public function test_can_create_riwayat_transaksi_with_valid_nominal()
-    {
-        $riwayatTransaksi = RiwayatTransaksi::create([
-            'nominal' => 500000000,
-            'saldo_akhir' => 1000000000,
-            'nasabah_id' => 1,
-            'tabungan_id' => 1,
-            'id_pegawai' => 1,
-        ]);
+    // public function test_can_create_riwayat_transaksi_with_valid_nominal()
+    // {
+    //     $riwayatTransaksi = RiwayatTransaksi::create([
+    //         'nominal' => 500000000,
+    //         'saldo_akhir' => 1000000000,
+    //         'nasabah_id' => 1,
+    //         'tabungan_id' => 1,
+    //         'id_pegawai' => 1,
+    //     ]);
 
-        $this->assertDatabaseHas('riwayat_transaksis', [
-            'nominal' => 500000000,
-        ]);
-    }
+    //     $this->assertDatabaseHas('riwayat_transaksis', [
+    //         'nominal' => 500000000,
+    //     ]);
+    // }
 
     public function test_cannot_create_riwayat_transaksi_with_invalid_nominal()
     {

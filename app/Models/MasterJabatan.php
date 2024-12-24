@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class MasterJabatan extends Model
 {
     use HasFactory;
+
+    public $fillable = ['code', 'name'];
+
 }

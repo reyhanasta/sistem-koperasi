@@ -14,6 +14,16 @@ class SimpananTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $nasabah;
+    protected $simpanan;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->nasabah = Nasabah::factory()->create();
+        $this->simpanan = Simpanan::factory()->create(['nasabah_id' => $this->nasabah->id]);
+    }
+
     /** @test */
     public function it_can_create_a_simpanan()
     {
@@ -36,17 +46,45 @@ class SimpananTest extends TestCase
         ]);
     }
 
+
     /** @test */
     public function it_has_a_relationship_with_nasabah()
     {
-        $simpanan = Simpanan::factory()->create();
-        $this->assertInstanceOf(Nasabah::class, $simpanan->nasabah);
+        $this->assertInstanceOf(Nasabah::class, $this->simpanan->nasabah);
     }
 
     /** @test */
     public function it_has_a_relationship_with_buku_tabungan()
     {
+        $this->assertInstanceOf(BukuTabungan::class, $this->simpanan->bukuTabungan);
+    }
+
+    /** @test */
+    public function it_can_update_a_simpanan()
+    {
         $simpanan = Simpanan::factory()->create();
-        $this->assertInstanceOf(BukuTabungan::class, $simpanan->bukuTabungan);
+
+        $simpanan->update([
+            'amount' => 200000,
+            'desc' => 'Updated deposit',
+        ]);
+
+        $this->assertDatabaseHas('simpanans', [
+            'id' => $simpanan->id,
+            'amount' => 200000,
+            'desc' => 'Updated deposit',
+        ]);
+    }
+
+    /** @test */
+    public function it_can_delete_a_simpanan()
+    {
+        $simpanan = Simpanan::factory()->create();
+
+        $simpanan->delete();
+
+        $this->assertSoftDeleted('simpanans', [
+            'id' => $simpanan->id,
+        ]);
     }
 }
