@@ -13,7 +13,8 @@ return new class () extends Migration {
         Schema::create('pinjamen', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('nasabah_id');
-            $table->foreignId('id_pegawai');
+            $table->foreign('nasabah_id')->references('id')->on('nasabahs')->onDelete('cascade');
+            $table->foreignId('id_pegawai')->constrained('pegawais')->onDelete('cascade');
             $table->string('kode_pinjaman')->default('P238001');
             $table->date('tanggal_pengajuan');
             $table->date('tanggal_persetujuan')->nullable();
@@ -21,7 +22,7 @@ return new class () extends Migration {
             $table->string('jenis_usaha')->default('kelontong');
             $table->integer('jangka_waktu'); // dalam bulan
             $table->decimal('bunga', 5, 2)->default(0);
-            $table->enum('status', ['diajukan', 'berlangsung', 'disetujui', 'dicairkan', 'tertunggak', 'ditolak', 'lunas', 'dibatalkan','validasi'])->default('diajukan');
+            $table->enum('status', ['diajukan', 'berlangsung', 'disetujui', 'dicairkan', 'tertunggak', 'ditolak', 'lunas', 'dibatalkan', 'validasi'])->default('diajukan');
             $table->string('metode_pembayaran')->default('cash');
             $table->date('tanggal_pelunasan')->nullable();
             $table->decimal('total_pembayaran', 10, 2)->default(0);
@@ -30,11 +31,7 @@ return new class () extends Migration {
             $table->decimal('sisa_pinjaman', 10, 2)->default(0);
             $table->text('catatan')->nullable();
             $table->timestamps();
-            $table->softDeletes(); // Soft Delete
-
-
-            // Foreign key constraint
-            $table->foreign('nasabah_id')->references('id')->on('nasabahs');
+            $table->softDeletes();
         });
     }
 

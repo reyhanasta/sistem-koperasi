@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Nasabah;
+use App\Models\BukuTabungan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,12 @@ class PenarikanFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'id_rekening' => BukuTabungan::factory(),
+            'nasabah_id' => Nasabah::factory(),
+            'amount' => $this->faker->numberBetween(1000, 1000000),
+            'desc' => $this->faker->sentence,
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }

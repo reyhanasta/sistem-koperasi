@@ -12,9 +12,10 @@ return new class () extends Migration {
     {
         Schema::create('penarikans', function (Blueprint $table) {
             $table->id();
-            $table->string('id_rekening');
-            $table->foreignId('nasabah_id');
-            $table->bigInteger('amount');
+            $table->string('id_rekening')->index();
+            $table->unsignedBigInteger('nasabah_id');
+            $table->foreign('nasabah_id')->references('id')->on('nasabahs')->onDelete('cascade');
+            $table->unsignedBigInteger('amount');
             $table->string('desc')->nullable();
             $table->timestamps();
             $table->softDeletes(); // Soft Delete
