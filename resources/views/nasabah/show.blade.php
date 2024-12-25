@@ -39,10 +39,18 @@
                                 <i class="mr-1 fas fa-tasks"></i>
                                 Daftar Peminjaman</b></a>
                         <hr>
-                        <a href="{{ url('nasabah/' . $data->id . '/edit') }}" class="btn btn-warning btn-block">
+                        <a href="{{ route('nasabah.edit', ['nasabah' => $data->id]) }}" class="btn btn-warning btn-block">
                             <i class="mr-1 fas fa-user-cog"></i>
                             <b>Update Data Nasabah</b>
                         </a>
+                        <form action="{{ route('nasabah.destroy', ['nasabah' => $data->id]) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data nasabah ini?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-block">
+                                <i class="mr-1 fas fa-trash"></i>
+                                <b>Hapus Data Nasabah</b>
+                            </button>
+                        </form>
                     </div>
                     <!-- /.card-body -->
                 </div>

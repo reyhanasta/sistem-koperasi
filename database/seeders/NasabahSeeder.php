@@ -13,13 +13,17 @@ class NasabahSeeder extends Seeder
      */
     public function run(): void
     {
-        Nasabah::create([
-            'name' => 'Putri Novia',
-            'address' => 'Jalan Hangtuah Bukit Cipta Residence',
-            'phone' => '087654321232',
-            'date_of_birth' => '1998-11-28',
-            'gender' => 'female',
-            'ktp' => '1402010909970003',
-        ]);
+        // Nasabah::create([
+        //     'name' => 'Putri Novia',
+        //     'address' => 'Jalan Hangtuah Bukit Cipta Residence',
+        //     'phone' => '087654321232',
+        //     'date_of_birth' => '1998-11-28',
+        //     'gender' => 'female',
+        //     'ktp' => '1402010909970003',
+        // ]);
+
+        
+        // Tambahkan lebih banyak data nasabah jika diperlukan
+        Nasabah::factory()->count(50)->create();
     }
 }

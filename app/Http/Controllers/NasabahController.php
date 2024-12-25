@@ -47,47 +47,34 @@ class NasabahController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
+ /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \App\Http\Requests\NasabahRequest  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(NasabahRequest $request)
     {
         try {
             // Wrap the database operations in a transaction
             DB::transaction(function () use ($request) {
-                // Create and save a new Nasabah
-                $nasabah = Nasabah::create($request->validated());
+            // Create and save a new Nasabah
+            $nasabah = Nasabah::create($request->validated());
 
-                // $date = $request->input('date_of_birth');
-                // $formattedDate = date('md', strtotime($date));
-                // $padString = date('ymd') . $formattedDate;
-                // $point = $nasabah->id;
-                // $nomor_rekening = str_pad($point, 12, $padString, STR_PAD_LEFT);
+            // // Generate nomor rekening
+            // $nomor_rekening = $this->generateAccountNumber($nasabah->id, $request->date_of_birth);
 
-                // Generate kode transaksi
-
-
-                // Create and save a new BukuTabungan
-                if ($nasabah) {
-                    $nomor_rekening = $this->generateAccountNumber($nasabah->id, $request->date_of_birth);
-                    BukuTabungan::create([
-                        'nasabah_id' => $nasabah->id,
-                        'no_rek' => $nomor_rekening,
-                        'balance' => 5000,
-                        'status' => 'aktif',
-                    ]);
-                }
-
-                // Simpan gambar KTP (jika diunggah)
-                if ($request->hasFile('ktp_image_path')) {
-                    $imagePath = $request->file('ktp_image_path')->store('ktp_images/', 'public');
-                    $imageName = basename($imagePath);
-                    $nasabah->update(['ktp_image_path' => $imageName]);
-                }
+            // // Create and save a new BukuTabungan via the Nasabah model relationship
+            // $nasabah->bukuTabungan()->create([
+            //     'no_rek' => $nomor_rekening,
+            //     'balance' => 5000,
+            //     'status' => 'aktif',
+            // ]);
             });
 
-            return redirect('/nasabah')->with('success', 'Nasabah baru telah berhasil terdaftar.');
+            return redirect()->route('nasabah.index')->with('success', 'Nasabah berhasil dibuat.');
         } catch (\Exception $e) {
-            Log::error('Error while adding Nasabah data: ' . $e->getMessage());
-            return redirect('/nasabah')->with('error', 'Terjadi kesalahan saat menambahkan data Nasabah. Silakan coba lagi.');
+            return redirect()->route('nasabah.index')->with('error', 'Terjadi kesalahan saat membuat nasabah: ' . $e->getMessage());
         }
     }
 
@@ -172,38 +159,41 @@ class NasabahController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-        public function destroy($id){
+    public function destroy($id)
+    {
         DB::beginTransaction();
         try {
             // Cari Nasabah berdasarkan ID
-            $nasabah = Nasabah::with(['pinjaman', 'simpanan', 'penarikan', 'angsuran'])->find($id);
-    
+            $nasabah = Nasabah::with(['pinjaman', 'simpanan', 'penarikan'])->find($id);
+
             if (!$nasabah) {
                 // Redirect dengan pesan error jika Nasabah tidak ditemukan
                 return redirect('/nasabah')->with('error', 'Nasabah tidak ditemukan.');
             }
-    
+
             // Periksa apakah ada peminjaman yang belum lunas
             $hasUnpaidLoans = $nasabah->pinjaman->contains(function ($pinjaman) {
                 return $pinjaman->status !== 'Lunas';
             });
-    
+
             if ($hasUnpaidLoans) {
                 // Redirect dengan pesan error jika ada pinjaman yang belum lunas
                 return redirect('/nasabah')->with('error', 'Nasabah memiliki transaksi peminjaman yang belum lunas sehingga data nasabah tidak dapat diarsipkan.');
             }
-    
+
             // Hapus semua data terkait Nasabah
             $nasabah->simpanan()->delete();
             $nasabah->penarikan()->delete();
-            $nasabah->angsuran()->delete();
+            // $nasabah->angsuran()->delete();
             $nasabah->delete();
-    
+
             DB::commit();
             return redirect('/nasabah')->with('success', 'Nasabah berhasil dihapus.');
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect('/nasabah')->with('error', 'Terjadi kesalahan saat menghapus nasabah.');
+            Log::error('Error while updating Nasabah data: ' . $e->getMessage());
+
+            return redirect('/nasabah')->with('error', 'Terjadi kesalahan saat menghapus nasabah: ' . $e->getMessage());
         }
     }
 
@@ -222,18 +212,10 @@ class NasabahController extends Controller
         return view('transaksi.index', compact('nasabah', 'transaksiSimpanan'));
     }
 
-    public function generateAccountNumber($nasabahId, $dateOfBirth)
+    private function generateAccountNumber($nasabahId, $dateOfBirth)
     {
-        // Format nomor rekening sesuai dengan kebutuhan Anda
-        // Misalnya, Anda ingin format nomor rekening: "N000012345678"
-
-        // Dapatkan tanggal lahir dalam format "ymd"
         $formattedDate = date('md', strtotime($dateOfBirth));
         $padString = date('ymd') . $formattedDate;
-
-        // Ambil lima digit pertama dari ID nasabah dan tambahkan nol di depan jika perlu
-        $nomorRekening = str_pad($nasabahId, 12, $padString, STR_PAD_LEFT);
-
-        return $nomorRekening;
+        return str_pad($nasabahId, 12, $padString, STR_PAD_LEFT);
     }
 }

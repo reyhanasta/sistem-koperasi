@@ -34,6 +34,12 @@ class NasabahTest extends TestCase
             'date_of_birth' => '1990-01-01',
             'closure_date' => null,
         ]);
+
+        $this->assertDatabaseHas('buku_tabungans', [
+            'nasabah_id' => $nasabah->id,
+            'balance' => 5000,
+            'status' => 'aktif',
+        ]);
     }
 
     /** @test */

@@ -12,6 +12,30 @@ class Nasabah extends Model
     use SoftDeletes;
     protected $guarded = ['id'];
 
+    
+    protected $fillable = [
+        'name',
+        'ktp',
+        'gender',
+        'phone',
+        'ktp_image_path',
+        'address',
+        'date_of_birth',
+        'closure_date',
+    ];
+
+    protected static function booted()
+    {
+        static::created(function ($nasabah) {
+            $nasabah->bukuTabungan()->create([
+                'no_rek' => '2024' . str_pad($nasabah->id, 6, '0', STR_PAD_LEFT),
+                'balance' => 5000,
+                'status' => 'aktif',
+            ]);
+        });
+    }
+    
+
     public function simpanan()
     {
         return $this->hasMany(Simpanan::class);
@@ -33,4 +57,11 @@ class Nasabah extends Model
     {
         return $this->hasMany(RiwayatTransaksi::class);
     }
+
+    public function bukuTabungan()
+    {
+        return $this->hasOne(BukuTabungan::class, 'nasabah_id');
+    }
+
+    
 }

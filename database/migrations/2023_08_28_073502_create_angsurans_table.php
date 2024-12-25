@@ -20,7 +20,7 @@ return new class () extends Migration {
             $table->softDeletes(); // Soft Delete
 
             // Foreign key constraint
-            $table->foreign('id_pinjaman')->references('id')->on('pinjamen');
+            $table->foreign('id_pinjaman')->references('id')->on('pinjamen')->onDelete('cascade');
         });
     }
 
