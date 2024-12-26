@@ -49,7 +49,8 @@ class RiwayatTransaksiController extends Controller
      */
     public function show($id)
     {
-     
+        
+
         $previousUrl = url()->previous();
         $bukuTabungan = BukuTabungan::where('nasabah_id',$id)->first();
         // Ambil riwayat transaksi peminjaman nasabah berdasarkan ID nasabah

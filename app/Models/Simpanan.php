@@ -14,18 +14,28 @@ class Simpanan extends Model
     protected $guarded = ['id'];
 
     protected $fillable = [
-        'nasabah_id',
-        'amount',
         'id_rekening',
+        'nasabah_id',
+        'pegawai_id',
+        'kode_simpanan',
+        'type',
+        'nominal',
+        'saldo_akhir',
         'desc',
     ];
    
+    public function nasabah()
+    {
+        return $this->belongsTo(Nasabah::class);
+    }
+
+    public function pegawai()
+    {
+        return $this->belongsTo(Pegawai::class, 'pegawai_id');
+    }
+
     public function bukuTabungan()
     {
         return $this->belongsTo(BukuTabungan::class, 'id_rekening');
-    }
-    public function nasabah()
-    {
-        return $this->belongsTo(Nasabah::class, 'nasabah_id');
     }
 }

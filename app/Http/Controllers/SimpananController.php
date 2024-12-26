@@ -22,7 +22,7 @@ class SimpananController extends Controller
     {
         try {
             // Retrieve all Simpanan data with related Nasabah, sorted by created_at in descending order
-            $data = Simpanan::with('Nasabah')->latest('created_at')->paginate(10);
+            $data = Simpanan::with(['nasabah', 'pegawai', 'bukuTabungan'])->orderBy('created_at', 'desc')->paginate(10);
             $back = url()->previous();
 
             return view('transaksi.simpanan.list', compact('data', 'back'));
@@ -65,13 +65,15 @@ class SimpananController extends Controller
     {
         try {
             // Generate kode transaksi
-            $kodeInput = $this->generateTransactionCode();
+            $kodeInput = 'KS' . now()->format('YmdHis'); // Generate kode transaksi
 
             // Create a new Simpanan instance
             $data = new Simpanan();
 
             // Fetch all Nasabah data
             $nasabahList = Nasabah::all();
+
+            $bukuTabunganList = BukuTabungan::all();
 
             // Get the previous URL for navigation
             $previousUrl = url()->previous();
@@ -80,7 +82,7 @@ class SimpananController extends Controller
             $confirmMessage = "Pastikan Data sudah di isi dengan benar, karena data transaksi tidak dapat di ubah lagi";
 
             // Pass data to the view using compact()
-            return view('transaksi.simpanan.add', compact('data', 'kodeInput', 'nasabahList', 'previousUrl', 'confirmMessage'));
+            return view('transaksi.simpanan.add', compact('data', 'kodeInput', 'nasabahList', 'previousUrl', 'confirmMessage', 'bukuTabunganList'));
         } catch (\Exception $e) {
             // Handle any errors that occur
             Log::error('Terjadi kesalahan saat membuat transaksi Simpanan: ' . $e->getMessage());
@@ -116,22 +118,17 @@ class SimpananController extends Controller
             $data->id_rekening = $rekeningNasabah->id;
             $data->nasabah_id = $request->nasabah;
             $data->kode_simpanan = $request->kode;
+            $data->pegawai_id = auth()->user()->id; // Ambil ID pegawai dari user yang sedang login
             $data->type = $request->type;
             $data->amount = $request->amount;
             $data->desc = $request->desc;
 
             // Update saldo buku tabungan nasabah
-            $rekeningNasabah->balance += $request->amount;
+            $rekeningNasabah->balance +=  $request->amount;
             $rekeningNasabah->save();
 
-            //Update Riwayat Transaksi
-            $history = new RiwayatTransaksi();
-            $history->tabungan_id = $rekeningNasabah->id;
-            $history->nominal = $request->amount;
-            $history->saldo_akhir = $rekeningNasabah->balance;
-            $history->type = "debit";
-            $history->id_pegawai =  auth()->user()->id;
-            $history->save();
+             // Set saldo akhir pada transaksi simpanan
+             $data->saldo_akhir = $rekeningNasabah->balance;
 
             // Simpan data transaksi Simpanan
             $data->save();

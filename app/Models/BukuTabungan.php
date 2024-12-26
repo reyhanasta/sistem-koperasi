@@ -19,6 +19,11 @@ class BukuTabungan extends Model
         'closed_date',
     ];
 
+    public function nasabah()
+    {
+        return $this->belongsTo(Nasabah::class);
+    }
+
     public function simpanan()
     {
         return $this->hasMany(Simpanan::class);
@@ -28,8 +33,8 @@ class BukuTabungan extends Model
         return $this->hasMany(Penarikan::class);
     }
 
-    public function riwayatTransaksi()
-    {
-        return $this->hasMany(BukuTabungan::class);
-    }
+    // public function riwayatTransaksi()
+    // {
+    //     return $this->hasMany(BukuTabungan::class);
+    // }
 }

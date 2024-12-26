@@ -48,10 +48,7 @@
                     @else
                         <p>Tidak ada riwayat transaksi simpanan.</p>
                     @endif
-
-                    
                         <a href="{{ $previousUrl }}" class="btn btn-secondary">Kembali</a>
-                   
                     </div>
                     <!-- /.card-body -->
                 </div>

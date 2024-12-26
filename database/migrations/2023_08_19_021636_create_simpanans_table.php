@@ -12,15 +12,22 @@ return new class () extends Migration {
     {
         Schema::create('simpanans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_rekening')->default(1);
-            $table->foreignId('nasabah_id')->default(1);
-            $table->string('kode_simpanan',100)->default('KS123456');
+            $table->foreignId('id_rekening')->constrained('buku_tabungans')->onDelete('cascade');
+            $table->foreignId('nasabah_id')->constrained('nasabahs')->onDelete('cascade');
+            $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('cascade');
+            $table->string('kode_simpanan', 100)->default('KS123456');
             $table->string('type')->default('deposit');
-            $table->bigInteger('amount')->default(0);
+            $table->decimal('amount', 15, 2)->default(0);
+            $table->decimal('saldo_akhir', 15, 2)->default(0);
             $table->string('desc')->nullable();
             $table->timestamps();
             $table->softDeletes(); // Soft Delete
 
+            // Menambahkan indeks
+            $table->index('nasabah_id');
+            $table->index('id_rekening');
+            $table->index('pegawai_id');
+            $table->index('created_at');
         });
     }
 

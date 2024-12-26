@@ -1,5 +1,5 @@
 @extends('layouts.template')
-@section('title', 'Transaksi Simpan')
+@section('title', 'Riwayat Transaksi Simpanan')
 @section('content')
     <section class="content">
         <div class="container-fluid">
@@ -10,9 +10,7 @@
                             <div class="card-header">
                                 <h3 class="card-title">{{ Session::get('success') }}</h3>
                                 <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="remove"><i
-                                            class="fas fa-times"></i>
-                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
                                 </div>
                                 <!-- /.card-tools -->
                             </div>
@@ -22,46 +20,41 @@
                     <div class="card">
                         <!-- /.card-header -->
                         <div class="card-body">
-                            @if (count($riwayatTransaksi) > 0)
-                                <table class="table table-bordered" aria-label>
+                            @if (count($transaksiSimpanan) > 0)
+                                <table class="table table-bordered">
                                     <thead>
                                         <tr>
                                             <th>Tanggal</th>
                                             <th>Type</th>
-                                            <th>Nominal</th>
+                                            <th>Nosminal</th>
                                             <th>Saldo Akhir</th>
                                             <th>Petugas</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($riwayatTransaksi as $transaksi)
+                                        @foreach ($transaksiSimpanan as $transaksi)
+                                        
                                             <tr>
                                                 <td>{{ $transaksi->created_at->isoFormat('D MMMM Y, HH:mm:ss') }}</td>
                                                 <td>{{ $transaksi->type }}</td>
-                                                <td>Rp.{{ number_format($transaksi->amount) }}</td>
-                                                <td>Rp.{{ number_format($transaksi->saldo_akhir) }}</td>
-                                                <td>{{$transaksi->pegawai->name}}</td>
+                                                <td>Rp.{{ number_format($transaksi->amount, 0, ',', '.') }}</td>
+                                                <td>Rp.{{ number_format($transaksi->saldo_akhir, 0, ',', '.') }}</td>
+                                                <td>{{ $transaksi->pegawai ? $transaksi->pegawai->name : 'N/A' }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                                 <br>
                                 <div class="d-flex justify-content-center">
-                                    {{ $riwayatTransaksi->links('pagination::bootstrap-4') }}
+                                    {{ $transaksiSimpanan->links('pagination::bootstrap-4') }}
                                 </div>
                             @else
                                 <p>Tidak ada riwayat transaksi simpanan.</p>
                             @endif
 
-                            <a href="{{ $previousUrl }}" class="btn btn-secondary">Kembali</a>
-
-
+                            <a href="{{ url()->previous() }}" class="btn btn-secondary">Kembali</a>
                         </div>
-                        {{-- <a href="{{ $previousUrl }}" class="btn btn-secondary">Kembali</a> --}}
                         <!-- /.card-body -->
-                        <!-- Tambahkan kode pagination berikut -->
-
-
                     </div>
                     <!-- /.card -->
                 </div>
@@ -71,5 +64,4 @@
         </div>
         <!-- /.container-fluid -->
     </section>
-
 @endsection

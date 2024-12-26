@@ -12,13 +12,17 @@ return new class () extends Migration {
     {
         Schema::create('buku_tabungans', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('no_rek')->default(20241123);
-            $table->foreignId('nasabah_id')->default(1);
-            $table->bigInteger('balance')->default(0);
-            $table->enum('status', ['aktif','non-aktif'])->default('aktif');
+            $table->unsignedBigInteger('nasabah_id');
+            $table->string('no_rek')->unique();
+            $table->decimal('balance', 15, 2)->default(0);
+            $table->enum('status', ['aktif', 'non-aktif'])->default('aktif');
             $table->string('notes')->nullable();
             $table->timestamp('closed_date')->nullable();
             $table->timestamps();
+
+            $table->foreign('nasabah_id')->references('id')->on('nasabahs')->onDelete('cascade');
+
+
         });
     }
 

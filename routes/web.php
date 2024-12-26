@@ -1,8 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BukuTabunganController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NasabahController;
 use App\Http\Controllers\PegawaiController;
@@ -31,15 +31,9 @@ Route::get('/', function () {
 
 // Semua rute yang memerlukan autentikasi dan verifikasi
 Route::middleware(['auth', 'verified'])->group(function () {
+
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    // Route::controller(ProfileController::class)->group(function () {
-    //     // Profil
-    //     Route::get('/profile', 'edit')->name('profile.edit');
-    //     Route::patch('/profile', 'update')->name('profile.update');
-    //     Route::delete('/profile', 'destroy')->name('profile.destroy');
-    // });
 
     // Saldo Nasabah
     Route::get('/saldoNasabah/{id}', [BukuTabunganController::class, 'getSaldo']);
@@ -59,6 +53,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Riwayat Transaksi Simpanan dan Angsuran
     Route::get('/riwayat-mutasi/{nasabah_id}', [RiwayatTransaksiController::class, 'show'])->name('riwayatTransaksi');
+
+    // Rute khusus untuk riwayat transaksi
+    Route::get('nasabah/{nasabah_id}/riwayat-transaksi', [NasabahController::class, 'riwayatTransaksi'])->name('riwayatTransaksi');
+
 });
 
 //Role : Admin
@@ -89,16 +87,13 @@ Route::middleware('role:admin|staff')->group(function(){
     });
 });
 
-// Route::get('/ujicoba', function () {
-//     return "hello world";
-// })->middleware(['auth', 'verified', 'role:admin'])->name('ujicoba');
-
-// //DASHBOARD
 // Route::get('/',[DashboardController::class,'index'])->middleware('auth');
+
 //LOGIN
 // Route::get('/login',[LoginController::class,'index'])->name('login')->middleware('guest');
 // Route::post('/login',[LoginController::class,'authenticate']);
 // Route::post('/logout',[LoginController::class,'logout']);
+
 //RESOURCE
 // Route::middleware('auth','log.crud.activity')->group(function () {
 // });

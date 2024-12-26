@@ -6,10 +6,10 @@ use Carbon\Carbon;
 
 
 use App\Models\Nasabah;
-use App\Models\Pinjaman;
-
 use App\Models\Simpanan;
 use App\Models\BukuTabungan;
+use Illuminate\Http\Request;
+use App\Models\RiwayatTransaksi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\NasabahRequest;
@@ -19,7 +19,7 @@ class NasabahController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function index()
     {
@@ -41,12 +41,6 @@ class NasabahController extends Controller
         return view('nasabah.add', compact('data', 'back'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
  /**
      * Store a newly created resource in storage.
      *
@@ -60,16 +54,6 @@ class NasabahController extends Controller
             DB::transaction(function () use ($request) {
             // Create and save a new Nasabah
             $nasabah = Nasabah::create($request->validated());
-
-            // // Generate nomor rekening
-            // $nomor_rekening = $this->generateAccountNumber($nasabah->id, $request->date_of_birth);
-
-            // // Create and save a new BukuTabungan via the Nasabah model relationship
-            // $nasabah->bukuTabungan()->create([
-            //     'no_rek' => $nomor_rekening,
-            //     'balance' => 5000,
-            //     'status' => 'aktif',
-            // ]);
             });
 
             return redirect()->route('nasabah.index')->with('success', 'Nasabah berhasil dibuat.');
@@ -77,8 +61,6 @@ class NasabahController extends Controller
             return redirect()->route('nasabah.index')->with('error', 'Terjadi kesalahan saat membuat nasabah: ' . $e->getMessage());
         }
     }
-
-
 
     /**
      * Display the specified resource.
@@ -88,22 +70,26 @@ class NasabahController extends Controller
      */
     public function show($id)
     {
-        //
-        $data = Nasabah::findorFail($id);
-        $dataTabungan = BukuTabungan::where('nasabah_id', $id)->first();
-        //Ambil umur
+        $data = Nasabah::with(['bukuTabungan', 'simpanan', 'pinjaman'])->findOrFail($id);
+        $dataTabungan = $data->bukuTabungan;
+
+        // Ambil umur
         $birthdate = Carbon::parse($data->date_of_birth);
         $currentDate = Carbon::now();
         $age = $birthdate->diffInYears($currentDate);
+
         // Ambil daftar transaksi simpanan nasabah berdasarkan ID nasabah
-        $transaksiSimpanan = Simpanan::where('nasabah_id', $id)->get()->sortByDesc('created_at');
+        $transaksiSimpanan = $data->simpanan->sortByDesc('created_at');
+
         // Ambil riwayat transaksi pinjaman nasabah berdasarkan ID nasabah
-        $riwayatPinjaman = Pinjaman::where('nasabah_id', $id)->orderBy('created_at', 'desc')->get();
+        $riwayatPinjaman = $data->pinjaman->sortByDesc('created_at');
+
         $back = url()->previous();
+
         return view('nasabah.show', compact('data', 'dataTabungan', 'back', 'transaksiSimpanan', 'riwayatPinjaman', 'age'));
     }
 
-    /**
+     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -111,9 +97,9 @@ class NasabahController extends Controller
      */
     public function edit($id)
     {
-        //
         $data = Nasabah::findOrFail($id);
         $back = url()->previous();
+
         return view('nasabah.edit', compact('data', 'back'));
     }
 
@@ -151,7 +137,6 @@ class NasabahController extends Controller
             return redirect('/nasabah')->with('error', 'Terjadi kesalahan saat memperbarui data Nasabah. Silakan coba lagi.');
         }
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -212,10 +197,40 @@ class NasabahController extends Controller
         return view('transaksi.index', compact('nasabah', 'transaksiSimpanan'));
     }
 
-    private function generateAccountNumber($nasabahId, $dateOfBirth)
+     /**
+     * Display the transaction history of the specified nasabah.
+     *
+     * @param  int  $nasabah_id
+     * @return \Illuminate\Http\Response
+     */
+    public function riwayatTransaksi($nasabah_id)
     {
-        $formattedDate = date('md', strtotime($dateOfBirth));
-        $padString = date('ymd') . $formattedDate;
-        return str_pad($nasabahId, 12, $padString, STR_PAD_LEFT);
+        
+        // $previousUrl = url()->previous();
+        // $bukuTabungan = BukuTabungan::where('nasabah_id',$nasabah_id)->first();
+        // // Ambil riwayat transaksi peminjaman nasabah berdasarkan ID nasabah
+        // $riwayatTransaksi = RiwayatTransaksi::with('pegawai')->where('tabungan_id',
+        // $bukuTabungan->id)->orderBy('created_at', 'desc')->paginate(10);
+        // return view('transaksi.riwayat.riwayat', compact('riwayatTransaksi', 'previousUrl'));
+        
+        $nasabah = Nasabah::findOrFail($nasabah_id);
+        $transaksiSimpanan = $nasabah->simpanan()->paginate(10);
+
+        return view('nasabah.riwayatTransaksi', compact('nasabah', 'transaksiSimpanan'));
     }
+
+    /**
+     * Display the loan history of the specified nasabah.
+     *
+     * @param  int  $nasabah_id
+     * @return \Illuminate\Http\Response
+     */
+    public function riwayatPinjaman($nasabah_id)
+    {
+        $nasabah = Nasabah::findOrFail($nasabah_id);
+        $riwayatPinjaman = $nasabah->pinjaman->sortByDesc('created_at');
+
+        return view('nasabah.riwayatPinjaman', compact('nasabah', 'riwayatPinjaman'));
+    }
+
 }
