@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {
-    use RefreshDatabase;
+    // use RefreshDatabase;
 
     public function test_login_screen_can_be_rendered(): void
     {
@@ -22,8 +22,22 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create();
 
+        // Test login with email
         $response = $this->post('/login', [
-            'email' => $user->email,
+            'login' => $user->email,
+            'password' => 'password',
+        ]);
+
+        $this->assertAuthenticated();
+        $response->assertRedirect(RouteServiceProvider::HOME);
+
+        // Log out
+        $this->post('/logout');
+        $this->assertGuest();
+
+        // Test login with username
+        $response = $this->post('/login', [
+            'login' => $user->username,
             'password' => 'password',
         ]);
 
@@ -36,7 +50,15 @@ class AuthenticationTest extends TestCase
         $user = User::factory()->create();
 
         $this->post('/login', [
-            'email' => $user->email,
+            'login' => $user->email,
+            'password' => 'wrong-password',
+        ]);
+
+        $this->assertGuest();
+
+        // Test with username
+        $this->post('/login', [
+            'login' => $user->username,
             'password' => 'wrong-password',
         ]);
 

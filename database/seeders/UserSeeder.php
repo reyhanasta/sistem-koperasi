@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
         //
         $admin = User::create([
             'name' => 'Muhammad Reyhan Perdana Asta',
+            'username' => 'reyhanasta',
             'email' => 'astareyhan@gmail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('admin'), // password
@@ -27,6 +28,7 @@ class UserSeeder extends Seeder
 
         $admin1 = User::create([
             'name' => 'Admin 1',
+            'username' => 'admin',
             'email' => 'admin@gmail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('admin'), // password
@@ -37,6 +39,7 @@ class UserSeeder extends Seeder
 
         $staff = User::create([
             'name' => 'Hilwa Asta',
+            'username' => 'hilwaasta',
             'email' => 'astahilwa@gmail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('astahilwa'), // password
@@ -47,6 +50,7 @@ class UserSeeder extends Seeder
 
         $staff1 = User::create([
             'name' => 'Staff 1',
+            'username' => 'staff',
             'email' => 'staff@gmail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('staff'), // password
@@ -55,8 +59,9 @@ class UserSeeder extends Seeder
 
         $staff1->assignRole('staff');
 
-        $nasabah = User::create(attributes: [
+        $nasabah = User::create([
             'name' => 'Putri Novia',
+            'username' => 'putrinovia',
             'email' => 'putrinovia@gmail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('putrinovia'), // password

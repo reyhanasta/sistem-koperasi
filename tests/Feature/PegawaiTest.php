@@ -52,4 +52,18 @@ class PegawaiTest extends TestCase
 
         $this->assertEquals('123 Main St, 555-555-5555', $pegawai->full_address);
     }
+
+    /** @test */
+    public function it_is_created_with_staff_role()
+    {
+        $pegawai = Pegawai::factory()->create();
+        $this->assertTrue($pegawai->user->hasRole('staff'));
+    }
+
+     /** @test */
+     public function it_has_same_name_as_user()
+     {
+         $pegawai = Pegawai::factory()->create();
+         $this->assertEquals($pegawai->name, $pegawai->user->name);
+     }
 }

@@ -20,10 +20,12 @@ class PegawaiFactory extends Factory
      */
     public function definition(): array
     {
+        $name = $this->faker->name;
+
         return [
-            'name' => $this->faker->name,
+            'name' =>  $name,
             'profile_pict' => $this->faker->imageUrl(),
-            'user_id' => User::factory()->create()->id,
+            'user_id' => User::factory()->create(['name' => $name])->assignRole('staff')->id,
             'address' => $this->faker->address,
             'phone' => $this->faker->phoneNumber,
             'position' => $this->faker->jobTitle,

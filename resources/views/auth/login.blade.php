@@ -78,8 +78,8 @@
                 <form action="{{ route('login') }}" method="post">
                     @csrf
                     <div class="mb-3 input-group">
-                        <x-text-input id="email" class="form-control @error('email') is-invalid @enderror"
-                            type="email" name="email" :value="old('email')" required autofocus autocomplete="email" />
+                        <x-text-input id="login" class="form-control @error('login') is-invalid @enderror"
+                            type="text" name="login" :value="old('login')" required autofocus autocomplete="login" />
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
@@ -88,7 +88,7 @@
                         {{-- @error('email')
           <div class="invalid-feedback">{{$message}}</div>
           @enderror --}}
-                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                        <x-input-error :messages="$errors->get('login')" class="mt-2" />
                     </div>
                     <div class="mb-3 input-group">
                         <x-text-input id="password" class="form-control" type="password" name="password" required
@@ -119,7 +119,8 @@
                         <!-- /.col -->
                         <div class="col-12">
                             <x-primary-button type="submit"
-                                class="btn btn-primary btn-block">{{ __('Log in') }}</x-primary-button>
+                                class="btn btn-primary btn-block">{{ __('Log in') }}
+                            </x-primary-button>
                         </div>
 
                         <div class="col-12">
