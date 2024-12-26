@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Pegawai;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Models\MasterJabatan;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Hash;
+use App\Helpers\UsernameHelper;
 use Illuminate\Support\Facades\DB;
 
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\PegawaiRequest;
 use Illuminate\Support\Facades\Storage;
 
 class PegawaiController extends Controller
@@ -46,29 +50,29 @@ class PegawaiController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
-    public function store(Request $request)
+    public function store(PegawaiRequest $request)
     {
         try {
             DB::beginTransaction(); // Begin the transaction
 
-            $validatedData = $request->validate([
-                'email' => 'required|email:dns|unique:users,email',
-            ]);
+            // Get the current date as the registration date
+            $registrationDate = now()->format('Y-m-d');
+
+            // Generate a unique username based on the name and registration date
+            $username = UsernameHelper::generateUsername($request->name, $registrationDate);
 
             // Create User instance
-            $newUser = new User([
+            $newUser = User::create([
                 'email' => strtolower($request->email),
                 'email_verified_at' => now(),
-                'level' => 'staff',
                 'name' => ucwords(strtolower($request->name)),
+                'username' => $username,
                 'password' => Hash::make('staff'),
             ]);
             $newUser->assignRole('staff');
-            $newUser->save();
 
             // Create Pegawai instance and associate it with the newly created User
-            $newPegawai = new Pegawai([
+            Pegawai::create([
                 'name' => ucwords(strtolower($request->name)),
                 'gender' => ucwords(strtolower($request->gender)),
                 'email' => strtolower($request->email),
@@ -76,27 +80,16 @@ class PegawaiController extends Controller
                 'user_id' => $newUser->id, // Associate Pegawai with User
             ]);
 
-            // Handle profile picture
-            if ($request->hasFile('profile_pict')) {
-                $file = $request->file('profile_pict');
-                $nama_file = time() . str_replace(" ", "", $file->getClientOriginalName());
-                $file->move('picture', $nama_file);
-                $newPegawai->profile_pict = $nama_file;
-            }
-
-            // Save Pegawai instance
-            $newPegawai->save();
-
             DB::commit(); // Commit the transaction
 
-            return redirect('/pegawai')->with('success', 'Data Berhasil di Simpan');
+            return redirect('/pegawai')->with('success', 'Data berhasil diubah');
         } catch (\Exception $e) {
-            DB::rollback(); // Rollback the transaction
-            return redirect('/pegawai')->with('error', 'Terjadi kesalahan saat menyimpan data');
+            DB::rollBack(); // Rollback the transaction on error
+            Log::error('Error creating Pegawai: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to create Pegawai. Please try again.'], 500);
         }
     }
-
-
+    
     /**
      * Display the specified resource.
      *

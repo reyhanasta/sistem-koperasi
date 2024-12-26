@@ -10,9 +10,19 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PegawaiTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     */
+    /** @test */
+    public function it_can_add_pegawai()
+    {
+        $user = User::factory()->create();
+        $pegawai = Pegawai::factory()->create(['user_id' => $user->id]);
+
+        $this->assertDatabaseHas('pegawais', [
+            'id' => $pegawai->id,
+            'user_id' => $user->id,
+            'name' => $pegawai->name,
+            'email' => $pegawai->email,
+        ]);
+    }
     /** @test */
     public function it_belongs_to_user()
     {
@@ -23,7 +33,6 @@ class PegawaiTest extends TestCase
         $this->assertEquals($pegawai->user->id, $user->id);
     }
 
-    /** @test */
     /** @test */
     public function it_has_default_values()
     {
@@ -61,9 +70,10 @@ class PegawaiTest extends TestCase
     }
 
      /** @test */
-     public function it_has_same_name_as_user()
-     {
-         $pegawai = Pegawai::factory()->create();
-         $this->assertEquals($pegawai->name, $pegawai->user->name);
-     }
+    public function it_has_same_name_and_email_as_user()
+    {
+        $pegawai = Pegawai::factory()->create();
+        $this->assertEquals($pegawai->name, $pegawai->user->name);
+        $this->assertEquals($pegawai->email, $pegawai->user->email);
+    }
 }
