@@ -31,8 +31,8 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
+                                        <th>Kode Transaksi</th>
                                         <th>Nama Nasabah</th>
-                                        <th>Nomor Rekening</th>
                                         <th>Jumlah Penarikan</th>
                                         <th>Tanggal Transaksi</th>
                                         <th>Deskripsi</th>
@@ -44,12 +44,13 @@
                                  
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $index->nasabah->name }}</td>
-                                            <td><a
-                                                    href="{{ url('nasabah/' . $index->bukuTabungan->nasabah_id) }}">
-                                                    {{ $index->bukuTabungan->no_rek }}
-                                                </a>
+                                            <td>
+                                                {{ $index->kode_simpanan }}
                                             </td>
+                                            <td><a
+                                                href="{{ url('nasabah/' . $index->nasabah->nasabah_id) }}">
+                                                {{ $index->nasabah->name }}
+                                            </a></td>
                                             <td>Rp.{{ number_format($index->amount) }}</td>
                                             <td>{{ $index->created_at->isoFormat('D MMMM Y, HH:mm:ss') }}</td>
                                             <td>{{ $index->desc }}</td>

@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Nasabah;
 use App\Models\Simpanan;
+use Illuminate\Support\Str;
 use App\Models\BukuTabungan;
-use Illuminate\Support\Facades\DB;
-use App\Http\Requests\SimpananRequest;
 use App\Models\RiwayatTransaksi;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\SimpananRequest;
 use Illuminate\Support\Facades\Log; // Impor Log class
 
 class SimpananController extends Controller
@@ -22,7 +24,7 @@ class SimpananController extends Controller
     {
         try {
             // Retrieve all Simpanan data with related Nasabah, sorted by created_at in descending order
-            $data = Simpanan::with(['nasabah', 'pegawai', 'bukuTabungan'])->orderBy('created_at', 'desc')->paginate(10);
+            $data = Simpanan::with(['nasabah', 'pegawai', 'bukuTabungan'])->where('type', 'deposit')->orderBy('created_at', 'desc')->paginate(10);
             $back = url()->previous();
 
             return view('transaksi.simpanan.list', compact('data', 'back'));
@@ -65,7 +67,7 @@ class SimpananController extends Controller
     {
         try {
             // Generate kode transaksi
-            $kodeInput = 'KS' . now()->format('YmdHis'); // Generate kode transaksi
+            $kodeInput = 'DP' . strtoupper(Str::random(6)); // Generate kode transaksi
 
             // Create a new Simpanan instance
             $data = new Simpanan();
@@ -115,11 +117,12 @@ class SimpananController extends Controller
 
             // Buat objek Simpanan
             $data = new Simpanan();
+           
             $data->id_rekening = $rekeningNasabah->id;
             $data->nasabah_id = $request->nasabah;
             $data->kode_simpanan = $request->kode;
             $data->pegawai_id = auth()->user()->id; // Ambil ID pegawai dari user yang sedang login
-            $data->type = $request->type;
+            $data->type = "deposit";
             $data->amount = $request->amount;
             $data->desc = $request->desc;
 

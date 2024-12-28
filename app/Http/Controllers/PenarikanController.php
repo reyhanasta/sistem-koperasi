@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Nasabah;
+use App\Models\Simpanan;
 use App\Models\Penarikan;
-use App\Models\BukuTabungan;
 
+use Illuminate\Support\Str;
+use App\Models\BukuTabungan;
 use Illuminate\Http\Request;
 use App\Models\RiwayatTransaksi;
 use Illuminate\Routing\Controller;
@@ -20,8 +22,10 @@ class PenarikanController extends Controller
      */
     public function index()
     {
-        //
-        $data = Penarikan::with('bukuTabungan')->get()->sortByDesc('created_at');
+        $data = Simpanan::with('bukuTabungan')
+            ->where('type', 'withdraw')
+            ->orderByDesc('created_at')
+            ->get();
 
         return view('transaksi.penarikan.list', compact('data'));
     }
@@ -63,9 +67,14 @@ class PenarikanController extends Controller
         // Check if validation passes
         if ($validatedData) {
             // Create a new Penarikan instance
-            $data = new Penarikan();
+            // Buat objek Simpanan
+            $data = new Simpanan();
             $data->id_rekening = $rekeningNasabah->id;
             $data->nasabah_id = $request->nasabah;
+            $data->kode_simpanan = $request->kode;
+            $data->pegawai_id = auth()->user()->id; // Ambil ID pegawai dari user yang sedang login
+            $data->kode_simpanan = 'WD' . strtoupper(Str::random(6));
+            $data->type = "withdraw";
             $data->amount = $request->amount;
             $data->desc = $request->desc;
 
@@ -73,14 +82,8 @@ class PenarikanController extends Controller
             $rekeningNasabah->balance -= $request->amount;
             $rekeningNasabah->save();
 
-            //Update Riwayat Transaksi
-            $history = new RiwayatTransaksi();
-            $history->tabungan_id = $rekeningNasabah->id;
-            $history->nominal = $request->amount;
-            $history->saldo_akhir = $rekeningNasabah->balance;
-            $history->type = "kredit";
-            $history->id_pegawai =  auth()->user()->id;
-            $history->save();
+            // Set saldo akhir pada transaksi simpanan
+            $data->saldo_akhir = $rekeningNasabah->balance;
             
             // Save changes to RekeningNasabah and Penarikan
             $data->save();

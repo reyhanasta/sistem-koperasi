@@ -14,7 +14,7 @@ return new class () extends Migration {
             $table->id();
             $table->unsignedBigInteger('nasabah_id');
             $table->string('no_rek')->unique();
-            $table->decimal('balance', 15, 2)->default(0);
+            $table->decimal('balance', 15)->default(0);
             $table->enum('status', ['aktif', 'non-aktif'])->default('aktif');
             $table->string('notes')->nullable();
             $table->timestamp('closed_date')->nullable();

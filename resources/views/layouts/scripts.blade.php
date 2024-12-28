@@ -32,6 +32,7 @@
 <script src="{{ asset('adminlte/') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
 
+
 <!-- Page specific script -->
 <script>
     //Initialize Select2 Elements
@@ -53,8 +54,9 @@
                     type: 'GET',
                     dataType: 'json',
                     success: function(data) {
-                        $('#balance').val(data[0]
-                            .balance); // Set the value to the input field
+                        console.log(data[0].balance); // Log the data for debugging
+                        $('#balance').val(
+                            data[0].balance); // Set the value to the input field
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText); // Log any errors for debugging
@@ -91,7 +93,7 @@
         $('[data-mask]').inputmask({
                 'alias': 'numeric',
                 'groupSeparator': '.',
-                'radixPoint': ',',
+             
                 'autoGroup': true,
                 'digits': 0,
                 'prefix': 'Rp ',

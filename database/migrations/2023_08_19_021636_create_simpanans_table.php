@@ -16,7 +16,7 @@ return new class () extends Migration {
             $table->foreignId('nasabah_id')->constrained('nasabahs')->onDelete('cascade');
             $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('cascade');
             $table->string('kode_simpanan', 100)->default('KS123456');
-            $table->string('type')->default('deposit');
+            $table->string('type')->enum(['deposit','withdraw'])->default('deposit');
             $table->decimal('amount', 15, 2)->default(0);
             $table->decimal('saldo_akhir', 15, 2)->default(0);
             $table->string('desc')->nullable();

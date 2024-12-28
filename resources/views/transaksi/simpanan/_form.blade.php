@@ -17,17 +17,18 @@
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-    <div class="form-group">
+    {{-- <div class="form-group">
         <label for="type">Jenis Simpanan</label>
         <select class="form-control @error('type') is-invalid @enderror" name="type" id="type">
-            <option value="pokok" {{ old('type', $data->type) == 'pokok' ? 'selected' : '' }}>Pokok</option>
-            <option value="wajib" {{ old('type', $data->type) == 'wajib' ? 'selected' : '' }}>Wajib</option>
-            <option value="sukarela" {{ old('type', $data->type) == 'sukarela' ? 'selected' : '' }}>Sukarela</option>
+            <option value="pokok" {{ old('type', $data->type) == 'deposit' ? 'selected' : '' }}>Deposit</option>
+           
         </select>
         @error('type')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
-    </div>
+    </div> --}}
+
+    <input type="hidden" name="type" id="type" value="deposit">
 
     <div class="form-group">
         <label for="name">Jumlah</label>

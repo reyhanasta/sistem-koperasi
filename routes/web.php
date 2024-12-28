@@ -57,7 +57,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Rute khusus untuk riwayat transaksi
     Route::get('nasabah/{nasabah_id}/riwayat-transaksi', [NasabahController::class, 'riwayatTransaksi'])->name('riwayatTransaksi');
 
-});
+
 
 //Role : Admin
 //Rute khusus Admin
@@ -77,6 +77,7 @@ Route::middleware('role:admin')->group(function(){
 Route::middleware('role:admin|staff')->group(function(){
     // Resource routes
     Route::resource('nasabah', NasabahController::class);
+    Route::post('/withdraw', [PenarikanController::class, 'withdraw'])->name('withdraw');
     Route::controller(PinjamanController::class)->prefix('trx')->group(function () {
         // Pinjaman
         Route::resource('penarikan', PenarikanController::class);
@@ -85,6 +86,8 @@ Route::middleware('role:admin|staff')->group(function(){
         Route::resource('simpanan',SimpananController::class);
         // Route::get('pinjaman/create','create')->name('pinjaman.create');
     });
+});
+
 });
 
 // Route::get('/',[DashboardController::class,'index'])->middleware('auth');

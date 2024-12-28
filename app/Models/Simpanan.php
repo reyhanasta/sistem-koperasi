@@ -38,4 +38,22 @@ class Simpanan extends Model
     {
         return $this->belongsTo(BukuTabungan::class, 'id_rekening');
     }
+
+    /**
+     * Handle withdrawal from the simpanan.
+     *
+     * @param float $amount
+     * @return bool
+     */
+    public function withdraw(float $amount): bool
+    {
+        if ($amount > $this->saldo_akhir) {
+            return false; // Insufficient funds
+        }
+
+        $this->saldo_akhir -= $amount;
+        $this->save();
+
+        return true;
+    }
 }
