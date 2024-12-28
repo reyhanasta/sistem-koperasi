@@ -26,7 +26,7 @@
                                         <tr>
                                             <th>Tanggal</th>
                                             <th>Type</th>
-                                            <th>Nosminal</th>
+                                            <th>Nominal</th>
                                             <th>Saldo Akhir</th>
                                             <th>Petugas</th>
                                         </tr>
@@ -34,13 +34,17 @@
                                     <tbody>
                                         @foreach ($transaksiSimpanan as $transaksi)
                                         
-                                            <tr>
-                                                <td>{{ $transaksi->created_at->isoFormat('D MMMM Y, HH:mm:ss') }}</td>
-                                                <td>{{ $transaksi->type }}</td>
-                                                <td>Rp.{{ number_format($transaksi->amount, 0, ',', '.') }}</td>
-                                                <td>Rp.{{ number_format($transaksi->saldo_akhir, 0, ',', '.') }}</td>
-                                                <td>{{ $transaksi->pegawai ? $transaksi->pegawai->name : 'N/A' }}</td>
-                                            </tr>
+                                        <tr>
+                                            <td>{{ $transaksi->created_at->isoFormat('D MMMM Y, HH:mm:ss') }}</td>
+                                            <td>{{ ucwords($transaksi->type) }}</td>
+                                            <td>
+                                                <span class="{{ $transaksi->type == 'deposit' ? 'text-success' : 'text-danger' }}">
+                                                    {{ $transaksi->type == 'deposit' ? '+' : '-' }}Rp.{{ number_format($transaksi->amount, 0, ',', '.') }}
+                                                </span>
+                                            </td>
+                                            <td>Rp.{{ number_format($transaksi->saldo_akhir, 0, ',', '.') }}</td>
+                                            <td>{{ $transaksi->pegawai ? $transaksi->pegawai->name : 'N/A' }}</td>
+                                        </tr>
                                         @endforeach
                                     </tbody>
                                 </table>

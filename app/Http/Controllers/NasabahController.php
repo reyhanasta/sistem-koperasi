@@ -204,17 +204,10 @@ class NasabahController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function riwayatTransaksi($nasabah_id)
-    {
-        
-        // $previousUrl = url()->previous();
-        // $bukuTabungan = BukuTabungan::where('nasabah_id',$nasabah_id)->first();
-        // // Ambil riwayat transaksi peminjaman nasabah berdasarkan ID nasabah
-        // $riwayatTransaksi = RiwayatTransaksi::with('pegawai')->where('tabungan_id',
-        // $bukuTabungan->id)->orderBy('created_at', 'desc')->paginate(10);
-        // return view('transaksi.riwayat.riwayat', compact('riwayatTransaksi', 'previousUrl'));
+    { 
         
         $nasabah = Nasabah::findOrFail($nasabah_id);
-        $transaksiSimpanan = $nasabah->simpanan()->paginate(10);
+        $transaksiSimpanan = $nasabah->simpanan()->orderBy('created_at', 'desc')->paginate(10);
 
         return view('nasabah.riwayatTransaksi', compact('nasabah', 'transaksiSimpanan'));
     }

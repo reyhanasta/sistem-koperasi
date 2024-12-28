@@ -19,7 +19,6 @@
                                         <th>#</th>
                                         <th>Kode Simpanan</th>
                                         <th>Nama Nasabah</th>
-                                        <th>Jenis Simpanan</th>
                                         <th>Jumlah Simpanan</th>
                                         <th>Tanggal Transaksi</th>
                                         <th>Action</th>
@@ -35,7 +34,6 @@
                                                 <a
                                                     href="{{ url('nasabah/' . $index->nasabah_id) }}">{{ $index->nasabah->name }}</a>
                                             </td>
-                                            <td>{{ ucfirst($index->type) }}</td>
                                             <td>Rp.{{ number_format($index->amount) }}</td>
                                             <td>{{ $index->created_at->isoFormat('D MMMM Y, HH:mm:ss') }}</td>
                                             <td>
