@@ -12,11 +12,14 @@
 <script src="{{ asset('adminlte/') }}/plugins/toastr/toastr.min.js"></script>
 <!-- AdminLTE App -->
 <script src="{{ asset('adminlte/') }}/dist/js/adminlte.min.js"></script>
+<!-- ChartJS -->
+<script src="{{ asset('adminlte/') }}/plugins/chart.js/Chart.min.js"></script>
 <!-- bs-custom-file-input -->
 <script src="{{ asset('adminlte/') }}/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
 <!-- InputMask -->
 <script src="{{ asset('adminlte/') }}/plugins/moment/moment.min.js"></script>
 <script src="{{ asset('adminlte/') }}/plugins/inputmask/jquery.inputmask.min.js"></script>
+
 <!-- DataTables  & Plugins -->
 <script src="{{ asset('adminlte/') }}/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="{{ asset('adminlte/') }}/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
@@ -30,6 +33,8 @@
 <script src="{{ asset('adminlte/') }}/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="{{ asset('adminlte/') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="{{ asset('adminlte/') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+
 
 
 
