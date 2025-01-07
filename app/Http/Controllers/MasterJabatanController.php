@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\MasterJabatan;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class MasterJabatanController extends Controller
 {
@@ -42,11 +44,33 @@ class MasterJabatanController extends Controller
     public function store(Request $request)
     {
         //
-        $data = new MasterJabatan();
-        $data->name = $request->name;
-        $data->save();
+         // Validasi input
+         $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
 
-        return redirect('/master-jabatan')->with('success', 'Data berhasil ditambahkan !');
+        // Mengubah name menjadi role
+        $role = strtolower(str_replace(' ', '-', $request->name));
+        $name = ucwords($request->name);
+         DB::beginTransaction();
+
+        try {
+            // Menyimpan data ke master_jabatans
+            $data = new MasterJabatan();
+            $data->name = $name;
+            $data->role = $role;
+            $data->save();
+
+            // Menambahkan data ke tabel roles
+            Role::create(['name' => $role]);
+
+            DB::commit();
+
+            return redirect('/master-jabatan')->with('success', 'Data berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect('/master-jabatan')->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -84,12 +108,42 @@ class MasterJabatanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-        $data = MasterJabatan::findorFail($id);
-        $data->name = $request->name;
-        $data->save();
-        return redirect('master-jabatan')->with('success', 'Data Berhasil di Ubah !');
+        // Validasi input
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        // Mengubah name menjadi role
+        $role = strtolower(str_replace(' ', '-', $request->name));
+        $name = ucwords($request->name);
+
+        DB::beginTransaction();
+
+        try {
+            // Mengupdate data di master_jabatans
+            $data = MasterJabatan::findOrFail($id);
+            $data->name = $name;
+            $data->role = $role;
+            $data->save();
+
+            // Mengupdate data di tabel roles
+            $existingRole = Role::where('name', $data->role)->first();
+            if ($existingRole) {
+                $existingRole->name = $role;
+                $existingRole->save();
+            } else {
+                Role::create(['name' => $role]);
+            }
+
+            DB::commit();
+
+            return redirect('/master-jabatan')->with('success', 'Data berhasil diubah!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect('/master-jabatan')->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
+    
 
     /**
      * Remove the specified resource from storage.

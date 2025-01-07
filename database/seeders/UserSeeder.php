@@ -46,7 +46,7 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
 
-        $staff->assignRole('staff');
+        $staff->assignRole('staff-administrasi');
 
         $staff1 = User::create([
             'name' => 'Staff 1',
@@ -57,7 +57,7 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
 
-        $staff1->assignRole('staff');
+        $staff1->assignRole('staff-keuangan');
 
         $nasabah = User::create([
             'name' => 'Putri Novia',

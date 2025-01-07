@@ -15,6 +15,7 @@ return new class () extends Migration {
             $table->string('code')->nullable();
             // The name of the position
             $table->string('name');
+            $table->string('role')->nullable();
             $table->timestamps();
         });
     }

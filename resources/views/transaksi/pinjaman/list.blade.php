@@ -33,10 +33,10 @@
                                 <tr>
                                     <th width="5%">No</th>
                                     <th width="10%">Kode Pinjaman</th>
-                                    <th width="30%">Nama Peminjam</th>
+                                    <th width="25%">Nama Peminjam</th>
                                     <th width="5px">Tanggal Peminjaman</th>
                                     <th width="12%">Jumlah Pinjaman</th>
-                                    <th width="12%">Status </th>
+                                    <th width="17%">Status </th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -62,8 +62,7 @@
                                         <span class="badge badge-warning">{{ ucwords($index->status) }}</span>
                                         @break
                                         @case('berlangsung')
-                                        <span class="badge badge-info">{{ ucwords($index->status) }}</span> : {{
-                                        $index->jumlah_angsuran . '/' . $index->jangka_waktu }}
+                                        <span class="badge badge-info">{{ ucwords($index->status) }}</span> : <b>{{$index->jumlah_angsuran .'%'}}</b>
                                         @break
                                         @case('lunas')
                                         <span class="badge badge-secondary">{{ ucwords($index->status) }}</span>

@@ -31,7 +31,7 @@
         <select class="form-control" name="position">
             <!--NANTI AKAN MENGGUNAKAN DATA MASTER JABATAN-->
             @foreach ($jabatan as $x)
-            <option value="{{ $x->name }}" {{ $x->name == $dataPegawai->position ? 'selected' : '' }}>
+            <option value="{{ $x->id }}" {{ $x->name == $dataPegawai->position ? 'selected' : '' }}>
                 {{ $x->name }}
             </option>
         @endforeach

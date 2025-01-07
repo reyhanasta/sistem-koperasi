@@ -26,7 +26,8 @@ class PegawaiController extends Controller
     public function index()
     {
         //
-        $listPegawai = Pegawai::all();
+        // $listPegawai = Pegawai::all();
+        $listPegawai = Pegawai::active()->get();
         return view('pegawai.list', compact('listPegawai'));
     }
 
@@ -60,6 +61,8 @@ class PegawaiController extends Controller
 
             // Generate a unique username based on the name and registration date
             $username = UsernameHelper::generateUsername($request->name, $registrationDate);
+           
+            $getJabatan = MasterJabatan::where('id', $request->position)->first();
 
             // Create User instance
             $newUser = User::create([
@@ -69,14 +72,14 @@ class PegawaiController extends Controller
                 'username' => $username,
                 'password' => Hash::make('staff'),
             ]);
-            $newUser->assignRole('staff');
+            $newUser->assignRole($getJabatan->role);
 
             // Create Pegawai instance and associate it with the newly created User
             Pegawai::create([
                 'name' => ucwords(strtolower($request->name)),
                 'gender' => ucwords(strtolower($request->gender)),
                 'email' => strtolower($request->email),
-                'position' => ucwords(strtolower($request->position)),
+                'master_jabatan_id' => $request->position,
                 'user_id' => $newUser->id, // Associate Pegawai with User
             ]);
 
@@ -142,10 +145,11 @@ class PegawaiController extends Controller
     {
         //
         $data = Pegawai::find($id);
+        
         $data->name = ucwords($request->name);
         $data->gender = $request->gender;
         $data->email = $request->email;
-        $data->position = $request->position;
+        $data->master_jabatan_id = $request->position;
         if ($request->file('profile_pict')) {
             $file = $request->file('profile_pict');
             $nama_file = time() . str_replace(" ", "", $file->getClientOriginalName());

@@ -22,11 +22,7 @@
                                     class="float-right @if ($dataTabungan->status === 'aktif') text-success @else text-danger @endif">
                                     Aktif
                                 </span>
-
-
                             </li>
-
-
                         </ul>
 
                         <a href="{{ route('riwayatTransaksi', ['nasabah_id' => $data->id]) }}"
@@ -43,10 +39,10 @@
                             <i class="mr-1 fas fa-user-cog"></i>
                             <b>Update Data Nasabah</b>
                         </a>
-                        <form action="{{ route('nasabah.destroy', ['nasabah' => $data->id]) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data nasabah ini?');">
+                        <form id="delete-form" action="{{ route('nasabah.destroy', ['nasabah' => $data->id]) }}" method="POST" class="d-inline" >
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-block">
+                            <button type="button" id="deleteData" class="btn btn-danger btn-block">
                                 <i class="mr-1 fas fa-trash"></i>
                                 <b>Hapus Data Nasabah</b>
                             </button>

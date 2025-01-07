@@ -19,17 +19,15 @@
                                     <tr>
                                         <th>Nama Pegawai</th>
                                         <th>Posisi</th>
-                                        <th>Nomor Telefon</th>
                                         <th>Status</th>
-                                        <th>Action</th>
+                                        <th width="10%">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($listPegawai as $pegawai)
                                         <tr>
                                             <td>{{ $pegawai->name }}</td>
-                                            <td>{{ $pegawai->position }}</td>
-                                            <td>{{ $pegawai->phone }}</td>
+                                            <td>{{ $pegawai->jabatan->name }}</td>
                                             <td>{{ $pegawai->status }}</td>
                                             <td>
                                                 <div class="btn-group">

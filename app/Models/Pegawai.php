@@ -19,6 +19,9 @@ class Pegawai extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+    public function jabatan(){
+        return $this->belongsTo(MasterJabatan::class,'master_jabatan_id');
+    }
 
     /**
      * Scope a query to only include active pegawai.
@@ -28,7 +31,7 @@ class Pegawai extends Model
      */
     public function scopeActive($query)
     {
-        return $query->where('status', 'kontrak');
+        return $query->whereIn('status', ['kontrak', 'tetap']);
     }
 
     /**

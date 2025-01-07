@@ -13,7 +13,15 @@ class MasterJabatanSeeder extends Seeder
      */
     public function run(): void
     {
-        MasterJabatan::create(['name' => 'Staff Administrasi']);
-        MasterJabatan::create(['name' => 'Staff Keuangan']);
+        MasterJabatan::create([
+            'name' => 'Staff Administrasi',
+            'role' => 'staff-administrasi'
+        ]);
+        MasterJabatan::create([
+            'name' => 'Staff Keuangan',
+            'role' => 'staff-keuangan'
+        ]);
+        
+
     }
 }
