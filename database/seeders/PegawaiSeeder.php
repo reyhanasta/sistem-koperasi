@@ -26,7 +26,7 @@ class PegawaiSeeder extends Seeder
         Pegawai::create([
             'name' => 'Admin 1',
             'email' => 'admin@gmail.com',
-            'user_id' => 3,
+            'user_id' => 2,
             'position' => 'Admin',
             'gaji' => 1000000,
             'gender' => 'male',
@@ -36,7 +36,7 @@ class PegawaiSeeder extends Seeder
         Pegawai::create([
             'name' => 'Hilwa Puti Imani Asta',
             'email' => 'astahilwa@gmail.com',
-            'user_id' => 2,
+            'user_id' => 3,
             'position' => 'Staff',
             'gaji' => 1000000,
             'gender' => 'female',

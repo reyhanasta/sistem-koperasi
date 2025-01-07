@@ -6,13 +6,14 @@ use App\Models\Nasabah;
 use App\Models\Pegawai;
 
 use App\Models\Pinjaman;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Services\PinjamanService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\PinjamanRequest;
-
-use App\Services\PinjamanService;
 
 class PinjamanController extends Controller
 {
@@ -79,7 +80,7 @@ class PinjamanController extends Controller
       
         try {
              // Validasi data yang masuk telah dilakukan oleh PinjamanRequest
-            $code = $this->generateTransactionCode();
+            $code =  'PJ' . strtoupper(Str::random(6)); // Generate kode transaksi
             $totalBayar = $request->jumlah_pinjaman * (1 - ($request->bunga / 100));
             $angsuran = $totalBayar / $request->jangka_waktu;
             $this->pinjamanServices->store($request,$angsuran,$totalBayar,$code);
@@ -90,16 +91,6 @@ class PinjamanController extends Controller
             return redirect($this->redirect)
             ->with('error', 'Terjadi kesalahan saat menambahkan data Nasabah. Silakan coba lagi.');
         }
-    }
-
-    private function generateTransactionCode()
-    {
-        $currentTime = now()->format('ym');
-        $baseCode = "P{$currentTime}";
-        // Increment the transaction count
-        $transactionCount = Pinjaman::withTrashed()->where('kode_pinjaman', 'like', "{$baseCode}%")->count() + 1;
-
-        return "{$baseCode}" . str_pad($transactionCount, 3, '0', STR_PAD_LEFT);
     }
 
     /**

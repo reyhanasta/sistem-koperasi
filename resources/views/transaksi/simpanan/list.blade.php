@@ -32,7 +32,7 @@
                                             <td>{{ $index->kode_simpanan }}</td>
                                             <td>
                                                 <a
-                                                    href="{{ url('nasabah/' . $index->nasabah_id) }}">{{ $index->nasabah->name }}</a>
+                                                    href="{{ route('nasabah.show', $index->nasabah_id) }}">{{ $index->nasabah->name }}</a>
                                             </td>
                                             <td>Rp.{{ number_format($index->amount) }}</td>
                                             <td>{{ $index->created_at->isoFormat('D MMMM Y, HH:mm:ss') }}</td>
