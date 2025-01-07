@@ -17,7 +17,7 @@ class PegawaiSeeder extends Seeder
             'name' => 'Muhammad Reyhan Perdana Asta',
             'email' => 'astareyhan@gmail.com',
             'user_id' => 1,
-            'position' => 'Admin',
+            'master_jabatan_id' => 1,
             'gaji' => 1000000,
             'gender' => 'male',
             'join_date' => now()
@@ -26,8 +26,8 @@ class PegawaiSeeder extends Seeder
         Pegawai::create([
             'name' => 'Admin 1',
             'email' => 'admin@gmail.com',
-            'user_id' => 2,
-            'position' => 'Admin',
+            'user_id' => 3,
+            'master_jabatan_id' => 1,
             'gaji' => 1000000,
             'gender' => 'male',
             'join_date' => now()
@@ -36,8 +36,8 @@ class PegawaiSeeder extends Seeder
         Pegawai::create([
             'name' => 'Hilwa Puti Imani Asta',
             'email' => 'astahilwa@gmail.com',
-            'user_id' => 3,
-            'position' => 'Staff',
+            'user_id' => 2,
+            'master_jabatan_id' => 2,
             'gaji' => 1000000,
             'gender' => 'female',
             'join_date' => now()
@@ -47,10 +47,21 @@ class PegawaiSeeder extends Seeder
             'name' => 'Staff 1',
             'email' => 'staff@gmail.com',
             'user_id' => 4,
-            'position' => 'Staff',
+            'master_jabatan_id' => 2,
             'gaji' => 1000000,
             'gender' => 'female',
             'join_date' => now()
+        ]);
+
+        Pegawai::create([
+            'name' => 'Staff Berhenti',
+            'email' => 'staffberhenti@gmail.com',
+            'user_id' => 5,
+            'master_jabatan_id' => 2,
+            'gaji' => 1000000,
+            'gender' => 'male',
+            'join_date' => now(),
+            'status' => 'berhenti'
         ]);
     }
 }

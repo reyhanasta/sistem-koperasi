@@ -11,7 +11,6 @@
         <div class="small-box bg-info">
           <div class="inner">
             <h3>{{ $totalNasabah }}</h3>
-
             <p>Nasabah Baru</p>
           </div>
           <div class="icon">
@@ -58,9 +57,8 @@
         <!-- small box -->
         <div class="small-box bg-danger">
           <div class="inner">
-            <h3>65</h3>
-
-            <p>Unique Visitors</p>
+            <h3>{{ $totalNasabahBulanan }}</h3>
+            <p>Nasabah Bulan ini</p>
           </div>
           <div class="icon">
             <i class="ion ion-pie-graph"></i>

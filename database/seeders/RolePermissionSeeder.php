@@ -16,8 +16,9 @@ class RolePermissionSeeder extends Seeder
         //
         // Membuat role
         Role::create(['name' => 'nasabah']);
-        Role::create(['name' => 'staff']);
+        Role::create(['name' => 'staff-administrasi']);
         Role::create(['name' => 'admin']);
+        Role::create(['name' => 'staff-keuangan']);
 
         // Membuat permission
         Permission::create(['name' => 'add-nasabah']);

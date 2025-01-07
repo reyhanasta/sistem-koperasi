@@ -64,7 +64,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware('role:admin')->group(function(){
     Route::controller(PinjamanController::class)->group(function () {
         // Pinjaman
-        Route::put('/pinjaman/{id}/update-status/{newStatus}','updateStatus')->name('pinjaman.updateStatus');
         Route::put('/pinjaman/{id}/lunasi','lunasi')->name('pinjaman.lunasi');
         Route::put('/pinjaman/{id}/pay','pay')->name('pinjaman.pay');
         Route::resource('master-jabatan', MasterJabatanController::class);
@@ -80,6 +79,7 @@ Route::middleware('role:admin|staff')->group(function(){
     Route::post('/withdraw', [PenarikanController::class, 'withdraw'])->name('withdraw');
     Route::controller(PinjamanController::class)->prefix('trx')->group(function () {
         // Pinjaman
+        Route::put('/pinjaman/{id}/update-status/{newStatus}','updateStatus')->name('pinjaman.updateStatus');
         Route::resource('penarikan', PenarikanController::class);
         Route::resource('angsuran', AngsuranController::class);
         Route::resource('pinjaman',PinjamanController::class);

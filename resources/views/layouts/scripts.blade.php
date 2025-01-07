@@ -217,7 +217,6 @@
         });
     });
 </script>
-
 <script>
     $(document).ready(function() {
         $('#nasabah').change(function() {
@@ -225,5 +224,38 @@
 
             console.log(selectedUserId);
         });
+    });
+</script>
+<script>
+    document.getElementById('angsuran-button').addEventListener('click', function() {
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Anda akan membayar angsuran!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, bayar!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('angsuran-form').submit();
+            }
+        })
+    });
+    
+    document.getElementById('lunasi-button').addEventListener('click', function() {
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Anda akan melunasi pinjaman!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, lunasi!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('lunasi-form').submit();
+            }
+        })
     });
 </script>

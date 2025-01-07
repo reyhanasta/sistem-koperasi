@@ -29,8 +29,8 @@
 
                                         <div class="info-box-content">
                                             <span class="info-box-text">Nominal Pinjaman</span>
-                                            <span class="info-box-number">Rp.{{
-                                                number_format($pinjaman->jumlah_pinjaman) }}</span>
+                                            <h3 class="info-box-number">Rp.{{
+                                                number_format($pinjaman->jumlah_pinjaman) }}</h3>
                                         </div>
                                         <!-- /.info-box-content -->
                                     </div>
@@ -114,67 +114,51 @@
                             <div class="row">
                                 <div class="mb-1 text-right col-md-12">
                                     <div class="d-flex justify-content-end">
-                                        @if ($pinjaman->status == 'diajukan')
                                         @role('admin|staff')
-                                        <form
-                                            action="{{ route('pinjaman.updateStatus', ['id' => $pinjaman->id, 'newStatus' => 'validasi']) }}"
-                                            method="post" class="mr-2">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" class="btn btn-sm btn-primary">Proses</button>
-                                        </form>
-                                        <form
-                                            action="{{ route('pinjaman.updateStatus', ['id' => $pinjaman->id, 'newStatus' => 'ditolak']) }}"
-                                            method="post" class="mr-2">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" class="btn btn-sm btn-danger">Tolak</button>
-                                        </form>
+                                            @if ($pinjaman->status == 'diajukan')
+                                                <form action="{{ route('pinjaman.updateStatus', ['id' => $pinjaman->id, 'newStatus' => 'validasi']) }}" method="post" class="mr-2">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-sm btn-primary">Proses</button>
+                                                </form>
+                                                <form action="{{ route('pinjaman.updateStatus', ['id' => $pinjaman->id, 'newStatus' => 'ditolak']) }}" method="post" class="mr-2">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-sm btn-danger">Tolak</button>
+                                                </form>
+                                            @elseif ($pinjaman->status == 'validasi')
+                                                @role('admin')
+                                                    <form action="{{ route('pinjaman.updateStatus', ['id' => $pinjaman->id, 'newStatus' => 'disetujui']) }}" method="post" class="mr-2">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button type="submit" class="btn btn-sm btn-success">Diterima</button>
+                                                    </form>
+                                                    <form action="{{ route('pinjaman.updateStatus', ['id' => $pinjaman->id, 'newStatus' => 'ditolak']) }}" method="post" class="mr-2">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button type="submit" class="btn btn-sm btn-danger">Tolak</button>
+                                                    </form>
+                                                @endrole
+                                            @elseif ($pinjaman->status == 'disetujui' || $pinjaman->status == 'berlangsung')
+                                                <form id="angsuran-form" action="{{ route('angsuran.store') }}" method="post" class="mr-2">
+                                                    @csrf
+                                                    <input type="hidden" name="id_pinjaman" value="{{ $pinjaman->id }}">
+                                                    <button type="button" id="angsuran-button" class="btn btn-sm btn-primary">
+                                                        <i class="fas fa-cash-register nav-icon"></i> Bayar Angsuran
+                                                    </button>
+                                                </form>
+                                                <form id="lunasi-form" action="{{ route('pinjaman.lunasi', ['id' => $pinjaman->id]) }}" method="post" class="mr-2">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <input type="hidden" name="id_pinjaman" value="{{ $pinjaman->id }}">
+                                                    <button type="button" id="lunasi-button" class="btn btn-sm btn-info">
+                                                        <i class="fas fa-dollar-sign nav-icon"></i> Bayar Lunas
+                                                    </button>
+                                                </form>
+                                            @endif
                                         @endrole
-                                        @elseif ($pinjaman->status == 'validasi')
-                                        @role('admin')
-                                        <form
-                                            action="{{ route('pinjaman.updateStatus', ['id' => $pinjaman->id, 'newStatus' => 'disetujui']) }}"
-                                            method="post" class="mr-2">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" class="btn btn-sm btn-success">Diterima</button>
-                                        </form>
-                                        <form
-                                            action="{{ route('pinjaman.updateStatus', ['id' => $pinjaman->id, 'newStatus' => 'ditolak']) }}"
-                                            method="post" class="mr-2">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" class="btn btn-sm btn-danger">Tolak</button>
-                                        </form>
-                                        @endrole
-                                        @elseif($pinjaman->status=='disetujui' || $pinjaman->status=='berlangsung' )
-                                        @role('admin|staff')
-                                        <form action="{{ route('angsuran.store') }}" method="post" class="mr-2">
-                                            @csrf
-                                            <!-- Ganti dengan PATCH jika sesuai -->
-                                            <input type="hidden" name="id_pinjaman" value="{{$pinjaman->id}}">
-                                            <button type="submit" class="btn btn-sm btn-primary"><i
-                                                    class="fas fa-cash-register nav-icon"> </i>
-                                                Bayar Angsuran
-                                            </button>
-                                        </form>
-                                        <form action="{{route('pinjaman.lunasi',['id' => $pinjaman->id])}}"
-                                            method="post" class="mr-2">
-                                            @csrf
-                                            @method('PUT')
-                                            <!-- Ganti dengan PATCH jika sesuai -->
-                                            <input type="hidden" name="id_pinjaman" value="{{$pinjaman->id}}">
-                                            <button type="submit" class="btn btn-sm btn-info">
-                                                <i class="fas fa-dollar-sign nav-icon"> </i>
-                                                Bayar Lunas
-                                            </button>
-                                        </form>
-                                        @endrole
-                                        @endif
                                         <a href="{{ $previousUrl }}" class="btn btn-sm btn-default">Kembali</a>
                                     </div>
-
                                 </div>
                             </div>
 
