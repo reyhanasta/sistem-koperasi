@@ -19,6 +19,12 @@ class DashboardController extends Controller
         $totalNasabah = Nasabah::count();
         $totalNasabahBulanan = Nasabah::whereMonth('created_at', now()->month)->count();
         $totalTabungan = BukuTabungan::sum('balance');
-        return view('home', compact('totalPinjaman', 'totalTabungan', 'totalNasabah', 'totalNasabahBulanan'));
+         // Data peminjaman bulanan
+         $monthlyLoans = Pinjaman::selectRaw('MONTH(created_at) as month, SUM(jumlah_pinjaman) as total')
+         ->groupBy('month')
+         ->get()
+         ->pluck('total', 'month')
+         ->toArray();
+        return view('home', compact('totalPinjaman','totalTabungan', 'totalNasabah', 'totalNasabahBulanan', 'monthlyLoans'));
     }
 }

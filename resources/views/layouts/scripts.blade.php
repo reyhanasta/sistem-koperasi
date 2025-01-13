@@ -174,30 +174,42 @@
 <script>
     // Pastikan pesan 'success' dari session ada
     @if (session('success'))
-        var Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        });
-        toastr.success('{{ session('success') }}')
+        // var Toast = Swal.mixin({
+        //     toast: true,
+        //     position: 'top-end',
+        //     showConfirmButton: false,
+        //     timer: 3000
+        // });
+        
+        Swal.fire(
+                    'Berhasil!',
+                    '{{ session('success') }}',
+                    'success'
+                )
+        
+        // toastr.success('{{ session('success') }}')
     @endif
     @if (session('error'))
-        var Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        });
-        toastr.warning('{{ session('error') }}')
+        // var Toast = Swal.mixin({
+        //     toast: true,
+        //     position: 'top-end',
+        //     showConfirmButton: false,
+        //     timer: 3000
+        // });
+        // toastr.warning('{{ session('error') }}')
+
+        Swal.fire(
+                    'Gagal!',
+                    '{{ session('error') }}',
+                    'error'
+                )
     @endif
 
     $('#deleteData').on('click', function(e) {
-        console.log('hey');
         e.preventDefault();
         var form = $(this).parents('form');
         Swal.fire({
-            title: 'Apakah yakin akna menghapus data ini?',
+            title: 'Apakah yakin akan menghapus data ini?',
             text: "You won't be able to revert this!",
             type: 'warning',
             showCancelButton: true,
@@ -205,14 +217,17 @@
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                ).then(() => {
-                    form.submit();
-                });
+            // if (result.isConfirmed) {
+            //     Swal.fire(
+            //         'Deleted!',
+            //         'Your file has been deleted.',
+            //         'success'
+            //     ).then(() => {
+            //         form.submit();
+            //     });
+            // }
+            if(result.isConfirmed){
+                form.submit();
             }
         });
     });
@@ -259,3 +274,4 @@
         })
     });
 </script>
+
