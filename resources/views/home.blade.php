@@ -44,7 +44,6 @@
             <h3>
               Rp. {{ number_Format($totalTabungan) }}
             </h3>
-
             <p>Total Simpanan</p>
           </div>
           <div class="icon">
@@ -58,8 +57,8 @@
         <!-- small box -->
         <div class="small-box bg-danger">
           <div class="inner">
-            <h3>{{ $totalNasabahBulanan }}</h3>
-            <p>Nasabah Bulan ini</p>
+            <h3>{{ $monthlyAccLoans }}</h3>
+            <p>Pinjaman Diterima Bulan ini</p>
           </div>
           <div class="icon">
             <i class="ion ion-pie-graph"></i>
@@ -84,20 +83,32 @@
         <div class="card-body">
           <div class="d-flex">
             <p class="d-flex flex-column">
-              <span class="text-lg text-bold">$18,230.00</span>
-              <span>Sales Over Time</span>
+              <span class="text-lg text-bold">Rp.{{ number_format($totalPinjamanYTD, 2) }}</span>
+              <span>Total Pinjaman Per Tahun</span>
             </p>
             <p class="ml-auto text-right d-flex flex-column">
+              @if ($increasePercentage > 0)
               <span class="text-success">
-                <i class="fas fa-arrow-up"></i> 33.1%
+                <i class="fas fa-arrow-up"></i> {{ number_format($increasePercentage, 2) }}%
               </span>
               <span class="text-muted">Since last month</span>
+            @elseif ($increasePercentage < 0)
+              <span class="text-danger">
+                <i class="fas fa-arrow-down"></i> {{ number_format($increasePercentage, 2) }}%
+              </span>
+              <span class="text-muted">Since last month</span>
+            @else
+              <span class="text-gray">
+                {{ number_format($increasePercentage, 2) }}%
+              </span>
+              <span class="text-muted">Dari bulan sebelumnya</span>
+            @endif
             </p>
           </div>
           <!-- /.d-flex -->
 
           <div class="mb-4 position-relative">
-            <canvas id="monthlyLoansChart" height="130"></canvas>
+            <canvas id="monthlyLoansChart" height="115"></canvas>
           </div>
 
           <div class="flex-row d-flex justify-content-end">
@@ -116,27 +127,41 @@
       <div class="card">
         <div class="border-0 card-header">
           <div class="d-flex justify-content-between">
-            <h3 class="card-title">Sales</h3>
+            <h3 class="card-title">Grafik Nasabah</h3>
             <a href="javascript:void(0);">View Report</a>
           </div>
         </div>
         <div class="card-body">
           <div class="d-flex">
             <p class="d-flex flex-column">
-              <span class="text-lg text-bold">$18,230.00</span>
-              <span>Sales Over Time</span>
+              <span class="text-lg text-bold">{{ number_format($averageNasabahPerMonth) }} Orang</span>
+              <span>Rata-rata Nasabah Per Bulan</span>
+           
+          
             </p>
             <p class="ml-auto text-right d-flex flex-column">
+              @if ($increasePercentageNasabah > 0)
               <span class="text-success">
-                <i class="fas fa-arrow-up"></i> 33.1%
+                <i class="fas fa-arrow-up"></i> {{ number_format($increasePercentageNasabah, 2) }}%
               </span>
-              <span class="text-muted">Since last month</span>
+              <span class="text-muted">Dari bulan sebelumnya</span>
+            @elseif ($increasePercentageNasabah < 0)
+              <span class="text-danger">
+                <i class="fas fa-arrow-down"></i> {{ number_format($increasePercentageNasabah, 2) }}%
+              </span>
+              <span class="text-muted">Dari bulan sebelumnya</span>
+            @else
+              <span class="text-gray">
+                {{ number_format($increasePercentageNasabah, 2) }}%
+              </span>
+              <span class="text-muted">Dari bulan sebelumnya</span>
+            @endif
             </p>
           </div>
           <!-- /.d-flex -->
 
           <div class="mb-4 position-relative">
-            <canvas id="monthlyLoansChart" height="130"></canvas>
+            <canvas id="monthlyNasabahChart" height="115"></canvas>
           </div>
 
           <div class="flex-row d-flex justify-content-end">
@@ -152,7 +177,6 @@
       </div>
     </div>
   </div>
-
 </section>
 @endsection
 <!-- Chart.js -->
@@ -165,8 +189,31 @@
       data: {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         datasets: [{
-          label: 'Total Peminjaman',
+          label: 'Total Peminjaman Bulanan',
           data: @json(array_values($monthlyLoans)),
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  });
+  document.addEventListener('DOMContentLoaded', function () {
+    var ctx = document.getElementById('monthlyNasabahChart').getContext('2d');
+    var monhlyNasabahChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [{
+          label: 'Total Nasbah Bulanan',
+          data: @json(array_values($monthlyNasabah)),
           backgroundColor: 'rgba(54, 162, 235, 0.2)',
           borderColor: 'rgba(54, 162, 235, 1)',
           borderWidth: 1

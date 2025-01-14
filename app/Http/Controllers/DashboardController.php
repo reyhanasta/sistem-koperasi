@@ -6,6 +6,7 @@ use App\Models\Nasabah;
 use App\Models\Pinjaman;
 use App\Models\Simpanan;
 use App\Models\BukuTabungan;
+use Illuminate\Support\Carbon;
 
 
 class DashboardController extends Controller
@@ -21,10 +22,55 @@ class DashboardController extends Controller
         $totalTabungan = BukuTabungan::sum('balance');
          // Data peminjaman bulanan
          $monthlyLoans = Pinjaman::selectRaw('MONTH(created_at) as month, SUM(jumlah_pinjaman) as total')
+         ->whereIn('status', ['diterima', 'berlangsung'])
          ->groupBy('month')
          ->get()
          ->pluck('total', 'month')
          ->toArray();
-        return view('home', compact('totalPinjaman','totalTabungan', 'totalNasabah', 'totalNasabahBulanan', 'monthlyLoans'));
+         
+         $monthlyAccLoans = Pinjaman::whereIn('status', ['diterima', 'berlangsung'])
+         ->whereMonth('tanggal_persetujuan', now()->month)->count();
+
+          // Hitung peningkatan dari bulan sebelumnya
+        $previousMonth = Carbon::now()->subMonth()->month;
+        $currentMonth = Carbon::now()->month;
+        $previousMonthLoans = $monthlyLoans[$previousMonth] ?? 0;
+        $currentMonthLoans = $monthlyLoans[$currentMonth] ?? 0;
+        $increasePercentage = $previousMonthLoans > 0 ? (($currentMonthLoans - $previousMonthLoans) / $previousMonthLoans) * 100 : 0;
+       
+         // Hitung total pinjaman Year to Date
+         $startOfYear = Carbon::now()->startOfYear();
+         $totalPinjamanYTD = Pinjaman::whereIn('status', ['diterima', 'berlangsung'])
+             ->where('created_at', '>=', $startOfYear)
+             ->sum('jumlah_pinjaman');
+ 
+       
+        // Data Nasabah bulanan
+        $monthlyNasabah = Nasabah::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->groupBy('month')
+            ->get()
+            ->pluck('total', 'month')
+            ->toArray();
+           // Hitung peningkatan dari bulan sebelumnya untuk nasabah
+        $previousMonthNasabah = $monthlyNasabah[$previousMonth] ?? 0;
+        $currentMonthNasabah = $monthlyNasabah[$currentMonth] ?? 0;
+        $increasePercentageNasabah = $previousMonthNasabah > 0 ? (($currentMonthNasabah - $previousMonthNasabah) / $previousMonthNasabah) * 100 : 0;
+
+         // Hitung rata-rata nasabah per bulan
+         $totalMonths = count($monthlyNasabah);
+         $totalNasabahBulanan = array_sum($monthlyNasabah);
+         $averageNasabahPerMonth = $totalMonths > 0 ? $totalNasabahBulanan / $totalMonths : 0;
+
+        return view('home', compact(
+            'totalPinjaman',
+            'totalTabungan', 
+            'totalNasabah', 
+            'totalNasabahBulanan', 
+            'monthlyLoans',
+            'monthlyNasabah',
+            'increasePercentage',
+            'increasePercentageNasabah',
+            'averageNasabahPerMonth',
+            'totalPinjamanYTD','monthlyAccLoans'));
     }
 }
