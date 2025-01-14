@@ -1,6 +1,6 @@
 @extends('layouts.template')
 @section('title','Home')
-@section('content')   
+@section('content')
 
 <section class="content">
   <div class="container-fluid">
@@ -16,7 +16,8 @@
           <div class="icon">
             <i class="ion ion-bag"></i>
           </div>
-          <a href="{{route('nasabah.index')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          <a href="{{route('nasabah.index')}}" class="small-box-footer">More info <i
+              class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
       <!-- ./col -->
@@ -76,6 +77,45 @@
       <div class="card">
         <div class="border-0 card-header">
           <div class="d-flex justify-content-between">
+            <h3 class="card-title">Grafik Peminjaman</h3>
+            <a href="javascript:void(0);">View Report</a>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="d-flex">
+            <p class="d-flex flex-column">
+              <span class="text-lg text-bold">$18,230.00</span>
+              <span>Sales Over Time</span>
+            </p>
+            <p class="ml-auto text-right d-flex flex-column">
+              <span class="text-success">
+                <i class="fas fa-arrow-up"></i> 33.1%
+              </span>
+              <span class="text-muted">Since last month</span>
+            </p>
+          </div>
+          <!-- /.d-flex -->
+
+          <div class="mb-4 position-relative">
+            <canvas id="monthlyLoansChart" height="130"></canvas>
+          </div>
+
+          <div class="flex-row d-flex justify-content-end">
+            <span class="mr-2">
+              <i class="fas fa-square text-primary"></i> This year
+            </span>
+
+            <span>
+              <i class="fas fa-square text-gray"></i> Last year
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="border-0 card-header">
+          <div class="d-flex justify-content-between">
             <h3 class="card-title">Sales</h3>
             <a href="javascript:void(0);">View Report</a>
           </div>
@@ -96,7 +136,7 @@
           <!-- /.d-flex -->
 
           <div class="mb-4 position-relative">
-            <canvas id="monthlyLoansChart" height="200"></canvas>
+            <canvas id="monthlyLoansChart" height="130"></canvas>
           </div>
 
           <div class="flex-row d-flex justify-content-end">
@@ -110,9 +150,10 @@
           </div>
         </div>
       </div>
+    </div>
   </div>
-  
-  </section>
+
+</section>
 @endsection
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
