@@ -6,7 +6,9 @@ use App\Models\Nasabah;
 use App\Models\Pinjaman;
 use App\Models\Simpanan;
 use App\Models\BukuTabungan;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 
 class DashboardController extends Controller
@@ -14,6 +16,14 @@ class DashboardController extends Controller
     //
     public function index()
     {
+        $user = Auth::user();
+
+        // Ambil notifikasi yang belum dibaca
+        $notifications = $user->unreadNotifications;
+        // Menyimpan notifikasi dalam session
+        session()->put('notifications', $notifications);
+
+
         $totalPinjaman = Pinjaman::whereIn('status', ['diterima', 'berlangsung'])
         ->where('sisa_pinjaman', '>', 0)
         ->sum('sisa_pinjaman');
@@ -71,6 +81,18 @@ class DashboardController extends Controller
             'increasePercentage',
             'increasePercentageNasabah',
             'averageNasabahPerMonth',
-            'totalPinjamanYTD','monthlyAccLoans'));
+            'totalPinjamanYTD','monthlyAccLoans','notifications'));
+
+
     }
+
+    public function markAsRead(Request $request)
+{
+    $user = Auth::user();
+
+    // Tandai semua notifikasi sebagai dibaca
+    $user->unreadNotifications->markAsRead();
+
+    return redirect()->route('pinjaman.index');
+}
 }

@@ -25,7 +25,7 @@ class SimpananController extends Controller
         try {
             // Retrieve all Simpanan data with related Nasabah, sorted by created_at in descending order
             $data = Simpanan::with(['nasabah', 'pegawai', 'bukuTabungan'])->where('type', 'deposit')->orderBy('created_at', 'desc')->paginate(10);
-            $back = url()->previous();
+            $back = route('simpanan.index');
 
             return view('transaksi.simpanan.list', compact('data', 'back'));
         } catch (\Exception $e) {
@@ -40,7 +40,7 @@ class SimpananController extends Controller
         try {
             // Retrieve Nasabah data and their Simpanan transaction history by ID
             $nasabah = Nasabah::with('Simpanan')->find($nasabah_id);
-            $previousUrl = url()->previous();
+            $previousUrl = route('simpanan.index');
 
             if (!$nasabah) {
                 return back()->with('warning', 'Nasabah tidak ditemukan.');
@@ -78,7 +78,7 @@ class SimpananController extends Controller
             $bukuTabunganList = BukuTabungan::all();
 
             // Get the previous URL for navigation
-            $previousUrl = url()->previous();
+            $previousUrl = route('simpanan.index');
 
             // Confirmation message for data input
             $confirmMessage = "Pastikan Data sudah di isi dengan benar, karena data transaksi tidak dapat di ubah lagi";
@@ -197,7 +197,7 @@ class SimpananController extends Controller
             $kodeInput = $this->generateTransactionCode();
 
             //back URL
-            $previousUrl = url()->previous();
+            $previousUrl = route('simpanan.index');
 
             // Pass the found Simpanan and Nasabah data to the view
             return view('transaksi.simpanan.edit', compact('data', 'nasabahList', 'kodeInput', 'previousUrl'));

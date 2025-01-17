@@ -273,5 +273,24 @@
             }
         })
     });
+
+   function confirmLogOut(element){
+    Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Anda akan keluar dari aplikasi.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, keluar!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit the form if user confirms
+                element.closest('form').submit();
+            }
+        });
+    };
 </script>
+
 

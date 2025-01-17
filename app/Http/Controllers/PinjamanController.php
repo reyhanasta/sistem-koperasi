@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Nasabah;
-use App\Models\Pegawai;
 
+use App\Models\Pegawai;
 use App\Models\Pinjaman;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Services\PinjamanService;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\PinjamanRequest;
 
@@ -36,6 +37,12 @@ class PinjamanController extends Controller
 
     public function index()
     {
+        $user = Auth::user();
+
+        // Ambil notifikasi yang belum dibaca
+        $notifications = $user->unreadNotifications;
+        // Menyimpan notifikasi dalam session
+        session()->put('notifications', $notifications);
         //
         $data = Pinjaman::with('nasabah')->paginate(10); // Ambil semua data pinjaman dari database
         // dd($urlCreate);
@@ -84,6 +91,7 @@ class PinjamanController extends Controller
             $totalBayar = $request->jumlah_pinjaman * (1 - ($request->bunga / 100));
             $angsuran = $totalBayar / $request->jangka_waktu;
             $this->pinjamanServices->store($request,$angsuran,$totalBayar,$code);
+            
             return redirect($this->redirect)->with('success', 'Data ditambahkan, buku tabungan nasabah diupdate.');
         } catch (\Exception $e) {
             // Log kesalahan

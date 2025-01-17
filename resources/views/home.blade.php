@@ -4,6 +4,16 @@
 
 <section class="content">
   <div class="container-fluid">
+    <div class="row">
+      <ul>
+        @foreach ($notifications as $notification)
+            <li>
+                {{ $notification->data['message'] }}
+                dibuat pada {{ $notification->data['peminjaman_created_at'] }}
+            </li>
+        @endforeach
+    </ul>
+    </div>
     <!-- Small boxes (Stat box) -->
     <div class="row">
       <div class="col-lg-3 col-6">

@@ -32,6 +32,9 @@ Route::get('/', function () {
 // Semua rute yang memerlukan autentikasi dan verifikasi
 Route::middleware(['auth', 'verified'])->group(function () {
 
+    // Notifikasi
+    Route::post('/notifications/read', [DashboardController::class, 'markAsRead'])->name('notifications.read');
+
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
