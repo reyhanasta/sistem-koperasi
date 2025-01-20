@@ -12,9 +12,11 @@ use Illuminate\Http\Request;
 use App\Services\PinjamanService;
 use Illuminate\Support\Facades\DB;
 
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\PinjamanRequest;
+use App\Notifications\PeminjamanNotification;
 
 class PinjamanController extends Controller
 {
@@ -44,7 +46,10 @@ class PinjamanController extends Controller
         // Menyimpan notifikasi dalam session
         session()->put('notifications', $notifications);
         //
-        $data = Pinjaman::with('nasabah')->paginate(10); // Ambil semua data pinjaman dari database
+        $data = Pinjaman::with('nasabah')
+        ->orderByRaw("FIELD(status, 'validasi', 'diajukan') DESC") // Urutkan berdasarkan prioritas status
+        ->orderBy('created_at', 'DESC') // Lalu urutkan berdasarkan waktu terbaru
+        ->paginate(10); // Ambil semua data pinjaman dari database
         // dd($urlCreate);
         return view('transaksi.pinjaman.list', compact('data'));
     }
@@ -71,7 +76,6 @@ class PinjamanController extends Controller
     public function create()
     {
         //
-        
         $data = new Pinjaman();
         $nasabahList = Nasabah::all();
         $previousUrl = url()->previous();
@@ -146,6 +150,21 @@ class PinjamanController extends Controller
                 'status' => $newStatus,
                 'tanggal_persetujuan' => now()
             ]);
+
+            if($newStatus == 'disetujui'){
+                // Ambil semua user dengan role admin menggunakan Spatie
+                $admins = Role::findByName('admin')->users;   
+                // Kirim notifikasi ke setiap admin
+                foreach ($admins as $admin) {
+                     // Tandai semua notifikasi sebagai dibaca
+                     $admin->unreadNotifications()
+                    ->where('data->peminjaman_id', $id)
+                    ->each(function ($notification) {
+                        $notification->markAsRead();
+                    });
+                }
+            }
+            
 
             return redirect($this->redirect)->with('success', 'Status berhasil diperbarui.');
         } catch (\Exception $e) {

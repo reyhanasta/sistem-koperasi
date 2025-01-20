@@ -82,11 +82,9 @@ class DashboardController extends Controller
             'increasePercentageNasabah',
             'averageNasabahPerMonth',
             'totalPinjamanYTD','monthlyAccLoans','notifications'));
-
-
     }
 
-    public function markAsRead(Request $request)
+    public function markAsRead()
 {
     $user = Auth::user();
 

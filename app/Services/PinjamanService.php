@@ -20,7 +20,7 @@ class PinjamanService{
         $pegawai = Pegawai::where('user_id', $user->id)->firstOrFail();
         $pinjaman = $this->pinjaman->buatPinjaman($request,$angsuran,$totalBayar,$code,$pegawai);
         // Ambil semua user dengan role admin menggunakan Spatie
-         $admins = Role::findByName('admin')->users;   
+        $admins = Role::findByName('admin')->users;   
         // Kirim notifikasi ke setiap admin
         foreach ($admins as $admin) {
             $admin->notify(new PeminjamanNotification($pinjaman));
