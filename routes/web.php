@@ -25,9 +25,10 @@ use App\Http\Controllers\RiwayatTransaksiController;
 */
 
 // Halaman utama
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+// Route::get('/login',[LoginController::class,'index'])->name('login')->middleware('guest');
 
 // Semua rute yang memerlukan autentikasi dan verifikasi
 Route::middleware(['auth', 'verified'])->group(function () {
