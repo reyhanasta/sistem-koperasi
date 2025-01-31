@@ -6,12 +6,12 @@
   <div class="container-fluid">
     <div class="row">
       <ul>
-        @foreach ($notifications as $notification)
+        {{-- @foreach ($notifications as $notification)
             <li>
                 {{ $notification->data['message'] }}
                 dibuat pada {{ $notification->data['peminjaman_created_at'] }}
             </li>
-        @endforeach
+        @endforeach --}}
     </ul>
     </div>
     <!-- Small boxes (Stat box) -->
