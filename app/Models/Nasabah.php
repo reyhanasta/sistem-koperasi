@@ -13,16 +13,16 @@ class Nasabah extends Model
     protected $guarded = ['id'];
 
     
-    protected $fillable = [
-        'name',
-        'ktp',
-        'gender',
-        'phone',
-        'ktp_image_path',
-        'address',
-        'date_of_birth',
-        'closure_date',
-    ];
+    // protected $fillable = [
+    //     'name',
+    //     'ktp',
+    //     'gender',
+    //     'phone',
+    //     'ktp_image_path',
+    //     'address',
+    //     'date_of_birth',
+    //     'closure_date',
+    // ];
 
     protected static function booted()
     {

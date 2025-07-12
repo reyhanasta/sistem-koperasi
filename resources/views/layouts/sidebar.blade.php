@@ -136,6 +136,24 @@
                     </li>
                 </ul>
             </li>
+            <li class="nav-item {{ request()->is('setting-*') ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link {{ request()->is('setting-*') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-gear"></i>
+                    <p>
+                        Konfigurasi
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route('migrasi.index') }}"
+                            class="nav-link {{ request()->is('migrasi') ? 'active' : '' }}">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Migrasi</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
             @endrole
             <li class="nav-item">
                 <a href="{{ asset('adminlte/') }}/index3.html" class="nav-link">

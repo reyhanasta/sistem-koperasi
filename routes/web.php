@@ -1,15 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BukuTabunganController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NasabahController;
 use App\Http\Controllers\PegawaiController;
-use App\Http\Controllers\PenarikanController;
-use App\Http\Controllers\PinjamanController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AngsuranController;
+use App\Http\Controllers\PinjamanController;
 use App\Http\Controllers\SimpananController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PenarikanController;
+use App\Http\Controllers\BukuTabunganController;
+use App\Http\Controllers\SqlMigrationController;
 use App\Http\Controllers\MasterJabatanController;
 use App\Http\Controllers\RiwayatTransaksiController;
 
@@ -71,6 +72,11 @@ Route::middleware('role:admin')->group(function(){
         Route::put('/pinjaman/{id}/pay','pay')->name('pinjaman.pay');
         Route::resource('master-jabatan', MasterJabatanController::class);
         Route::resource('pegawai', PegawaiController::class);
+        // routes/web.php
+    Route::get('/migrasi-sql', [SqlMigrationController::class, 'index'])->name('migrasi.index');
+    Route::post('/migrasi-sql/upload', [SqlMigrationController::class, 'upload'])->name('migrasi.upload');
+    Route::post('/migrasi-sql/migrate-nasabah', [SqlMigrationController::class, 'migrateNasabah'])->name('migrasi.nasabah');
+
     });
 });
 

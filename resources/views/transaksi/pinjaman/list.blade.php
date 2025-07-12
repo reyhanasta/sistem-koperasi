@@ -1,5 +1,5 @@
 @extends('layouts.template')
-@section('title', 'Transaksi Simpan')
+@section('title', 'Transaksi Pinjaman')
 @section('content')
 <!-- Main content -->
 <section class="content">
@@ -62,7 +62,8 @@
                                         <span class="badge badge-warning">{{ ucwords($index->status) }}</span>
                                         @break
                                         @case('berlangsung')
-                                        <span class="badge badge-info">{{ ucwords($index->status) }}</span> : <b>{{$index->jumlah_angsuran .'%'}}</b>
+                                        <span class="badge badge-info">{{ ucwords($index->status) }}</span> :
+                                        <b>{{$index->jumlah_angsuran .'%'}}</b>
                                         @break
                                         @case('lunas')
                                         <span class="badge badge-secondary">{{ ucwords($index->status) }}</span>
@@ -92,7 +93,8 @@
                                                         href="{{ route('pinjaman.edit',['pinjaman' => $index->id]) }}"><i
                                                             class="fas fa-edit nav-icon"></i> Edit
                                                         Pinjaman</a>
-                                                    <form action="{{ url('trx/pinjaman/' . $index->id) }}" method="post">
+                                                    <form action="{{ url('trx/pinjaman/' . $index->id) }}"
+                                                        method="post">
                                                         @method('delete')
                                                         @csrf
                                                         <button type="submit" class="dropdown-item"

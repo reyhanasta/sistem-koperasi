@@ -62,7 +62,7 @@ return [
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
-
+        
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
@@ -92,6 +92,18 @@ return [
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
+
+        'ibss_temp' => [
+        'driver' => 'mysql',
+        'host' => '127.0.0.1',
+        'database' => 'temp_db',
+        'username' => 'root',
+        'password' => 'r3yh4n',
+        'charset' => 'utf8mb4',
+        'collation' => 'utf8mb4_unicode_ci',
+        'prefix' => '',
+        'strict' => false,
+    ],
     
 
     ],
